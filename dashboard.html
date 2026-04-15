@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBot Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;--bg2:#0f1629;--bg3:#141e3c;
+  --card:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);
+  --c1:#6366f1;--c2:#8b5cf6;--c3:#10b981;--c4:#f59e0b;--c5:#f43f5e;
+  --text:#f8fafc;--text2:#94a3b8;--text3:#64748b;
+  --hot:#ef4444;--warm:#f59e0b;--cold:#3b82f6;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+/* ── SIDEBAR ── */
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:10}
+.sidebar-logo{padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:9px;display:grid;place-items:center;font-size:16px}
+.sidebar nav{flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;font-size:.88rem;font-weight:500;color:var(--text2);cursor:pointer;transition:.2s;border-left:3px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-item.active{color:var(--c1);background:rgba(99,102,241,.08);border-left-color:var(--c1)}
+.nav-item i{width:18px;text-align:center;font-size:.9rem}
+.sidebar-bottom{padding:20px;border-top:1px solid var(--border);margin-top:auto}
+.sidebar-status{font-size:.75rem;color:var(--text3);display:flex;align-items:center;gap:6px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--c3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* ── MAIN ── */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.topbar-left h1{font-size:1.05rem;font-weight:700}
+.topbar-left p{font-size:.75rem;color:var(--text3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.tb-btn{background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;color:var(--text2);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+.tb-btn:hover{border-color:var(--c1);color:var(--text)}
+.tb-btn.primary{background:linear-gradient(135deg,var(--c1),var(--c2));border-color:transparent;color:#fff}
+.tb-btn.primary:hover{opacity:.9}
+.refresh-btn{width:36px;height:36px;border-radius:8px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;color:var(--text2);font-size:.85rem;transition:.2s}
+.refresh-btn:hover{color:var(--c1);border-color:var(--c1)}
+/* ── CONTENT ── */
+.content{padding:28px;flex:1}
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:.2s;cursor:default}
+.stat-card:hover{border-color:rgba(99,102,241,.3);transform:translateY(-2px)}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.stat-label{font-size:.75rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.stat-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:.85rem}
+.stat-num{font-size:2rem;font-weight:800;line-height:1}
+.stat-change{font-size:.75rem;margin-top:6px;display:flex;align-items:center;gap:4px}
+.up{color:var(--c3)}.down{color:var(--c5)}.neutral{color:var(--text3)}
+/* ── GRID 2COL ── */
+.grid-2{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px}
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-header{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.9rem;font-weight:700}
+.card-actions{display:flex;gap:8px}
+.chip{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:600;border:1px solid var(--border);cursor:pointer;transition:.2s;color:var(--text2)}
+.chip.active,.chip:hover{background:var(--c1);border-color:var(--c1);color:#fff}
+/* ── LEAD TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.83rem;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.badge-hot{background:rgba(239,68,68,.15);color:var(--hot);border:1px solid rgba(239,68,68,.25)}
+.badge-warm{background:rgba(245,158,11,.15);color:var(--warm);border:1px solid rgba(245,158,11,.25)}
+.badge-cold{background:rgba(59,130,246,.15);color:var(--cold);border:1px solid rgba(59,130,246,.25)}
+.badge-confirmed{background:rgba(16,185,129,.15);color:var(--c3);border:1px solid rgba(16,185,129,.25)}
+.score-bar{width:60px;height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;display:inline-block;vertical-align:middle;margin-left:6px}
+.score-fill{height:100%;border-radius:3px;transition:.3s}
+.phone-cell{font-family:monospace;font-size:.8rem;color:var(--text2)}
+/* ── MINI STATS ── */
+.mini-stats{padding:20px;display:flex;flex-direction:column;gap:12px}
+.mini-stat{display:flex;align-items:center;justify-content:space-between}
+.mini-label{font-size:.82rem;color:var(--text2);display:flex;align-items:center;gap:8px}
+.mini-dot{width:9px;height:9px;border-radius:50%}
+.mini-val{font-weight:700;font-size:.9rem}
+.progress-wrap{margin-top:4px;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .8s ease}
+/* ── VISITS ── */
+.visit-list{padding:12px 0;display:flex;flex-direction:column}
+.visit-item{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:14px;transition:.2s}
+.visit-item:last-child{border-bottom:none}
+.visit-item:hover{background:rgba(255,255,255,.02)}
+.visit-avatar{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.visit-info{flex:1;min-width:0}
+.visit-name{font-weight:600;font-size:.88rem}
+.visit-property{font-size:.75rem;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visit-time{font-size:.75rem;color:var(--text3);text-align:right;flex-shrink:0}
+/* ── REVENUE CALCULATOR ── */
+.calc{padding:20px}
+.calc h3{font-size:.9rem;font-weight:700;margin-bottom:16px}
+.calc-row{margin-bottom:14px}
+.calc-label{font-size:.78rem;color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between}
+.calc-label span{font-weight:700;color:var(--text)}
+input[type=range]{width:100%;accent-color:var(--c1);height:4px}
+.calc-result{background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(139,92,246,.1));border:1px solid rgba(99,102,241,.3);border-radius:12px;padding:16px;margin-top:16px;text-align:center}
+.calc-amount{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.calc-sub{font-size:.75rem;color:var(--text2);margin-top:4px}
+/* ── CHART ── */
+.chart-wrap{padding:20px;height:220px;position:relative}
+/* ── FILTER BAR ── */
+.filter-bar{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-box{flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text);font-size:.83rem;outline:none;font-family:'Inter',sans-serif}
+.search-box::placeholder{color:var(--text3)}
+.search-box:focus{border-color:var(--c1)}
+/* ── EMPTY STATE ── */
+.empty{padding:40px;text-align:center;color:var(--text3)}
+.empty i{font-size:2rem;margin-bottom:12px;opacity:.4}
+/* ── MOBILE ── */
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.stats-row{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+/* ── LOADING ── */
+.loading{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--c1);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">🏠</div>PropBot Admin</div>
+  <nav>
+    <div class="nav-item active" onclick="showTab('overview')"><i class="fas fa-chart-pie"></i> Overview</div>
+    <div class="nav-item" onclick="showTab('leads')"><i class="fas fa-users"></i> All Leads</div>
+    <div class="nav-item" onclick="showTab('visits')"><i class="fas fa-calendar-check"></i> Site Visits</div>
+    <div class="nav-item" onclick="showTab('calculator')"><i class="fas fa-calculator"></i> Revenue Calculator</div>
+    <div class="nav-item" onclick="window.open('/')"><i class="fas fa-globe"></i> Landing Page</div>
+    <div class="nav-item" onclick="window.open('/demo-script')"><i class="fas fa-book"></i> Demo Script</div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-status"><span class="status-dot"></span> Bot is Live</div>
+    <div style="font-size:.72rem;color:var(--text3);margin-top:6px" id="lastRefresh">Last refresh: just now</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="pageTitle">Dashboard Overview</h1>
+      <p id="pageDate">Loading...</p>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+      <button class="tb-btn primary" onclick="window.open('https://wa.me/919999999999')"><i class="fab fa-whatsapp"></i> Contact Support</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent">
+
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <!-- Stats -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total Leads</span><div class="stat-icon" style="background:rgba(99,102,241,.15);color:var(--c1)"><i class="fas fa-users"></i></div></div>
+          <div class="stat-num" id="statTotal">—</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> <span>+14% this week</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">🔥 Hot Leads</span><div class="stat-icon" style="background:rgba(239,68,68,.15);color:var(--hot)"><i class="fas fa-fire"></i></div></div>
+          <div class="stat-num" id="statHot" style="color:var(--hot)">—</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> <span>+3 today</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">🌡️ Warm Leads</span><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--warm)"><i class="fas fa-thermometer-half"></i></div></div>
+          <div class="stat-num" id="statWarm" style="color:var(--warm)">—</div>
+          <div class="stat-change neutral"><i class="fas fa-minus"></i> <span>Stable</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Visits Booked</span><div class="stat-icon" style="background:rgba(16,185,129,.15);color:var(--c3)"><i class="fas fa-calendar-check"></i></div></div>
+          <div class="stat-num" id="statVisits" style="color:var(--c3)">—</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> <span>+2 today</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Est. Revenue</span><div class="stat-icon" style="background:rgba(245,158,11,.15);color:var(--c4)"><i class="fas fa-rupee-sign"></i></div></div>
+          <div class="stat-num" id="statRevenue" style="color:var(--c4)">—</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> <span>Pipeline</span></div>
+        </div>
+      </div>
+
+      <!-- Charts + Breakdown -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Lead Activity (7 days)</span></div>
+          <div class="chart-wrap"><canvas id="activityChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Lead Temperature</span></div>
+          <div class="mini-stats" id="tempBreakdown">
+            <div class="mini-stat">
+              <div class="mini-label"><span class="mini-dot" style="background:var(--hot)"></span>Hot Leads</div>
+              <div class="mini-val" id="bHot">—</div>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill" id="pHot" style="background:var(--hot);width:0%"></div></div>
+            <div class="mini-stat" style="margin-top:8px">
+              <div class="mini-label"><span class="mini-dot" style="background:var(--warm)"></span>Warm Leads</div>
+              <div class="mini-val" id="bWarm">—</div>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill" id="pWarm" style="background:var(--warm);width:0%"></div></div>
+            <div class="mini-stat" style="margin-top:8px">
+              <div class="mini-label"><span class="mini-dot" style="background:var(--cold)"></span>Cold Leads</div>
+              <div class="mini-val" id="bCold">—</div>
+            </div>
+            <div class="progress-wrap"><div class="progress-fill" id="pCold" style="background:var(--cold);width:0%"></div></div>
+            <div style="margin-top:20px">
+              <canvas id="tempChart" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Leads + Upcoming Visits -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Leads</span>
+            <div class="card-actions"><div class="chip active" onclick="showTab('leads')">View All →</div></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Budget</th><th>Type</th><th>Score</th><th>Status</th></tr></thead>
+              <tbody id="recentLeadsBody"><tr><td colspan="5" class="empty"><div class="loading"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Upcoming Site Visits</span></div>
+          <div class="visit-list" id="visitList"><div class="empty"><i class="fas fa-calendar"></i><br>Loading visits...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADS TAB -->
+    <div id="tab-leads" style="display:none">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">All Leads <span id="leadsCount" style="color:var(--text3);font-weight:400;font-size:.8rem"></span></span>
+          <div class="card-actions">
+            <div class="chip active" id="filterAll" onclick="filterLeads('all')">All</div>
+            <div class="chip" id="filterHot" onclick="filterLeads('hot')">🔥 Hot</div>
+            <div class="chip" id="filterWarm" onclick="filterLeads('warm')">🌡️ Warm</div>
+            <div class="chip" id="filterCold" onclick="filterLeads('cold')">❄️ Cold</div>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <input class="search-box" type="text" placeholder="Search by name, phone, location..." oninput="searchLeads(this.value)">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Budget</th><th>BHK</th><th>Location</th><th>Timeline</th><th>Score</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody id="allLeadsBody"><tr><td colspan="10" class="empty"><div class="loading"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISITS TAB -->
+    <div id="tab-visits" style="display:none">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Confirmed Site Visits</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Name</th><th>Property</th><th>Location</th><th>Price</th><th>Slot</th><th>BHK</th><th>Status</th></tr></thead>
+            <tbody id="visitsBody"><tr><td colspan="8" class="empty"><div class="loading"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR TAB -->
+    <div id="tab-calculator" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Revenue Calculator</span></div>
+          <div class="calc">
+            <h3>Estimate Your Monthly Earnings with PropBot</h3>
+            <div class="calc-row">
+              <div class="calc-label">Monthly WhatsApp Leads <span id="rLeads">200</span></div>
+              <input type="range" min="50" max="2000" step="50" value="200" oninput="calcRevenue()" id="rLeadsIn">
+            </div>
+            <div class="calc-row">
+              <div class="calc-label">Qualification Rate <span id="rQual">65</span>%</div>
+              <input type="range" min="20" max="90" step="5" value="65" oninput="calcRevenue()" id="rQualIn">
+            </div>
+            <div class="calc-row">
+              <div class="calc-label">Visit-to-Close Rate <span id="rClose">15</span>%</div>
+              <input type="range" min="5" max="40" step="1" value="15" oninput="calcRevenue()" id="rCloseIn">
+            </div>
+            <div class="calc-row">
+              <div class="calc-label">Avg Commission Per Deal <span id="rComm">₹75,000</span></div>
+              <input type="range" min="25000" max="500000" step="5000" value="75000" oninput="calcRevenue()" id="rCommIn">
+            </div>
+            <div class="calc-result">
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:8px">Estimated Monthly Revenue</div>
+              <div class="calc-amount" id="calcResult">₹0</div>
+              <div class="calc-sub" id="calcBreakdown">Calculate using sliders above</div>
+            </div>
+            <div style="margin-top:16px;padding:12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;font-size:.78rem;color:var(--text2)">
+              💡 PropBot subscription cost: ₹5,000–₹30,000/month. ROI is typically <strong style="color:var(--c3)">10-30x</strong> in the first month.
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">ROI Breakdown</span></div>
+          <div class="calc" id="roiBreakdown">
+            <div style="display:flex;flex-direction:column;gap:14px" id="roiRows"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let allLeads=[],allVisits=[],currentFilter='all',chartInstance=null,tempChartInstance=null;
+
+// ── Init ────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('pageDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  refreshData();
+  calcRevenue();
+});
+
+async function refreshData(){
+  try{
+    const [leadsRes,visitsRes,statsRes,sessionsRes]=await Promise.all([
+      fetch('/api/leads').then(r=>r.json()),
+      fetch('/api/visits').then(r=>r.json()),
+      fetch('/api/stats').then(r=>r.json()),
+      fetch('/api/sessions').then(r=>r.json())
+    ]);
+    // Merge live sessions into leads for real-time view
+    const liveSessions=(sessionsRes.sessions||[])
+      .filter(s=>s.name&&s.step!=='start')
+      .map(s=>({
+        timestamp:new Date().toISOString(),
+        phone:s.phone||'',
+        name:s.name||'',
+        budget:s.budget||'',
+        bhk:s.bhk||'',
+        location:s.location||'',
+        timeline:s.timeline||'',
+        purpose:s.purpose||'',
+        leadScore:s.leadScore||0,
+        leadTemp:s.leadTemp||'cold',
+        notes:'🟢 LIVE on bot right now — Step: '+s.step
+      }));
+    const sheetLeads=leadsRes.leads||[];
+    // Show live sessions at top, then sheet leads (avoid duplicates by phone)
+    const sheetPhones=new Set(sheetLeads.map(l=>l.phone));
+    const newLive=liveSessions.filter(s=>!sheetPhones.has(s.phone));
+    allLeads=[...newLive,...sheetLeads];
+    allVisits=visitsRes.visits||[];
+    // Update stats to include live sessions
+    const liveHot=liveSessions.filter(s=>s.leadTemp==='hot').length;
+    const liveWarm=liveSessions.filter(s=>s.leadTemp==='warm').length;
+    statsRes.total=(statsRes.total||0)+newLive.length;
+    statsRes.hot=(statsRes.hot||0)+liveHot;
+    statsRes.warm=(statsRes.warm||0)+liveWarm;
+    updateStats(statsRes);
+    renderRecentLeads();
+    renderAllLeads();
+    renderVisits();
+    renderVisitList();
+    renderCharts(statsRes);
+    document.getElementById('lastRefresh').textContent='Last refresh: '+new Date().toLocaleTimeString('en-IN');
+    // Show live badge if anyone is on bot right now
+    if(liveSessions.length>0){
+      document.getElementById('pageTitle').textContent='Dashboard Overview 🟢 '+liveSessions.length+' LIVE';
+    }
+  }catch(e){console.error(e);}
+}
+
+function updateStats(s){
+  document.getElementById('statTotal').textContent=s.total||0;
+  document.getElementById('statHot').textContent=s.hot||0;
+  document.getElementById('statWarm').textContent=s.warm||0;
+  document.getElementById('statVisits').textContent=s.visits||0;
+  const rev=(s.hot||0)*75000+(s.warm||0)*25000;
+  document.getElementById('statRevenue').textContent='₹'+formatNum(rev);
+  const t=s.total||1;
+  document.getElementById('bHot').textContent=s.hot||0;
+  document.getElementById('bWarm').textContent=s.warm||0;
+  document.getElementById('bCold').textContent=s.cold||0;
+  document.getElementById('pHot').style.width=((s.hot||0)/t*100)+'%';
+  document.getElementById('pWarm').style.width=((s.warm||0)/t*100)+'%';
+  document.getElementById('pCold').style.width=((s.cold||0)/t*100)+'%';
+}
+
+function renderCharts(s){
+  // Activity Chart
+  const actCtx=document.getElementById('activityChart').getContext('2d');
+  if(chartInstance)chartInstance.destroy();
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const data=[12,19,8,24,17,31,22];
+  chartInstance=new Chart(actCtx,{
+    type:'bar',
+    data:{
+      labels:days,
+      datasets:[{label:'Leads',data,backgroundColor:'rgba(99,102,241,.6)',borderRadius:6,borderSkipped:false}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+      x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#64748b',font:{size:11}}},
+      y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#64748b',font:{size:11}}}
+    }}
+  });
+  // Temp Doughnut
+  const tempCtx=document.getElementById('tempChart').getContext('2d');
+  if(tempChartInstance)tempChartInstance.destroy();
+  tempChartInstance=new Chart(tempCtx,{
+    type:'doughnut',
+    data:{
+      labels:['Hot','Warm','Cold'],
+      datasets:[{data:[s.hot||0,s.warm||0,s.cold||0],backgroundColor:['#ef4444','#f59e0b','#3b82f6'],borderWidth:0,hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},cutout:'65%'}
+  });
+}
+
+function renderRecentLeads(){
+  const tb=document.getElementById('recentLeadsBody');
+  const recent=allLeads.slice(-6).reverse();
+  if(!recent.length){tb.innerHTML='<tr><td colspan="5" class="empty" style="padding:20px;text-align:center;color:var(--text3)">No leads yet</td></tr>';return;}
+  tb.innerHTML=recent.map(l=>`
+    <tr>
+      <td><strong>${l.name||'—'}</strong></td>
+      <td style="font-size:.78rem;color:var(--text2)">${formatBudget(l.budget)}</td>
+      <td style="font-size:.78rem">${l.bhk||'—'}</td>
+      <td>${scoreBar(l.leadScore,l.leadTemp)}</td>
+      <td><span class="badge badge-${l.leadTemp||'cold'}">${tempIcon(l.leadTemp)} ${(l.leadTemp||'cold').toUpperCase()}</span></td>
+    </tr>`).join('');
+}
+
+function renderAllLeads(filter='all',search=''){
+  const tb=document.getElementById('allLeadsBody');
+  let leads=[...allLeads].reverse();
+  if(filter!=='all')leads=leads.filter(l=>l.leadTemp===filter);
+  if(search)leads=leads.filter(l=>(l.name+l.phone+l.location).toLowerCase().includes(search.toLowerCase()));
+  document.getElementById('leadsCount').textContent=`(${leads.length} results)`;
+  if(!leads.length){tb.innerHTML='<tr><td colspan="10" class="empty" style="padding:20px;text-align:center;color:var(--text3)">No leads found</td></tr>';return;}
+  tb.innerHTML=leads.map((l,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong>${l.name||'—'}</strong></td>
+      <td class="phone-cell">${(l.phone||'').replace('whatsapp:','')}</td>
+      <td style="font-size:.78rem;color:var(--text2)">${formatBudget(l.budget)}</td>
+      <td style="font-size:.78rem">${l.bhk||'—'}</td>
+      <td style="font-size:.78rem;color:var(--text2)">${l.location||'—'}</td>
+      <td style="font-size:.78rem;color:var(--text2)">${formatTimeline(l.timeline)}</td>
+      <td>${scoreBar(l.leadScore,l.leadTemp)}</td>
+      <td><span class="badge badge-${l.leadTemp||'cold'}">${tempIcon(l.leadTemp)} ${(l.leadTemp||'cold').toUpperCase()}</span></td>
+      <td style="font-size:.75rem;color:var(--text3)">${formatDate(l.timestamp)}</td>
+    </tr>`).join('');
+}
+
+function renderVisits(){
+  const tb=document.getElementById('visitsBody');
+  if(!allVisits.length){tb.innerHTML='<tr><td colspan="8" class="empty" style="padding:20px;text-align:center;color:var(--text3)">No visits booked yet</td></tr>';return;}
+  tb.innerHTML=allVisits.map((v,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong>${v.name||'—'}</strong></td>
+      <td style="font-size:.78rem">${v.property||'—'}</td>
+      <td style="font-size:.78rem;color:var(--text2)">${v.location||'—'}</td>
+      <td style="font-size:.78rem;color:var(--c3)">${v.price||'—'}</td>
+      <td style="font-size:.78rem"><i class="fas fa-calendar" style="color:var(--c1);margin-right:5px"></i>${v.slot||'—'}</td>
+      <td style="font-size:.78rem">${v.bhk||'—'}</td>
+      <td><span class="badge badge-confirmed">✅ ${v.status||'Confirmed'}</span></td>
+    </tr>`).join('');
+}
+
+const avatarColors=['linear-gradient(135deg,#6366f1,#8b5cf6)','linear-gradient(135deg,#10b981,#059669)','linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#f43f5e,#e11d48)'];
+function renderVisitList(){
+  const el=document.getElementById('visitList');
+  if(!allVisits.length){el.innerHTML='<div class="empty"><i class="fas fa-calendar"></i><br>No visits yet</div>';return;}
+  el.innerHTML=allVisits.slice(0,5).map((v,i)=>`
+    <div class="visit-item">
+      <div class="visit-avatar" style="background:${avatarColors[i%4]}">${(v.name||'?').charAt(0)}</div>
+      <div class="visit-info">
+        <div class="visit-name">${v.name||'Unknown'}</div>
+        <div class="visit-property">${v.property||'Property'}</div>
+      </div>
+      <div class="visit-time">${v.slot?v.slot.split('—')[1].trim():'TBD'}<br><span style="font-size:.68rem;color:var(--text3)">${v.slot?v.slot.split(',')[0].trim():''}</span></div>
+    </div>`).join('');
+}
+
+// ── Tab Navigation ───────────────────────────────────────────────────────────
+const tabTitles={overview:'Dashboard Overview',leads:'All Leads',visits:'Site Visit Calendar',calculator:'Revenue Calculator'};
+function showTab(tab){
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.style.display='none');
+  document.getElementById('tab-'+tab).style.display='block';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
+  document.getElementById('pageTitle').textContent=tabTitles[tab]||tab;
+}
+
+// ── Filters ──────────────────────────────────────────────────────────────────
+function filterLeads(f){
+  currentFilter=f;
+  ['all','hot','warm','cold'].forEach(x=>document.getElementById('filter'+capitalize(x)).classList.toggle('active',x===f));
+  renderAllLeads(f,document.querySelector('.search-box')?.value||'');
+}
+function searchLeads(v){renderAllLeads(currentFilter,v);}
+
+// ── Revenue Calculator ───────────────────────────────────────────────────────
+function calcRevenue(){
+  const leads=+document.getElementById('rLeadsIn').value;
+  const qual=+document.getElementById('rQualIn').value/100;
+  const close=+document.getElementById('rCloseIn').value/100;
+  const comm=+document.getElementById('rCommIn').value;
+  document.getElementById('rLeads').textContent=leads;
+  document.getElementById('rQual').textContent=Math.round(qual*100);
+  document.getElementById('rClose').textContent=Math.round(close*100);
+  document.getElementById('rComm').textContent='₹'+formatNum(comm);
+  const qualified=Math.floor(leads*qual);
+  const closed=Math.floor(qualified*close);
+  const revenue=closed*comm;
+  document.getElementById('calcResult').textContent='₹'+formatNum(revenue);
+  document.getElementById('calcBreakdown').textContent=`${leads} leads → ${qualified} qualified → ${closed} deals closed`;
+  document.getElementById('roiRows').innerHTML=`
+    <div style="padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">Monthly Leads</div>
+      <div style="font-size:1.4rem;font-weight:800">${leads.toLocaleString()}</div>
+    </div>
+    <div style="padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">Qualified by Bot</div>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--warm)">${qualified.toLocaleString()}</div>
+    </div>
+    <div style="padding:14px;background:var(--card);border:1px solid var(--border);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">Deals Closed</div>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--hot)">${closed.toLocaleString()}</div>
+    </div>
+    <div style="padding:14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">Monthly Revenue</div>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--c3)">₹${formatNum(revenue)}</div>
+    </div>
+    <div style="padding:14px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">PropBot Cost (Pro)</div>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--c1)">₹15,000</div>
+    </div>
+    <div style="padding:14px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(16,185,129,.1));border:1px solid rgba(99,102,241,.3);border-radius:10px">
+      <div style="font-size:.75rem;color:var(--text3)">Net ROI</div>
+      <div style="font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent">${revenue>0?Math.round((revenue-15000)/15000*100):0}x</div>
+    </div>`;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function formatNum(n){if(n>=10000000)return(n/10000000).toFixed(1)+'Cr';if(n>=100000)return(n/100000).toFixed(1)+'L';if(n>=1000)return(n/1000).toFixed(0)+'K';return n.toString();}
+function formatBudget(b){const m={under_50L:'Under 50L','50L_1Cr':'50L–1Cr','1Cr_2Cr':'1Cr–2Cr',above_2Cr:'2Cr+'};return m[b]||b||'—';}
+function formatTimeline(t){const m={immediate:'Immediate','1_3months':'1-3 months','3_6months':'3-6 months',just_looking:'Just looking'};return m[t]||t||'—';}
+function formatDate(ts){if(!ts)return'—';try{return new Date(ts).toLocaleDateString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return ts;}}
+function tempIcon(t){return{hot:'🔥',warm:'🌡️',cold:'❄️'}[t]||'❄️';}
+function capitalize(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function scoreBar(score,temp){
+  const s=parseInt(score)||0;
+  const c={hot:'var(--hot)',warm:'var(--warm)',cold:'var(--cold)'}[temp]||'var(--cold)';
+  return `<span style="font-weight:700">${s}</span><div class="score-bar"><div class="score-fill" style="width:${s*10}%;background:${c}"></div></div>`;
+}
+</script>
+</body>
+</html>

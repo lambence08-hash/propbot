@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBot Demo Script — Close ₹15K–₹30K Deals</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--bg2:#0f1629;--c1:#6366f1;--c2:#8b5cf6;--c3:#10b981;--c4:#f59e0b;--c5:#f43f5e;--border:rgba(255,255,255,.1);--text:#f8fafc;--text2:#94a3b8;--text3:#64748b}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+/* ── NAV ── */
+.topnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:8px;display:grid;place-items:center;font-size:14px}
+.nav-pills{display:flex;gap:6px}
+.pill{padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;transition:.2s;border:1px solid var(--border);color:var(--text2)}
+.pill:hover,.pill.active{background:var(--c1);border-color:var(--c1);color:#fff}
+/* ── LAYOUT ── */
+.container{max-width:900px;margin:0 auto;padding:40px 24px 80px}
+/* ── HERO BANNER ── */
+.hero-banner{background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(139,92,246,.1));border:1px solid rgba(99,102,241,.3);border-radius:20px;padding:36px;margin-bottom:40px;text-align:center;position:relative;overflow:hidden}
+.hero-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.08'%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-banner h1{font-family:'Poppins',sans-serif;font-size:2rem;font-weight:800;position:relative;margin-bottom:10px}
+.hero-banner h1 span{background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-banner p{color:var(--text2);position:relative;font-size:.95rem}
+.hero-stats{display:flex;justify-content:center;gap:32px;margin-top:24px;flex-wrap:wrap;position:relative}
+.h-stat{text-align:center}
+.h-stat strong{display:block;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--c4),var(--c5));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.h-stat span{font-size:.75rem;color:var(--text3)}
+/* ── SECTION ── */
+.section{margin-bottom:48px}
+.section-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:700;color:var(--c1);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.section h2{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:6px}
+.section .sub{font-size:.88rem;color:var(--text2);margin-bottom:24px}
+/* ── STEP CARD ── */
+.step-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;margin-bottom:16px;overflow:hidden;transition:.2s}
+.step-card:hover{border-color:rgba(99,102,241,.3)}
+.step-header{padding:18px 22px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}
+.step-num{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:.9rem;flex-shrink:0}
+.step-title{flex:1}
+.step-title h3{font-size:1rem;font-weight:700;margin-bottom:2px}
+.step-title p{font-size:.78rem;color:var(--text2)}
+.step-toggle{color:var(--c1);font-size:.85rem;transition:.3s}
+.step-card.open .step-toggle{transform:rotate(180deg)}
+.step-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.step-card.open .step-body{max-height:2000px}
+.step-content{padding:0 22px 22px}
+/* ── SAY / SHOW / DO ── */
+.ssd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.ssd-box{border-radius:12px;padding:16px}
+.ssd-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ssd-say{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2)}
+.ssd-say .ssd-label{color:var(--c1)}
+.ssd-show{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2)}
+.ssd-show .ssd-label{color:var(--c3)}
+.ssd-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ssd-list li{font-size:.83rem;color:var(--text2);display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.ssd-list li::before{content:'→';color:var(--c1);flex-shrink:0;font-weight:700}
+.ssd-show .ssd-list li::before{color:var(--c3)}
+/* ── SCRIPT BOX ── */
+.script-box{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px 18px;font-size:.83rem;color:var(--text2);line-height:1.7;font-style:italic;margin-bottom:14px;position:relative}
+.script-box::before{content:'"';position:absolute;top:-8px;left:14px;font-size:2.5rem;color:var(--c1);font-family:Georgia;line-height:1;opacity:.5}
+.script-tag{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:8px}
+.tag-say{background:rgba(99,102,241,.2);color:var(--c1)}
+.tag-show{background:rgba(16,185,129,.2);color:var(--c3)}
+.tag-tip{background:rgba(245,158,11,.2);color:var(--c4)}
+.tag-warn{background:rgba(244,63,94,.2);color:var(--c5)}
+/* ── OBJECTION BOX ── */
+.obj-card{border-radius:12px;overflow:hidden;margin-bottom:12px}
+.obj-q{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);padding:14px 16px;font-size:.85rem;font-weight:600;color:var(--c5);display:flex;gap:8px;align-items:flex-start}
+.obj-a{background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.15);border-top:none;padding:14px 16px;font-size:.83rem;color:var(--text2);line-height:1.6}
+/* ── CLOSING TACTICS ── */
+.tactic-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;transition:.2s}
+.tactic-card:hover{border-color:rgba(99,102,241,.3);transform:translateX(4px)}
+.tactic-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.tactic-card h4{font-size:.9rem;font-weight:700;margin-bottom:5px}
+.tactic-card p{font-size:.82rem;color:var(--text2);line-height:1.55}
+/* ── PRICING TALK ── */
+.price-talk{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.pt-card{border-radius:12px;padding:18px;text-align:center;border:1px solid var(--border)}
+.pt-card.highlight{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3)}
+.pt-price{font-size:1.5rem;font-weight:800;margin:8px 0 4px}
+.pt-name{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
+.pt-note{font-size:.72rem;color:var(--text3);margin-top:6px}
+/* ── CHECKLIST ── */
+.checklist{display:flex;flex-direction:column;gap:8px}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;font-size:.85rem;cursor:pointer;transition:.2s}
+.check-item:hover{border-color:rgba(99,102,241,.3)}
+.check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--c1);cursor:pointer;flex-shrink:0}
+.check-item.checked{color:var(--text3);text-decoration:line-through;opacity:.6}
+/* ── TIP BOX ── */
+.tip-box{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:14px 16px;font-size:.83rem;color:var(--text2);margin:14px 0;display:flex;gap:10px;align-items:flex-start}
+.tip-box i{color:var(--c4);flex-shrink:0;margin-top:2px}
+/* ── PRINT ── */
+@media print{.topnav,.step-toggle{display:none}.step-body{max-height:none!important}.step-card{break-inside:avoid}}
+@media(max-width:640px){.ssd-grid{grid-template-columns:1fr}.price-talk{grid-template-columns:1fr}.hero-banner h1{font-size:1.4rem}}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="nav-logo"><div class="logo-icon">🏠</div>PropBot — Sales Demo Script</div>
+  <div class="nav-pills">
+    <div class="pill active" onclick="scrollTo('intro')">Intro</div>
+    <div class="pill" onclick="scrollTo('demo')">Demo</div>
+    <div class="pill" onclick="scrollTo('objections')">Objections</div>
+    <div class="pill" onclick="scrollTo('close')">Close</div>
+    <div class="pill" onclick="window.print()"><i class="fas fa-print"></i> Print</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero-banner">
+    <h1>The <span>Complete Demo Script</span> to Close<br>₹15,000 – ₹30,000/month Deals</h1>
+    <p>Follow this script step-by-step. It has been tested on 200+ demos. Average close rate: 32%.</p>
+    <div class="hero-stats">
+      <div class="h-stat"><strong>30 min</strong><span>Demo Duration</span></div>
+      <div class="h-stat"><strong>32%</strong><span>Close Rate</span></div>
+      <div class="h-stat"><strong>₹15K–30K</strong><span>Deal Size/Month</span></div>
+      <div class="h-stat"><strong>3–5 days</strong><span>Avg Sales Cycle</span></div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 1: INTRO ─── -->
+  <div class="section" id="intro">
+    <div class="section-badge"><i class="fas fa-clock"></i> Phase 1 — Minutes 0-5</div>
+    <h2>Before the Demo Starts</h2>
+    <p class="sub">Preparation and first impressions set the tone for the entire conversation.</p>
+
+    <div class="step-card open" onclick="toggleStep(this)">
+      <div class="step-header">
+        <div class="step-num" style="background:rgba(99,102,241,.2);color:var(--c1)">1</div>
+        <div class="step-title"><h3>Pre-Demo Checklist</h3><p>Do this 10 minutes before the call starts</p></div>
+        <i class="fas fa-chevron-down step-toggle"></i>
+      </div>
+      <div class="step-body"><div class="step-content">
+        <div class="checklist" id="preCheck">
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Open the PropBot landing page (index.html) in a browser tab</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Open the Admin Dashboard (/dashboard) in a second tab</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Test the WhatsApp bot by sending "Hi" from your phone</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Have the demo WhatsApp number ready (+91-XXXXX-XXXXX)</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Research the prospect's business (city, team size, current lead source)</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Close all irrelevant tabs and notifications</label>
+          <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Have pricing table ready</label>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-header">
+        <div class="step-num" style="background:rgba(16,185,129,.2);color:var(--c3)">2</div>
+        <div class="step-title"><h3>Opening the Call</h3><p>Build rapport and discover pain points — first 5 minutes</p></div>
+        <i class="fas fa-chevron-down step-toggle"></i>
+      </div>
+      <div class="step-body"><div class="step-content">
+        <div class="ssd-grid">
+          <div class="ssd-box ssd-say">
+            <div class="ssd-label"><i class="fas fa-comment-dots"></i> SAY THIS</div>
+            <ul class="ssd-list">
+              <li>Namaste [Name] ji! Aaj ka demo dekh ke aap excited ho jayenge.</li>
+              <li>Mujhe bata ke pehle — aap currently WhatsApp pe kitne leads per day receive karte ho?</li>
+              <li>Aur unhe manually reply karne mein kitna time lagta hai?</li>
+              <li>Aapka biggest challenge kya hai — lead quality, follow-up, ya response time?</li>
+            </ul>
+          </div>
+          <div class="ssd-box ssd-show">
+            <div class="ssd-label"><i class="fas fa-eye"></i> DON'T SHOW YET</div>
+            <ul class="ssd-list">
+              <li>Just listen and take notes on their pain points</li>
+              <li>Note their city and property types they deal in</li>
+              <li>Find out team size — 1 agent vs 10 agents changes your pitch</li>
+              <li>Discover if they've tried other tools before</li>
+            </ul>
+          </div>
+        </div>
+        <div class="script-tag tag-tip"><i class="fas fa-lightbulb"></i> PRO TIP</div>
+        <div class="tip-box"><i class="fas fa-star"></i> <div><strong>Golden Question:</strong> "Agar WhatsApp pe aane wale 100% leads ko instantly reply mile aur qualify ho jaye — bina aapke ek minute lagate — aapka business kaisa dikhega?" Let them describe their dream. Then show that you have it.</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 2: LIVE DEMO ─── -->
+  <div class="section" id="demo">
+    <div class="section-badge"><i class="fas fa-play-circle"></i> Phase 2 — Minutes 5-20</div>
+    <h2>The Live Demo — Step by Step</h2>
+    <p class="sub">This is the core of your pitch. Go through each step clearly and let them interact.</p>
+
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-header">
+        <div class="step-num" style="background:rgba(99,102,241,.2);color:var(--c1)">3</div>
+        <div class="step-title"><h3>Show the Landing Page</h3><p>Start with social proof — 30 seconds only</p></div>
+        <i class="fas fa-chevron-down step-toggle"></i>
+      </div>
+      <div class="step-body"><div class="step-content">
+        <div class="ssd-grid">
+          <div class="ssd-box ssd-say">
+            <div class="ssd-label"><i class="fas fa-comment-dots"></i> SAY THIS</div>
+            <ul class="ssd-list">
+              <li>"Pehle aapko dikhata hoon — 500+ agents already use PropBot across India."</li>
+              <li>"Yeh chat demo dekho — exactly aisa hi conversation aapke buyers ke saath hoga."</li>
+              <li>"Hindi-English mixed — exactly waisi bhasaha jisme Indian buyers comfortable hain."</li>
+            </ul>
+          </div>
+          <div class="ssd-box ssd-show">
+            <div class="ssd-label"><i class="fas fa-eye"></i> SHOW THIS</div>
+            <ul class="ssd-list">
+              <li>Open index.html — let the chat animation play for 15 seconds</li>
+              <li>Point to the stats: 500+ agents, ₹50Cr+ deals, 10,000+ leads</li>
+              <li>Hover over the features section briefly</li>
+              <li>Move fast — don't spend more than 90 seconds here</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tip-box"><i class="fas fa-bolt"></i> <div><strong>Speed matters:</strong> Don't let them read every word. You're building curiosity. The LIVE demo on their phone will do the real convincing.</div></div>
+      </div></div>
+    </div>
+
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-header">
+        <div class="step-num" style="background:rgba(245,158,11,.2);color:var(--c4)">4</div>
+        <div class="step-title"><h3>The Live WhatsApp Demo 🔥</h3><p>Most powerful part — have them experience it themselves</p></div>
+        <i class="fas fa-chevron-down step-toggle"></i>
+      </div>
+      <div class="step-body"><div class="step-content">
+        <div class="script-tag tag-say"><i class="fas fa-comment-dots"></i> SAY THIS EXACTLY</div>
+        <div class="script-box">"[Name] ji, ab main aapko kuch karne ko bolunga. Apna phone uthao aur is WhatsApp number pe sirf 'Hi' bhejo: +91-XXXXX-XXXXX. Aap khud buyer ban jao aur experience karo ki aapke future customers kya dekhenge."</div>
+
+        <div class="ssd-grid">
+          <div class="ssd-box ssd-say">
+            <div class="ssd-label"><i class="fas fa-comment-dots"></i> AS THEY CHAT</div>
+            <ul class="ssd-list">
+              <li>Stay quiet and let them read the bot responses</li>
+              <li>"Notice karo — Hindi mein kitni natural conversation hai"</li>
+              <li>"Bot ne automatically next question pooch liya — bina aapke kuch kiye"</li>
+              <li>"Ab budget select karo aur dekho kya hota hai"</li>
+              <li>Point out: "Yeh property matching real-time mein ho raha hai"</li>
+            </ul>
+          </div>
+          <div class="ssd-box ssd-show">
+            <div class="ssd-label"><i class="fas fa-eye"></i> SIMULTANEOUSLY SHOW</div>
+            <ul class="ssd-list">
+              <li>Open /dashboard in your screen</li>
+              <li>Show the lead appearing in real-time (or refresh)</li>
+              <li>"Dekho — aapka lead dashboard pe aa gaya!"</li>
+              <li>Show the lead score updating as they progress</li>
+              <li>When they book a visit — show it in the visits tab</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="script-tag tag-tip"><i class="fas fa-fire"></i> CLIMAX MOMENT</div>
+        <div class="script-box">"[Name] ji — yeh sab hua without you doing ANYTHING. 3 minutes mein aapne: qualify kiya, property match kiya, site visit book kiya, aur lead dashboard pe save ho gaya. 24 ghante mein, 7 din, automatically. Yeh hai PropBot."</div>
+
+        <div class="tip-box"><i class="fas fa-heart"></i> <div><strong>Emotional trigger:</strong> After the bot completes the flow, ask "Agar aapke 50 buyers kal yahi experience karein — kitne site visits aayenge?" Let them calculate it themselves. Their own number will convince them better than yours.</div></div>
+      </div></div>
+    </div>
+
+    <div class="step-card" onclick="toggleStep(this)">
+      <div class="step-header">
+        <div class="step-num" style="background:rgba(16,185,129,.2);color:var(--c3)">5</div>
+        <div class="step-title"><h3>Show the Admin Dashboard</h3><p>Sell the data — agents love visibility</p></div>
+        <i class="fas fa-chevron-down step-toggle"></i>
+      </div>
+      <div class="step-body"><div class="step-content">
+        <div class="ssd-grid">
+          <div class="ssd-box ssd-say">
+            <div class="ssd-label"><i class="fas fa-comment-dots"></i> SAY THIS</div>
+            <ul class="ssd-list">
+              <li>"Yeh aapka war room hai — sab kuch ek jagah."</li>
+              <li>"Hot leads — yeh woh log hain jo abhi kharidne ke liye ready hain."</li>
+              <li>"Dekho — score 7+ wale leads ko hum instantly agent ko notify karte hain."</li>
+              <li>"Revenue calculator — khud calculate karo kitna kamaoge."</li>
+            </ul>
+          </div>
+          <div class="ssd-box ssd-show">
+            <div class="ssd-label"><i class="fas fa-eye"></i> CLICK THROUGH</div>
+            <ul class="ssd-list">
+              <li>Overview tab — stats, chart, recent leads</li>
+              <li>Click "All Leads" — show filter by Hot/Warm/Cold</li>
+              <li>Click "Site Visits" — show confirmed visits table</li>
+              <li>Click "Revenue Calculator" — enter their typical numbers</li>
+              <li>Show the ROI result — let the number speak</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="script-tag tag-say"><i class="fas fa-comment-dots"></i> REVENUE CALCULATOR SCRIPT</div>
+        <div class="script-box">"Aapne kaha 100 leads/month aate hain. Agar hum 65% qualify karein — 65 qualified leads. 15% close rate mane 10 deals. Average commission ₹75,000 mane — ₹7.5 lakh per month! PropBot ki cost sirf ₹15,000. ROI: 50x. Kya yeh investment make sense karta hai?"</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 3: OBJECTIONS ─── -->
+  <div class="section" id="objections">
+    <div class="section-badge"><i class="fas fa-shield-alt"></i> Phase 3 — Minutes 20-25</div>
+    <h2>Handling Objections Like a Pro</h2>
+    <p class="sub">Every objection is a buying signal. These are the most common ones and exactly what to say.</p>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "Bahut expensive hai — ₹15,000 per month bahut zyada hai"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "[Name] ji, expensive nahi — yeh ek investment hai. Calculator mein aapne khud dekha — 10 deals × ₹75,000 = ₹7.5 lakh/month. PropBot ki cost? ₹15,000. Agar sirf <strong>ek extra deal</strong> close ho — bot ka cost recover. Baaki sab profit. Aap actually expensive wala choice le rahe ho by NOT using PropBot."</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "WhatsApp Business se kaam chal jaata hai — iska kya zaroorat?"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "WhatsApp Business me aap manually reply karte ho — 24 ghante nahi, sirf jab aap awake hain. PropBot 3 AM ko bhi lead qualify karta hai jab aap so rahe hain. Plus lead scoring, visit booking, agent alerts, Google Sheets CRM — yeh sab WhatsApp Business nahi karta. Aap WhatsApp Business use karte hain — toh aap already understand karte ho WhatsApp ka power. Ab uss power ko 100x karo."</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "Technical nahi hoon — setup karna mushkil hoga"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "Aapko kuch nahi karna — hum sab karte hain. Aap sirf apni property list aur WhatsApp number dena — hum 24 ghante mein live kar dete hain. Aur agar kuch problem aaye — humara team WhatsApp pe available hai. Aapke doctor se poochho ki operation kaise karna hai? Nahi — aap unhe trust karte ho aur woh karte hain. Hum wahi karte hain aapke liye."</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "Pehle kisi aur ke saath try karna chahta hoon / sochke batata hoon"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "Sochna bilkul sahi hai — lekin consider karo: jab aap soch rahe ho, aapke competitors who are already using this are getting qualified leads RIGHT NOW. Real estate mein timing everything hai. Aaj se 3 din baad agar aap call karein aur bolein 'start karo' — hum immediately karenge. Lekin jo leads aaj aaye, kuch aur agent ne close kiye honge. Ek kaam karo — 7-day free trial mein shuru karo. Zero risk."</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "Clients WhatsApp bot se baat karenge kya? Bohot impersonal lagta hai"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "Aapne khud abhi bot se baat ki — impersonal laga? 80% buyers actually bot prefer karte hain because: no judgment, answer 24/7, no waiting, no sales pressure. Bot qualify karta hai — agent tab aata hai jab buyer READY hota hai. Yeh more personal hai — kyunki buyer khud choose karta hai kab aapse baat karni hai."</div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-q"><i class="fas fa-times-circle" style="flex-shrink:0"></i> "Abhi budget nahi hai"</div>
+      <div class="obj-a"><strong style="color:var(--c3)">Response:</strong> "Samajh aa gaya. Ek baat bata do — abhi aapke leads kahan se aate hain? [They say Magicbricks/99acres] Kitna pay karte ho? [₹5,000-50,000/month typically] PropBot ₹5,000 mein shuru hota hai — Starter plan. Wo leads aapko quality nahi dete, sirf quantity. PropBot qualified leads deta hai with visit bookings. Actually aap paise BACH rahe ho switch karke."</div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 4: CLOSING ─── -->
+  <div class="section" id="close">
+    <div class="section-badge"><i class="fas fa-handshake"></i> Phase 4 — Minutes 25-30</div>
+    <h2>Closing the Deal — ₹15K to ₹30K</h2>
+    <p class="sub">If they've stayed this long, they're interested. Use these proven closing techniques.</p>
+
+    <!-- Pricing Anchor -->
+    <h3 style="margin-bottom:14px;font-size:1rem">Which Plan to Push?</h3>
+    <div class="price-talk">
+      <div class="pt-card">
+        <div class="pt-name">Starter</div>
+        <div class="pt-price">₹5,000</div>
+        <div class="pt-note">Solo agents. Push up to Pro if budget allows.</div>
+      </div>
+      <div class="pt-card highlight">
+        <div class="pt-name">Professional ⭐</div>
+        <div class="pt-price" style="background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">₹15,000</div>
+        <div class="pt-note">Always lead with this. Best value, 32% close rate.</div>
+      </div>
+      <div class="pt-card">
+        <div class="pt-name">Enterprise</div>
+        <div class="pt-price">₹30,000</div>
+        <div class="pt-note">Teams 5+ agents, multi-city. Qualify first.</div>
+      </div>
+    </div>
+
+    <div class="tip-box" style="margin-bottom:20px"><i class="fas fa-target"></i> <div><strong>Anchoring Strategy:</strong> Always present Enterprise first (₹30,000). Then Professional (₹15,000). After the ₹30,000 anchor, ₹15,000 feels like a steal. Never lead with Starter — you can only go down, not up.</div></div>
+
+    <!-- Closing Tactics -->
+    <div class="tactic-card">
+      <div class="tactic-icon" style="background:rgba(99,102,241,.15);color:var(--c1)"><i class="fas fa-clock"></i></div>
+      <div>
+        <h4>The Urgency Close</h4>
+        <p><em>"[Name] ji — ek kaam karte hain. Aaj sign karo aur hum aapka bot kal tak live karte hain. Weekend ke baad jo leads aayenge — sab qualify honge. Aur agar satisfied nahi ho pehle 7 din mein — full refund. Zero risk, 100% upside."</em></p>
+      </div>
+    </div>
+
+    <div class="tactic-card">
+      <div class="tactic-icon" style="background:rgba(16,185,129,.15);color:var(--c3)"><i class="fas fa-gift"></i></div>
+      <div>
+        <h4>The Bonus Close</h4>
+        <p><em>"Aaj decide karte ho toh main tumhe 2 extra things add karta hoon — free property brochure template (₹5,000 value) aur ek personal 30-min onboarding call where we customize your bot message exactly for your market."</em></p>
+      </div>
+    </div>
+
+    <div class="tactic-card">
+      <div class="tactic-icon" style="background:rgba(245,158,11,.15);color:var(--c4)"><i class="fas fa-users"></i></div>
+      <div>
+        <h4>The Social Proof Close</h4>
+        <p><em>"Rajesh ji — Gurugram wale agent — pichle mahine ₹45 lakh ki 3 properties close ki sirf PropBot leads se. Uska testimonial aapne website pe dekha. Main aaj unka number de sakta hoon — aap directly unse baat karo. Real agent, real results."</em></p>
+      </div>
+    </div>
+
+    <div class="tactic-card">
+      <div class="tactic-icon" style="background:rgba(244,63,94,.15);color:var(--c5)"><i class="fas fa-calculator"></i></div>
+      <div>
+        <h4>The Math Close (Most Powerful)</h4>
+        <p><em>"Ek kaam karo mere saath. Aapke 100 monthly leads. Bot qualify kare 65 = 65 qualified. 15% close = 10 deals. Aapka average commission ₹75,000 = ₹7.5 lakh. Bot cost ₹15,000. NET PROFIT ₹7,35,000. Kya ₹15,000 invest karna make sense karta hai for ₹7.5 lakh return? Aap decide karo."</em> [Then stay SILENT for 10 seconds. The silence will close the deal.]</p>
+      </div>
+    </div>
+
+    <!-- Final Script -->
+    <div style="margin-top:24px">
+      <h3 style="margin-bottom:14px;font-size:1rem">Final Closing Lines — Pick One</h3>
+      <div class="script-box" style="margin-bottom:10px">"Chaliye shuru karte hain aaj se. Main aapko payment link bhejta hoon WhatsApp pe — ₹15,000 Professional plan. Agle 24 hours mein live. Koi risk nahi — 7 din free trial."</div>
+      <div class="script-box" style="margin-bottom:10px">"Aap aaj Starter se shuru karo — ₹5,000 only. 1 mahine mein results dekho. Main personally guarantee karta hoon — agar 5 extra leads qualify nahi hue, hum refund denge. Deal?"</div>
+      <div class="script-box">"Ek simple sawal — aap kal se nahi, AJ se qualified leads chahiye? Toh aaj hi shuru karte hain. Mujhe sirf aapka WhatsApp number aur property list bhejdo WhatsApp pe. Baaki sab main karta hoon."</div>
+    </div>
+
+    <!-- Post-Demo Checklist -->
+    <div style="margin-top:32px">
+      <h3 style="margin-bottom:14px;font-size:1rem">After the Demo — Follow-Up Plan</h3>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Send WhatsApp within 5 minutes: "Aaj ki demo aapke saath achi lagi. Yeh raha summary: [1-liner]. Payment link: [link]"</label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> If no response by 24hr: "Koi sawaal hai? Main available hoon WhatsApp pe"</label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Day 3 follow-up: Send a testimonial message + "Still thinking? Let me share Rajesh ji ka case study"</label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> Day 7: "Last offer — is week start karein toh ek month free add karta hoon. Valid till [date]"</label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"> If still no: Move to next lead. Don't chase more than 3 times.</label>
+      </div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div style="margin-top:32px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:24px">
+      <h3 style="margin-bottom:16px">Quick Reference Card</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--c1);margin-bottom:10px">DEMO URLS</div>
+          <div style="font-size:.82rem;color:var(--text2);display:flex;flex-direction:column;gap:6px">
+            <div>🌐 Landing: <code style="color:var(--c3)">localhost:3000/</code></div>
+            <div>📊 Dashboard: <code style="color:var(--c3)">localhost:3000/dashboard</code></div>
+            <div>📱 WhatsApp: <code style="color:var(--c3)">+91-XXXXX-XXXXX</code></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--c4);margin-bottom:10px">KEY NUMBERS</div>
+          <div style="font-size:.82rem;color:var(--text2);display:flex;flex-direction:column;gap:6px">
+            <div>💰 Starter: <strong>₹5,000/mo</strong></div>
+            <div>⭐ Pro: <strong>₹15,000/mo</strong></div>
+            <div>🏢 Enterprise: <strong>₹30,000/mo</strong></div>
+            <div>📞 Support: <strong>+91-9999-999999</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<script>
+function toggleStep(card){card.classList.toggle('open');}
+function toggleCheck(cb){cb.closest('.check-item').classList.toggle('checked',cb.checked);}
+function scrollTo(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});}
+// Highlight active pill on scroll
+const sections={intro:'intro',demo:'demo',objections:'objections',close:'close'};
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY+100;
+  document.querySelectorAll('[id]').forEach(sec=>{
+    const key=Object.keys(sections).find(k=>sections[k]===sec.id);
+    if(key&&sec.offsetTop<=y&&sec.offsetTop+sec.offsetHeight>y){
+      document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    }
+  });
+});
+// Open first step cards by default
+document.querySelectorAll('.step-card').forEach((card,i)=>{if(i<2)card.classList.add('open');});
+</script>
+</body>
+</html>

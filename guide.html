@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBot — Complete Business Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--bg2:#0f1629;--c1:#6366f1;--c2:#8b5cf6;--c3:#10b981;--c4:#f59e0b;--c5:#f43f5e;--border:rgba(255,255,255,.1);--text:#f8fafc;--text2:#94a3b8;--text3:#64748b}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+
+/* TOP BAR */
+.topbar{background:linear-gradient(135deg,var(--c1),var(--c2));padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(99,102,241,.4)}
+.topbar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.1rem}
+.topbar-right{display:flex;gap:10px}
+.tb-btn{padding:8px 18px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif}
+.btn-white{background:#fff;color:var(--c1)}
+.btn-outline{background:transparent;border:2px solid rgba(255,255,255,.4);color:#fff}
+
+/* SIDEBAR + LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;flex-shrink:0}
+.sidebar-section{padding:8px 0;margin-bottom:4px}
+.sidebar-section-title{padding:8px 20px;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
+.sidebar-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:.83rem;font-weight:500;color:var(--text2);cursor:pointer;transition:.15s;border-left:3px solid transparent}
+.sidebar-link:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.sidebar-link.active{color:var(--c1);background:rgba(99,102,241,.08);border-left-color:var(--c1)}
+.sidebar-link i{width:16px;text-align:center;font-size:.82rem;flex-shrink:0}
+
+/* CONTENT */
+.content{flex:1;padding:40px 48px;max-width:900px}
+
+/* SECTION */
+.doc-section{margin-bottom:64px;scroll-margin-top:80px}
+.section-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
+.badge-purple{background:rgba(99,102,241,.15);color:var(--c1);border:1px solid rgba(99,102,241,.25)}
+.badge-green{background:rgba(16,185,129,.15);color:var(--c3);border:1px solid rgba(16,185,129,.25)}
+.badge-amber{background:rgba(245,158,11,.15);color:var(--c4);border:1px solid rgba(245,158,11,.25)}
+.badge-red{background:rgba(244,63,94,.15);color:var(--c5);border:1px solid rgba(244,63,94,.25)}
+.badge-sky{background:rgba(14,165,233,.15);color:#0ea5e9;border:1px solid rgba(14,165,233,.25)}
+h1{font-family:'Poppins',sans-serif;font-size:2.2rem;font-weight:800;margin-bottom:10px;line-height:1.2}
+h1 .g{background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-family:'Poppins',sans-serif;font-size:1.7rem;font-weight:800;margin-bottom:10px;line-height:1.2}
+h3{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:var(--text)}
+h4{font-size:.9rem;font-weight:700;margin-bottom:8px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+p{font-size:.92rem;color:var(--text2);margin-bottom:14px;line-height:1.75}
+strong{color:var(--text);font-weight:700}
+
+/* CARDS */
+.card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:16px}
+.card-green{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.2)}
+.card-purple{background:rgba(99,102,241,.05);border-color:rgba(99,102,241,.2)}
+.card-amber{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.2)}
+.card-red{background:rgba(244,63,94,.05);border-color:rgba(244,63,94,.2)}
+
+/* STEP BOX */
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;place-items:center;font-weight:800;font-size:.85rem;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-body h3{font-size:.95rem;margin-bottom:4px}
+.step-body p{margin-bottom:0;font-size:.86rem}
+
+/* CODE BOX */
+.code{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px 20px;font-family:'Courier New',monospace;font-size:.82rem;color:#e6edf3;white-space:pre-wrap;margin:12px 0;position:relative}
+.code-label{position:absolute;top:10px;right:12px;font-size:.68rem;background:rgba(99,102,241,.2);color:var(--c1);padding:2px 8px;border-radius:4px;font-family:'Inter',sans-serif;font-weight:700;text-transform:uppercase}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.86rem}
+th{background:rgba(255,255,255,.05);padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-bottom:1px solid var(--border)}
+td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text2);vertical-align:top}
+td strong{color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:14px 0}
+
+/* HIGHLIGHT BOX */
+.highlight{border-left:3px solid var(--c1);padding:14px 18px;background:rgba(99,102,241,.07);border-radius:0 10px 10px 0;margin:16px 0;font-size:.88rem;color:var(--text2)}
+.highlight-green{border-left-color:var(--c3);background:rgba(16,185,129,.07)}
+.highlight-amber{border-left-color:var(--c4);background:rgba(245,158,11,.07)}
+.highlight-red{border-left-color:var(--c5);background:rgba(244,63,94,.07)}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.check{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;font-size:.86rem;cursor:pointer}
+.check input{margin-top:2px;accent-color:var(--c1);flex-shrink:0}
+.check.done{opacity:.5;text-decoration:line-through}
+
+/* SCRIPT BOX */
+.script{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px;font-size:.86rem;color:#e2e8f0;line-height:1.8;margin:12px 0;font-style:italic;position:relative}
+.script::before{content:'💬';position:absolute;top:-12px;left:16px;font-style:normal;font-size:1.2rem}
+
+/* BIG STAT */
+.big-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.big-stat{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.big-stat .num{font-family:'Poppins',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.big-stat .label{font-size:.75rem;color:var(--text3);margin-top:5px}
+
+/* TAG */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700}
+.tag-green{background:rgba(16,185,129,.15);color:var(--c3)}
+.tag-red{background:rgba(244,63,94,.15);color:var(--c5)}
+.tag-amber{background:rgba(245,158,11,.15);color:var(--c4)}
+.tag-purple{background:rgba(99,102,241,.15);color:var(--c1)}
+
+/* DIVIDER */
+hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* PRINT */
+@media print{.topbar,.sidebar{display:none}.content{padding:20px}.layout{display:block}.code{color:#000;background:#f5f5f5;border:1px solid #ddd}}
+@media(max-width:768px){.layout{flex-direction:column}.sidebar{display:none}.content{padding:24px 20px}.grid-2,.grid-3{grid-template-columns:1fr}.big-stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">🏠 PropBot — Complete Business Guide</div>
+  <div class="topbar-right">
+    <button class="tb-btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+    <button class="tb-btn btn-white" onclick="window.open('/dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</button>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Product</div>
+    <div class="sidebar-link active" onclick="goto('what')"><i class="fas fa-info-circle"></i> Yeh Kya Hai</div>
+    <div class="sidebar-link" onclick="goto('how')"><i class="fas fa-cogs"></i> Kaise Kaam Karta Hai</div>
+    <div class="sidebar-link" onclick="goto('features')"><i class="fas fa-star"></i> Features</div>
+    <div class="sidebar-link" onclick="goto('urls')"><i class="fas fa-link"></i> Saare URLs</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Setup</div>
+    <div class="sidebar-link" onclick="goto('deploy')"><i class="fas fa-rocket"></i> Deploy Karo</div>
+    <div class="sidebar-link" onclick="goto('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp Setup</div>
+    <div class="sidebar-link" onclick="goto('client-setup')"><i class="fas fa-user-plus"></i> Client Onboarding</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Business</div>
+    <div class="sidebar-link" onclick="goto('pricing')"><i class="fas fa-rupee-sign"></i> Pricing</div>
+    <div class="sidebar-link" onclick="goto('costs')"><i class="fas fa-calculator"></i> Kharcha & Profit</div>
+    <div class="sidebar-link" onclick="goto('find-clients')"><i class="fas fa-search"></i> Clients Kahan Milenge</div>
+    <div class="sidebar-link" onclick="goto('pitch')"><i class="fas fa-comments"></i> Kya Bolna Hai</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Sales</div>
+    <div class="sidebar-link" onclick="goto('demo')"><i class="fas fa-play"></i> Demo Script</div>
+    <div class="sidebar-link" onclick="goto('objections')"><i class="fas fa-shield-alt"></i> Objection Handle</div>
+    <div class="sidebar-link" onclick="goto('close')"><i class="fas fa-handshake"></i> Deal Close Karo</div>
+    <div class="sidebar-link" onclick="goto('followup')"><i class="fas fa-bell"></i> Follow-Up Plan</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Growth</div>
+    <div class="sidebar-link" onclick="goto('scale')"><i class="fas fa-chart-line"></i> Scale Kaise Karo</div>
+    <div class="sidebar-link" onclick="goto('improve')"><i class="fas fa-tools"></i> Kya Add Karna Hai</div>
+    <div class="sidebar-link" onclick="goto('30days')"><i class="fas fa-calendar"></i> 30 Din Ka Plan</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1: WHAT IS IT -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="what">
+  <div class="section-badge badge-purple"><i class="fas fa-info-circle"></i> Product Overview</div>
+  <h1>PropBot <span class="g">Complete Guide</span></h1>
+  <p>Yeh document tumhare liye hai. Isme sab kuch hai — product kya hai, kaise kaam karta hai, kaise becho, kitna kamaoge. Isko ek baar poora padho phir shuru karo.</p>
+
+  <div class="big-stats">
+    <div class="big-stat"><div class="num">₹15K</div><div class="label">Per Client/Month</div></div>
+    <div class="big-stat"><div class="num">94%</div><div class="label">Profit Margin</div></div>
+    <div class="big-stat"><div class="num">24/7</div><div class="label">Bot Active</div></div>
+    <div class="big-stat"><div class="num">₹0</div><div class="label">Starting Cost</div></div>
+  </div>
+
+  <div class="card card-purple">
+    <h3>🏠 PropBot Kya Hai — Simple Language Mein</h3>
+    <p>PropBot ek <strong>AI WhatsApp bot</strong> hai jo real estate agents ke liye kaam karta hai. Jab koi buyer WhatsApp pe message karta hai — PropBot automatically:</p>
+    <ul style="margin-left:20px;color:var(--text2);font-size:.9rem;display:flex;flex-direction:column;gap:6px;margin-top:8px">
+      <li>✅ Unka naam, budget, location, BHK poochta hai</li>
+      <li>✅ Matching properties show karta hai</li>
+      <li>✅ Site visit book karta hai</li>
+      <li>✅ Lead score karta hai (Hot/Warm/Cold)</li>
+      <li>✅ Agent ko alert bhejta hai agar lead hot hai</li>
+      <li>✅ Sab kuch Google Sheets mein save karta hai</li>
+    </ul>
+    <p style="margin-top:12px;margin-bottom:0"><strong>Agent ko kuch nahi karna</strong> — bot sab handle karta hai, 24 ghante, 7 din.</p>
+  </div>
+
+  <div class="highlight-amber">
+    <strong>⚠️ Yeh yaad rakho:</strong> Tum yeh bot real estate agents ko bechte ho. Tumhara customer = Agent/Broker. Unka customer = Property buyer. Tum agent ki problem solve kar rahe ho, buyer ki nahi.
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2: HOW IT WORKS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="how">
+  <div class="section-badge badge-green"><i class="fas fa-cogs"></i> Working</div>
+  <h2>Kaise Kaam Karta Hai</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>Buyer Ka Experience</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><h3>WhatsApp karta hai</h3><p>"Hi" bhejta hai agent ke number pe</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Bot reply karta hai</h3><p>Naam, BHK, budget, location poochta hai</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Properties dikhata hai</h3><p>Matching properties list karta hai</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Visit book karta hai</h3><p>Slot select karke confirm karta hai</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Agent Ka Experience</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num" style="background:linear-gradient(135deg,var(--c3),#059669)">1</div><div class="step-body"><h3>Kuch nahi karna</h3><p>Bot sab handle karta hai</p></div></div>
+        <div class="step"><div class="step-num" style="background:linear-gradient(135deg,var(--c3),#059669)">2</div><div class="step-body"><h3>Hot lead alert milta hai</h3><p>WhatsApp pe notification aata hai</p></div></div>
+        <div class="step"><div class="step-num" style="background:linear-gradient(135deg,var(--c3),#059669)">3</div><div class="step-body"><h3>Dashboard dekhta hai</h3><p>Saare leads, scores, visits ek jagah</p></div></div>
+        <div class="step"><div class="step-num" style="background:linear-gradient(135deg,var(--c3),#059669)">4</div><div class="step-body"><h3>Sirf close karta hai</h3><p>Hot leads ko call karta hai, deal karta hai</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-amber">
+    <h3>🔥 Lead Scoring — Yeh Kya Hai</h3>
+    <p>Har buyer ko bot automatically score karta hai 1-10. Yeh score decide karta hai ki lead kitni serious hai:</p>
+    <div class="grid-3" style="margin-top:12px">
+      <div style="text-align:center;padding:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:10px">
+        <div style="font-size:1.8rem">🔥</div>
+        <div style="font-weight:800;color:#ef4444;font-size:1.1rem">HOT (7-10)</div>
+        <div style="font-size:.78rem;color:var(--text2);margin-top:4px">Abhi kharidna chahta hai. Agent ko turant alert.</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:10px">
+        <div style="font-size:1.8rem">🌡️</div>
+        <div style="font-weight:800;color:var(--c4);font-size:1.1rem">WARM (4-6)</div>
+        <div style="font-size:.78rem;color:var(--text2);margin-top:4px">1-3 mahine mein kharidega. Follow-up karo.</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px">
+        <div style="font-size:1.8rem">❄️</div>
+        <div style="font-weight:800;color:#3b82f6;font-size:1.1rem">COLD (0-3)</div>
+        <div style="font-size:.78rem;color:var(--text2);margin-top:4px">Sirf dekh raha hai. Bot handle karta rahega.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3: FEATURES -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="features">
+  <div class="section-badge badge-purple"><i class="fas fa-star"></i> Features</div>
+  <h2>Kya Kya Hai Product Mein</h2>
+  <table>
+    <tr><th>Feature</th><th>Kya Karta Hai</th><th>Plan</th></tr>
+    <tr><td><strong>WhatsApp Bot</strong></td><td>24/7 buyers se baat karta hai, Hindi-English mein</td><td><span class="tag tag-green">Sabko</span></td></tr>
+    <tr><td><strong>Property Matching</strong></td><td>Budget + location + BHK ke hisaab se properties dikhata hai</td><td><span class="tag tag-green">Sabko</span></td></tr>
+    <tr><td><strong>Visit Booking</strong></td><td>Slots dikhata hai, automatically book karta hai</td><td><span class="tag tag-green">Sabko</span></td></tr>
+    <tr><td><strong>Lead Scoring</strong></td><td>Hot/Warm/Cold — score 1-10</td><td><span class="tag tag-amber">Pro+</span></td></tr>
+    <tr><td><strong>Agent Alert</strong></td><td>Hot lead pe turant WhatsApp notification</td><td><span class="tag tag-amber">Pro+</span></td></tr>
+    <tr><td><strong>Admin Dashboard</strong></td><td>Saare leads, visits, stats ek jagah</td><td><span class="tag tag-amber">Pro+</span></td></tr>
+    <tr><td><strong>Google Sheets CRM</strong></td><td>Sab data automatically save hota hai</td><td><span class="tag tag-amber">Pro+</span></td></tr>
+    <tr><td><strong>Landing Page</strong></td><td>Client ke liye professional website</td><td><span class="tag tag-purple">Enterprise</span></td></tr>
+    <tr><td><strong>White Label</strong></td><td>Client ke naam se — PropBot ka naam nahi</td><td><span class="tag tag-purple">Enterprise</span></td></tr>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 4: URLs -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="urls">
+  <div class="section-badge badge-sky"><i class="fas fa-link"></i> URLs</div>
+  <h2>Saare Important Links</h2>
+  <div class="card">
+    <table>
+      <tr><th>Page</th><th>Local URL</th><th>Kab Use Karo</th></tr>
+      <tr><td><strong>🏠 Landing Page</strong></td><td><code style="color:var(--c3)">localhost:3000/</code></td><td>Demo mein pehle dikhao</td></tr>
+      <tr><td><strong>📊 Dashboard</strong></td><td><code style="color:var(--c3)">localhost:3000/dashboard</code></td><td>Leads + stats dikhao</td></tr>
+      <tr><td><strong>📖 Demo Script</strong></td><td><code style="color:var(--c3)">localhost:3000/demo-script</code></td><td>Demo ke waqt tumhara guide</td></tr>
+      <tr><td><strong>📱 WhatsApp</strong></td><td><code style="color:var(--c3)">+1 415 523 8886</code></td><td>Demo mein live use</td></tr>
+      <tr><td><strong>🔗 ngrok URL</strong></td><td><code style="color:var(--c4)">Check /tmp/ngrok.log</code></td><td>Twilio webhook ke liye</td></tr>
+      <tr><td><strong>📡 API - Leads</strong></td><td><code style="color:var(--c3)">localhost:3000/api/leads</code></td><td>Raw lead data</td></tr>
+      <tr><td><strong>📡 API - Stats</strong></td><td><code style="color:var(--c3)">localhost:3000/api/stats</code></td><td>Summary stats</td></tr>
+    </table>
+  </div>
+  <div class="highlight">
+    <strong>Bot shuru karne ke liye terminal mein:</strong> <code>cd /Users/yashkhandelwal/propbot && node src/bot.js</code>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 5: DEPLOY -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="deploy">
+  <div class="section-badge badge-amber"><i class="fas fa-rocket"></i> Deploy</div>
+  <h2>Server Pe Deploy Karo</h2>
+  <p><strong>Abhi problem:</strong> Bot sirf tumhare laptop pe chal raha hai. Laptop band = bot band. Railway.app pe daalo = hamesha live, free mein.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>GitHub Account Banao</h3>
+        <p>github.com pe jao → Sign up karo → Free account</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Railway.app Pe Jao</h3>
+        <p>railway.app → "Start a New Project" → GitHub se login karo</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Project Upload Karo</h3>
+        <p>Railway mein "Deploy from GitHub repo" → Propbot folder select karo</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Environment Variables Add Karo</h3>
+        <p>Railway dashboard mein "Variables" tab → Yeh sab add karo:</p>
+        <div class="code"><span class="code-label">ENV VARS</span>TWILIO_ACCOUNT_SID=AC649179fd61a80f899b9a7feeefb76d04
+TWILIO_AUTH_TOKEN=0006dea41d2090f56b585dde88f39fc7
+TWILIO_WHATSAPP_NUMBER=+14155238886
+GOOGLE_SHEET_ID=1sHCJHARAZelDrNQhZIQ5UdtfXGmj7tQgKJyrM_VodA4
+GOOGLE_SERVICE_ACCOUNT_JSON={"type":"service_account"...}
+PORT=3000</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Deploy Click Karo</h3>
+        <p>Railway automatically build karega. 2-3 minute mein ek live URL milega jaise: <code style="color:var(--c3)">propbot-production.up.railway.app</code></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h3>Twilio Webhook Update Karo</h3>
+        <p>Twilio Console → Messaging → Sandbox → Webhook URL: <code style="color:var(--c3)">https://[tumhara-railway-url]/webhook</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-green">
+    <strong>✅ Ek baar Railway pe deploy hua</strong> → ngrok ki zaroorat nahi → laptop band karo → bot chal raha hoga → clients ko real demo de sakte ho.
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 6: WHATSAPP SETUP -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="whatsapp">
+  <div class="section-badge badge-green"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+  <h2>WhatsApp Setup — 2 Options</h2>
+
+  <div class="grid-2">
+    <div class="card card-amber">
+      <h3>Option A — Demo Ke Liye (Abhi)</h3>
+      <p><strong>Twilio Sandbox</strong> — Free hai, abhi kaam karta hai</p>
+      <p>⚠️ Problem: Buyer ko pehle "join [word]" bhejni padti hai sandbox join karne ke liye. Real business ke liye nahi.</p>
+      <p><strong>Use karo:</strong> Demos ke liye, pehle clients ke liye proof of concept</p>
+    </div>
+    <div class="card card-green">
+      <h3>Option B — Production Ke Liye</h3>
+      <p><strong>Gupshup API</strong> — Official WhatsApp, Indian company</p>
+      <p>✅ Real WhatsApp number milta hai. Koi "join" nahi. Buyers directly message kar sakte hain.</p>
+      <p><strong>Cost:</strong> ₹2,999/month + ₹0.40/message</p>
+      <p><strong>Apply:</strong> gupshup.io pe register karo</p>
+    </div>
+  </div>
+
+  <div class="highlight-amber">
+    <strong>Strategy:</strong> Pehle 2-3 clients Twilio Sandbox se lo (free demo). Unka paisa aaye toh Gupshup lo. Sab clients ko proper WhatsApp de do.
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 7: CLIENT ONBOARDING -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="client-setup">
+  <div class="section-badge badge-purple"><i class="fas fa-user-plus"></i> Client Setup</div>
+  <h2>Naye Client Ko Kaise Setup Karo</h2>
+  <p>Client ne paisa diya — ab kya karo. <strong>24 ghante mein deliver karo.</strong></p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><h3>Property List Maango</h3><p>Excel ya WhatsApp pe bhejo. Naam, location, price, BHK, amenities — sab chahiye.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Properties.js Update Karo</h3>
+        <p><code>config/properties.js</code> file mein unki properties add karo. Format exactly same rakhna:</p>
+        <div class="code"><span class="code-label">properties.js</span>{ id:1, name:"Property Name",
+  location:"City, Area",
+  price:"₹XX Lakh",
+  area:"XXXX sqft",
+  bhk:"2BHK",
+  status:"Ready to Move",
+  budget_category:"50L_1Cr",
+  amenities:"Gym, Pool, Club",
+  builder:"Builder Name",
+  possession:"Immediate" }</div>
+        <p style="margin-top:8px">Budget categories: <code>under_50L</code> / <code>50L_1Cr</code> / <code>1Cr_2Cr</code> / <code>above_2Cr</code></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><h3>Agent Phone Number Add Karo</h3><p><code>.env</code> file mein: <code>AGENT_PHONE=+91XXXXXXXXXX</code> — yeh number pe hot lead alert aayega.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><h3>Live Test Karo</h3><p>Khud WhatsApp pe "Hi" bhejo, poora conversation karo, ek visit book karo. Confirm karo sab kuch chal raha hai.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body"><h3>Client Ko Handover Karo</h3><p>Dashboard URL do, WhatsApp number do, ek 30-min call karo — unhe dikhao kaise use karna hai.</p></div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 8: PRICING -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="pricing">
+  <div class="section-badge badge-amber"><i class="fas fa-rupee-sign"></i> Pricing</div>
+  <h2>Pricing — Kya Charge Karo</h2>
+
+  <table>
+    <tr><th>Plan</th><th>Price</th><th>Kiske Liye</th><th>Setup Fee</th></tr>
+    <tr>
+      <td><strong>Starter</strong></td>
+      <td><strong style="color:var(--c3)">₹5,000/month</strong></td>
+      <td>Solo agent, 50-200 leads/month</td>
+      <td>₹3,000 (one-time)</td>
+    </tr>
+    <tr>
+      <td><strong>Professional ⭐</strong></td>
+      <td><strong style="color:var(--c1)">₹15,000/month</strong></td>
+      <td>Small agency, 200-1000 leads/month</td>
+      <td>₹5,000 (one-time)</td>
+    </tr>
+    <tr>
+      <td><strong>Enterprise</strong></td>
+      <td><strong style="color:var(--c4)">₹30,000/month</strong></td>
+      <td>Large agency, multiple cities</td>
+      <td>₹10,000 (one-time)</td>
+    </tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card card-green">
+      <h3>✅ Hamesha Setup Fee Lo</h3>
+      <p>Monthly subscription ke alawa ek baar ka setup fee alag lo. Yeh professional lagta hai aur tumhara time ka compensation hai. Setup fee = ₹3K–₹10K depending on plan.</p>
+    </div>
+    <div class="card card-amber">
+      <h3>💡 Anchoring Trick</h3>
+      <p>Hamesha Enterprise (₹30K) se shuru karo. Phir Professional (₹15K) batao. ₹30K ke baad ₹15K sasta lagta hai. Yeh psychology hai — kaam karta hai.</p>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <strong>3 Mahine Advance Deal:</strong> "3 mahine advance doge toh 1 mahina free" = ₹30,000 instead of ₹45,000. Tumhe ₹30,000 ek saath milta hai. Cash flow ke liye bahut achha.
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 9: COSTS & PROFIT -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="costs">
+  <div class="section-badge badge-sky"><i class="fas fa-calculator"></i> Kharcha & Profit</div>
+  <h2>Asli Numbers — Kitna Kamaoge</h2>
+
+  <table>
+    <tr><th>Clients</th><th>Monthly Revenue</th><th>Tumhara Kharcha</th><th>Net Profit</th><th>Margin</th></tr>
+    <tr><td>1 client</td><td>₹15,000</td><td>₹4,150</td><td><strong style="color:var(--c3)">₹10,850</strong></td><td>72%</td></tr>
+    <tr><td>5 clients</td><td>₹75,000</td><td>₹6,350</td><td><strong style="color:var(--c3)">₹68,650</strong></td><td>91%</td></tr>
+    <tr><td>10 clients</td><td>₹1,50,000</td><td>₹9,100</td><td><strong style="color:var(--c3)">₹1,40,900</strong></td><td>94%</td></tr>
+    <tr><td>20 clients</td><td>₹3,00,000</td><td>₹14,600</td><td><strong style="color:var(--c3)">₹2,85,400</strong></td><td>95%</td></tr>
+  </table>
+
+  <div class="card card-green" style="margin-top:16px">
+    <h3>💰 Monthly Kharcha Breakdown (10 clients ke saath)</h3>
+    <table>
+      <tr><td>Railway.app hosting</td><td><strong>₹500</strong></td></tr>
+      <tr><td>Gupshup WhatsApp API</td><td><strong>₹2,999</strong></td></tr>
+      <tr><td>WhatsApp messages (10 clients × 500 msg × ₹0.40)</td><td><strong>₹2,000</strong></td></tr>
+      <tr><td>Domain renewal</td><td><strong>₹67</strong></td></tr>
+      <tr><td>Miscellaneous</td><td><strong>₹500</strong></td></tr>
+      <tr style="background:rgba(16,185,129,.1)"><td><strong>TOTAL</strong></td><td><strong style="color:var(--c3)">~₹6,066/month</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 10: FIND CLIENTS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="find-clients">
+  <div class="section-badge badge-green"><i class="fas fa-search"></i> Clients Dhundho</div>
+  <h2>Clients Kahan Milenge</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>🗺️ Google Maps (Sabse Easy)</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num" style="background:rgba(99,102,241,.3);color:var(--c1);font-size:.75rem">1</div><div class="step-body"><p>Google Maps pe jao</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(99,102,241,.3);color:var(--c1);font-size:.75rem">2</div><div class="step-body"><p>"Property dealer Noida" search karo</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(99,102,241,.3);color:var(--c1);font-size:.75rem">3</div><div class="step-body"><p>50 numbers copy karo</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(99,102,241,.3);color:var(--c1);font-size:.75rem">4</div><div class="step-body"><p>WhatsApp karo</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📱 99acres / MagicBricks</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3);font-size:.75rem">1</div><div class="step-body"><p>99acres.com pe jao</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3);font-size:.75rem">2</div><div class="step-body"><p>Koi bhi property listing dekho</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3);font-size:.75rem">3</div><div class="step-body"><p>Agent ka WhatsApp number milega</p></div></div>
+        <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3);font-size:.75rem">4</div><div class="step-body"><p>Message karo</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0">
+    <h3>📊 Daily Target — Yeh Karo</h3>
+    <table>
+      <tr><th>Din</th><th>Kaam</th><th>Target</th></tr>
+      <tr><td>Monday</td><td>Google Maps + 99acres se numbers nikaalo</td><td>50 numbers</td></tr>
+      <tr><td>Tuesday</td><td>WhatsApp messages bhejo</td><td>50 messages</td></tr>
+      <tr><td>Wednesday</td><td>Follow-up + replies handle karo</td><td>10 responses</td></tr>
+      <tr><td>Thursday</td><td>Demos schedule karo</td><td>3-5 demos</td></tr>
+      <tr><td>Friday</td><td>Demos do + close karo</td><td>1-2 clients</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 11: PITCH -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="pitch">
+  <div class="section-badge badge-red"><i class="fas fa-comments"></i> Pitch</div>
+  <h2>Kya Bolna Hai — Word for Word</h2>
+
+  <h3>Pehla WhatsApp Message</h3>
+  <div class="script">Namaste [Naam] ji! 🙏
+
+Aap property deal karte hain na?
+
+Ek quick sawaal — WhatsApp pe din mein kitne leads aate hain? Aur unhe reply karne mein kitna time lagta hai?
+
+Humne ek AI bot banaya hai jo:
+✅ 24/7 automatically qualify karta hai
+✅ Properties match karta hai
+✅ Site visit book karta hai
+✅ Aapko sirf HOT leads deta hai
+
+Ek 20-min free demo dekhoge? Aapke phone pe live dikhaata hoon.
+
+— [Tumhara naam]</div>
+
+  <h3>Jab Woh "Haan" Bolein</h3>
+  <div class="script">Perfect [Naam] ji! 🙏
+
+Kal [din] ko [time] pe Google Meet pe 20 minute milte hain?
+
+Main aapke phone pe live demo karunga — aap khud bot use karoge aur dekhoge ki kaise kaam karta hai.
+
+Confirm karo: [Google Meet link]</div>
+
+  <h3>Demo Call Ka Opening</h3>
+  <div class="script">"[Naam] ji, aaj main aapko kuch naya dikhaunga. Pehle mujhe batao — abhi WhatsApp pe din mein kitne buyers message karte hain? [Sunno] Aur unhe reply karne mein kitna time lagta hai? [Sunno] Toh basically [X] ghante roz WhatsApp pe jaate hain. Kya lagta hai agar yeh kaam koi aur kare — 24 ghante, bina ruke, bina galti kiye? Chaliye dikhata hoon."</div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 12: DEMO SCRIPT -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="demo">
+  <div class="section-badge badge-purple"><i class="fas fa-play"></i> Demo Script</div>
+  <h2>Demo — 20 Minute Mein Kya Karo</h2>
+
+  <table>
+    <tr><th>Time</th><th>Kya Karo</th><th>Kya Bolna Hai</th></tr>
+    <tr><td><strong>0-3 min</strong></td><td>Unka pain poochho</td><td>"Kitne leads waste hote hain? Raat ko bhi reply karte ho?"</td></tr>
+    <tr><td><strong>3-5 min</strong></td><td>Landing page dikhao</td><td>"Yeh dekho — 500+ agents pehle se use kar rahe hain"</td></tr>
+    <tr><td><strong>5-15 min</strong></td><td><strong>🔥 UNHE BOT USE KARWAO</strong></td><td>"Apna phone lo, is number pe 'Hi' bhejo" — bas chup raho</td></tr>
+    <tr><td><strong>15-18 min</strong></td><td>Dashboard dikhao</td><td>"Dekho — aapka lead real-time mein aa gaya!"</td></tr>
+    <tr><td><strong>18-20 min</strong></td><td>Price batao + close</td><td>"Professional plan ₹15,000/month — aaj shuru karein?"</td></tr>
+  </table>
+
+  <div class="highlight-amber">
+    <strong>💡 Sabse Important:</strong> Jab woh bot use kar rahe hoon — <strong>CHUP RAHO.</strong> Unhe khud experience karne do. Jo pehle bolta hai woh haarta hai. Unka silence = woh soch rahe hain = woh interested hain.
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 13: OBJECTIONS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="objections">
+  <div class="section-badge badge-red"><i class="fas fa-shield-alt"></i> Objections</div>
+  <h2>Objection — Kya Jawab Do</h2>
+
+  <div class="card card-red">
+    <h3>❌ "Bahut expensive hai"</h3>
+    <div class="script" style="margin-top:10px">"[Naam] ji, expensive nahi — investment hai. Calculator mein aapne dekha — 3 deals × ₹75K = ₹2.25 lakh. Bot cost ₹15K. Sirf EK extra deal = bot ka pura kharcha recover. Baaki ₹2.1 lakh pure profit. Kya ₹15K invest karna make sense karta hai?"</div>
+  </div>
+
+  <div class="card card-amber">
+    <h3>⚠️ "Soch ke batata hoon"</h3>
+    <div class="script" style="margin-top:10px">"Bilkul! Sochna chahiye. Ek kaam karo — 7 din free trial mein shuru karo. Agar 7 din mein 5 qualified leads nahi aaye — full refund. Zero risk. Haan ya naa?"</div>
+  </div>
+
+  <div class="card">
+    <h3>❓ "Technical nahi hoon, setup mushkil hoga"</h3>
+    <div class="script" style="margin-top:10px">"Aapko ek bhi line code nahi likhni. Aap sirf property list aur WhatsApp number dena. Main 24 ghante mein live kar deta hoon. Phir ek call mein sab explain kar deta hoon. Tumhara kaam sirf WhatsApp check karna hai."</div>
+  </div>
+
+  <div class="card">
+    <h3>❓ "WhatsApp Business se kaam chal jaata hai"</h3>
+    <div class="script" style="margin-top:10px">"WhatsApp Business mein aap manually reply karte ho — sirf jab jaag rahe ho. Raat 2 baje lead aaya? Kal subah reply karoge — woh tab tak competitor se deal kar chuka hoga. PropBot 3 seconds mein reply karta hai — 24 ghante. Aur lead qualify bhi karta hai. WhatsApp Business sirf messaging hai — PropBot complete sales system hai."</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 14: CLOSE -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="close">
+  <div class="section-badge badge-green"><i class="fas fa-handshake"></i> Close</div>
+  <h2>Deal Kaise Close Karo</h2>
+
+  <div class="card card-green">
+    <h3>✅ Sabse Best Closing Line</h3>
+    <div class="script" style="margin-top:10px">"[Naam] ji — ek simple sawaal. Aaj se 30 din baad, agar 20 extra qualified leads aaye aur 3-4 deals close huye — kya ₹15,000 sahi investment thi? [Woh haan bolenge] Toh chaliye aaj shuru karte hain. Payment link bhejta hoon — ₹15,000 + ₹5,000 setup = ₹20,000. Aaj pay karo, kal tak bot live."</div>
+  </div>
+
+  <h3 style="margin-top:20px">Payment Kaise Lo</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3)">1</div><div class="step-body"><h3>Razorpay Account Banao</h3><p>razorpay.com pe free account — payment links banao</p></div></div>
+    <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3)">2</div><div class="step-body"><h3>Payment Link Bhejo</h3><p>WhatsApp pe link bhejo — UPI/Card/Netbanking sab accept hoga</p></div></div>
+    <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3)">3</div><div class="step-body"><h3>GST Invoice Do</h3><p>Payment aate hi invoice bhejo — professional lagta hai</p></div></div>
+    <div class="step"><div class="step-num" style="background:rgba(16,185,129,.3);color:var(--c3)">4</div><div class="step-body"><h3>24 Ghante Mein Deliver Karo</h3><p>Bot setup karo, test karo, handover karo</p></div></div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 15: FOLLOW-UP -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="followup">
+  <div class="section-badge badge-sky"><i class="fas fa-bell"></i> Follow-Up</div>
+  <h2>Follow-Up Plan — Jo "Nahi" Bole Unhe Kaise Convince Karo</h2>
+  <table>
+    <tr><th>Kab</th><th>Kya Bhejo</th></tr>
+    <tr><td><strong>Demo ke 5 min baad</strong></td><td>"Shukriya [naam] ji! Demo summary: [1 line]. Agar koi sawaal ho — WhatsApp pe hoon. Payment link: [link]"</td></tr>
+    <tr><td><strong>24 ghante baad</strong></td><td>"[Naam] ji, ek sawaal tha? Main available hoon."</td></tr>
+    <tr><td><strong>Day 3</strong></td><td>Ek real agent ka testimonial/result screenshot bhejo</td></tr>
+    <tr><td><strong>Day 7</strong></td><td>"Last offer — is hafte start karo toh ek mahina free. Valid till [date]."</td></tr>
+    <tr><td><strong>Day 14</strong></td><td>Ek naya feature ya result share karo. "Naya update: EMI calculator add kiya"</td></tr>
+    <tr><td><strong>Day 14 ke baad</strong></td><td>Next lead pe focus karo. 3 se zyada follow-up = time waste.</td></tr>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 16: SCALE -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="scale">
+  <div class="section-badge badge-amber"><i class="fas fa-chart-line"></i> Scale</div>
+  <h2>10 Se 100 Clients — Kaise Scale Karo</h2>
+
+  <div class="grid-2">
+    <div class="card card-purple">
+      <h3>🤝 Referral Program</h3>
+      <p>Happy client se kaho: <strong>"Ek aur agent ko refer karo — tumhara ek mahina free."</strong></p>
+      <p>10 clients × 1 referral = 10 naye clients bina kisi effort ke.</p>
+    </div>
+    <div class="card card-green">
+      <h3>👥 Reseller Program</h3>
+      <p>Doosre log tumhara product bechein:</p>
+      <p>Unhe: ₹5,000 commission per ₹15,000 sale</p>
+      <p>Tumhe: ₹10,000 per client bina effort ke</p>
+    </div>
+  </div>
+
+  <div class="card card-amber">
+    <h3>📍 City Expansion</h3>
+    <p>Pehle ek city master karo. Phir:</p>
+    <table>
+      <tr><td><strong>Month 1-2:</strong></td><td>Noida/Delhi NCR — 5-10 clients</td></tr>
+      <tr><td><strong>Month 3-4:</strong></td><td>Mumbai/Pune — partner dhundho</td></tr>
+      <tr><td><strong>Month 5-6:</strong></td><td>Bangalore/Hyderabad — online demos</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 17: WHAT TO ADD -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="improve">
+  <div class="section-badge badge-purple"><i class="fas fa-tools"></i> Improve</div>
+  <h2>Aage Kya Add Karna Hai</h2>
+  <table>
+    <tr><th>Feature</th><th>Value</th><th>Difficulty</th><th>Priority</th></tr>
+    <tr><td><strong>Auto Follow-Up</strong></td><td>Hot leads ko reminder bhejo</td><td>Medium</td><td><span class="tag tag-red">High</span></td></tr>
+    <tr><td><strong>EMI Calculator</strong></td><td>Bot ke andar EMI calculate karo</td><td>Easy</td><td><span class="tag tag-red">High</span></td></tr>
+    <tr><td><strong>Property Images</strong></td><td>Bot photos + PDF bheje</td><td>Medium</td><td><span class="tag tag-amber">Medium</span></td></tr>
+    <tr><td><strong>Multi-Client System</strong></td><td>Ek server pe 100 clients</td><td>Hard</td><td><span class="tag tag-amber">Medium</span></td></tr>
+    <tr><td><strong>Gupshup Integration</strong></td><td>Official WhatsApp API</td><td>Medium</td><td><span class="tag tag-red">High</span></td></tr>
+    <tr><td><strong>Monthly PDF Report</strong></td><td>Auto-generated client report</td><td>Easy</td><td><span class="tag tag-green">Low</span></td></tr>
+  </table>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 18: 30 DAYS PLAN -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-section" id="30days">
+  <div class="section-badge badge-green"><i class="fas fa-calendar"></i> 30 Din Ka Plan</div>
+  <h2>Aaj Se 30 Din — Step by Step</h2>
+
+  <div class="card card-purple">
+    <h3>Week 1 — Setup + Pehle Leads</h3>
+    <div class="checklist">
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Railway.app pe deploy karo (Claude se help lo)</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Razorpay account banao (payment ke liye)</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Google Maps se 100 numbers nikaalo (Noida/Gurugram)</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> 50 WhatsApp messages bhejo</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Jo reply kare unhe demo schedule karo</label>
+    </div>
+  </div>
+
+  <div class="card card-amber">
+    <h3>Week 2 — Pehla Client Close Karo</h3>
+    <div class="checklist">
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> 5+ demos do</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Pehla payment receive karo</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Client ka bot 24 ghante mein setup karo</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Client se testimonial lo (screenshot/voice note)</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Aur 50 messages bhejo</label>
+    </div>
+  </div>
+
+  <div class="card card-green">
+    <h3>Week 3-4 — Scale Karo</h3>
+    <div class="checklist">
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> 2-3 aur clients close karo</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Gupshup API apply karo</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Pehle client se referral maango</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> Instagram pe real estate agents follow karo + DM</label>
+      <label class="check" onclick="this.classList.toggle('done')"><input type="checkbox"> LinkedIn pe "PropBot AI" ke baare mein post karo</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>30 Din Baad — Expected Result</h3>
+    <table>
+      <tr><td>Messages bheje</td><td><strong>200+</strong></td></tr>
+      <tr><td>Demos kiye</td><td><strong>15-20</strong></td></tr>
+      <tr><td>Clients closed</td><td><strong>3-5</strong></td></tr>
+      <tr><td>Monthly Revenue</td><td><strong style="color:var(--c3)">₹45,000–₹75,000</strong></td></tr>
+      <tr><td>Net Profit</td><td><strong style="color:var(--c3)">₹40,000–₹68,000</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="highlight-green">
+    <strong>💡 Yaad rakho:</strong> Product ready hai. Website ready hai. Bot ready hai. Dashboard ready hai. Demo script ready hai. Sab kuch ready hai. <strong>Sirf tumhara action baaki hai.</strong> Aaj pehla message bhejo.
+  </div>
+</div>
+
+<!-- Final CTA -->
+<div style="text-align:center;padding:40px;background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(139,92,246,.1));border:1px solid rgba(99,102,241,.3);border-radius:20px;margin-top:40px">
+  <div style="font-size:2.5rem;margin-bottom:10px">🚀</div>
+  <h2 style="margin-bottom:10px">Ab Shuru Karo</h2>
+  <p style="color:var(--text2);max-width:500px;margin:0 auto 24px">Yeh guide baar baar padha — lekin action lena tumhara kaam hai. Pehla step: Google Maps pe jao, 10 numbers nikalo, message bhejo. Abhi. Aaj.</p>
+  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+    <button onclick="window.open('/')" style="padding:13px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'Inter',sans-serif">🏠 Landing Page Dekho</button>
+    <button onclick="window.open('/dashboard')" style="padding:13px 28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'Inter',sans-serif">📊 Dashboard Dekho</button>
+    <button onclick="window.open('/demo-script')" style="padding:13px 28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'Inter',sans-serif">📖 Demo Script</button>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /layout -->
+
+<script>
+function goto(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
+}
+// Active sidebar on scroll
+const sections=['what','how','features','urls','deploy','whatsapp','client-setup','pricing','costs','find-clients','pitch','demo','objections','close','followup','scale','improve','30days'];
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY+120;
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.offsetTop<=y&&el.offsetTop+el.offsetHeight>y){
+      document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
+      const links=document.querySelectorAll('.sidebar-link');
+      links.forEach(l=>{if(l.getAttribute('onclick')?.includes(id))l.classList.add('active');});
+    }
+  });
+});
+</script>
+</body>
+</html>

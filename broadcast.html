@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropBot — WhatsApp Broadcast</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--bg2:#0f1629;--c1:#6366f1;--c2:#8b5cf6;--c3:#10b981;--c4:#f59e0b;--c5:#f43f5e;--wa:#25d366;--border:rgba(255,255,255,.1);--text:#f8fafc;--text2:#94a3b8;--text3:#64748b}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar-logo{display:flex;align-items:center;gap:10px;font-weight:800}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--wa),#128c7e);border-radius:9px;display:grid;place-items:center;font-size:16px}
+.topbar-right{display:flex;gap:10px}
+.tb-btn{padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Inter',sans-serif;transition:.2s;display:flex;align-items:center;gap:6px}
+.tb-btn:hover{border-color:var(--c1);color:var(--text)}
+.tb-btn.green{background:var(--wa);border-color:var(--wa);color:#fff}
+.tb-btn.green:hover{opacity:.9}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 380px;gap:24px;max-width:1200px;margin:0 auto;padding:28px 24px}
+
+/* CARD */
+.card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-body{padding:22px}
+
+/* FORM */
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.8rem;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-textarea,.form-select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.88rem;outline:none;font-family:'Inter',sans-serif;transition:.2s}
+.form-textarea{resize:vertical;min-height:120px;line-height:1.6}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--c1);background:rgba(99,102,241,.05)}
+.form-select option{background:#1a1a2e}
+.char-count{font-size:.72rem;color:var(--text3);margin-top:5px;text-align:right}
+
+/* NUMBER INPUT */
+.number-input-wrap{position:relative}
+.number-input-wrap textarea{padding-right:100px}
+.number-count{position:absolute;bottom:10px;right:12px;font-size:.72rem;background:rgba(99,102,241,.2);color:var(--c1);padding:3px 10px;border-radius:8px;font-weight:700}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:.2s;position:relative}
+.upload-zone:hover{border-color:var(--c1);background:rgba(99,102,241,.05)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-zone i{font-size:2rem;color:var(--text3);margin-bottom:10px}
+.upload-zone p{font-size:.85rem;color:var(--text2)}
+.upload-zone small{font-size:.75rem;color:var(--text3)}
+
+/* TEMPLATES */
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.template-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;font-size:.8rem}
+.template-card:hover,.template-card.selected{border-color:var(--c1);background:rgba(99,102,241,.08)}
+.template-card h4{font-size:.8rem;font-weight:700;margin-bottom:5px;color:var(--text)}
+.template-card p{color:var(--text3);line-height:1.5;font-size:.75rem}
+
+/* PREVIEW PHONE */
+.preview-phone{background:#0a0a0a;border-radius:36px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);position:sticky;top:88px}
+.preview-phone::before{content:'';position:absolute;top:14px;left:50%;transform:translateX(-50%);width:80px;height:5px;background:#222;border-radius:3px}
+.preview-screen{background:#0c1317;border-radius:26px;overflow:hidden;min-height:480px;display:flex;flex-direction:column}
+.preview-header{background:#1f2c34;padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.preview-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;place-items:center;font-size:14px;flex-shrink:0}
+.preview-name{font-size:.85rem;font-weight:600;color:#e9edef}
+.preview-status{font-size:.7rem;color:var(--wa)}
+.preview-body{flex:1;padding:14px;background:#071d28;display:flex;flex-direction:column;gap:8px}
+.preview-msg{background:#1f2c34;border-radius:0 10px 10px 10px;padding:10px 14px;max-width:85%;font-size:.8rem;color:#e9edef;line-height:1.5;position:relative}
+.preview-time{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:4px;text-align:right}
+.preview-placeholder{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.82rem;text-align:center;padding:20px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.stat-mini{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat-mini .num{font-size:1.6rem;font-weight:800;line-height:1}
+.stat-mini .lbl{font-size:.72rem;color:var(--text3);margin-top:4px}
+
+/* SCHEDULE */
+.schedule-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* SEND BTN */
+.send-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--wa),#128c7e);border:none;border-radius:12px;color:#fff;font-weight:800;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.send-btn:hover{opacity:.9;transform:translateY(-1px)}
+.send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* PROGRESS */
+.progress-wrap{display:none;margin-top:16px}
+.progress-bar{height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin:10px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--wa),var(--c3));border-radius:4px;width:0%;transition:width .3s}
+.progress-text{font-size:.82rem;color:var(--text2);text-align:center}
+
+/* HISTORY TABLE */
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{padding:10px 14px;text-align:left;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-bottom:1px solid var(--border)}
+td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.badge{padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700}
+.badge-sent{background:rgba(16,185,129,.15);color:var(--c3)}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--c4)}
+.badge-failed{background:rgba(244,63,94,.15);color:var(--c5)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;padding:16px 22px 0;border-bottom:1px solid var(--border)}
+.tab{padding:10px 18px;font-size:.85rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--text2);transition:.2s}
+.tab.active{color:var(--c1);border-bottom-color:var(--c1)}
+.tab-content{display:none;padding:22px}
+.tab-content.active{display:block}
+
+/* VARIABLE CHIPS */
+.var-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.var-chip{padding:4px 12px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);border-radius:8px;font-size:.75rem;font-weight:700;color:var(--c1);cursor:pointer;transition:.2s}
+.var-chip:hover{background:rgba(99,102,241,.25)}
+
+/* ALERT */
+.alert{padding:14px 16px;border-radius:10px;font-size:.85rem;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+.alert-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--c4)}
+.alert-green{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:var(--c3)}
+.alert-red{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);color:var(--c5)}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr}.preview-phone{display:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-icon"><i class="fab fa-whatsapp"></i></div>
+    PropBot — WhatsApp Broadcast
+  </div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="window.open('/dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</button>
+    <button class="tb-btn green" id="mainSendBtn" onclick="startBroadcast()"><i class="fas fa-paper-plane"></i> Send Broadcast</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: COMPOSE -->
+  <div>
+
+    <!-- STATS -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-mini"><div class="num" id="statContacts">0</div><div class="lbl">Contacts</div></div>
+      <div class="stat-mini"><div class="num" style="color:var(--c3)" id="statSent">0</div><div class="lbl">Sent</div></div>
+      <div class="stat-mini"><div class="num" style="color:var(--c4)" id="statPending">0</div><div class="lbl">Pending</div></div>
+      <div class="stat-mini"><div class="num" style="color:var(--c5)" id="statFailed">0</div><div class="lbl">Failed</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('compose',this)">📝 Compose</div>
+        <div class="tab" onclick="switchTab('contacts',this)">👥 Contacts</div>
+        <div class="tab" onclick="switchTab('history',this)">📊 History</div>
+      </div>
+
+      <!-- COMPOSE TAB -->
+      <div class="tab-content active" id="tab-compose">
+
+        <div class="alert alert-warn">
+          <i class="fas fa-exclamation-triangle" style="flex-shrink:0;margin-top:2px"></i>
+          <div><strong>WhatsApp Policy:</strong> Sirf un logon ko message karo jo aapka number save kar ke already message kar chuke hain — ya jo opt-in kar chuke hain. Spam karne se number ban ho sakta hai.</div>
+        </div>
+
+        <!-- MESSAGE TEMPLATE -->
+        <div class="form-group">
+          <label class="form-label">Quick Templates</label>
+          <div class="template-grid">
+            <div class="template-card" onclick="useTemplate(this,'new_launch')">
+              <h4>🏠 New Property Launch</h4>
+              <p>Naya property launch announcement</p>
+            </div>
+            <div class="template-card" onclick="useTemplate(this,'price_drop')">
+              <h4>💰 Price Drop Alert</h4>
+              <p>Price reduction notification</p>
+            </div>
+            <div class="template-card" onclick="useTemplate(this,'site_visit')">
+              <h4>📅 Site Visit Invite</h4>
+              <p>Weekend visit invitation</p>
+            </div>
+            <div class="template-card" onclick="useTemplate(this,'follow_up')">
+              <h4>🔔 Follow-Up</h4>
+              <p>Warm lead re-engagement</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MESSAGE -->
+        <div class="form-group">
+          <label class="form-label">Message <span style="color:var(--c5)">*</span></label>
+          <div class="number-input-wrap">
+            <textarea class="form-textarea" id="msgText" placeholder="Namaste {naam} ji! 🙏&#10;&#10;Aapke liye ek khaas property hai..." oninput="updatePreview();countChars()"></textarea>
+          </div>
+          <div class="char-count"><span id="charCount">0</span> characters</div>
+          <div class="var-chips">
+            <span style="font-size:.75rem;color:var(--text3);margin-top:2px">Variables:</span>
+            <div class="var-chip" onclick="insertVar('{naam}')">👤 {naam}</div>
+            <div class="var-chip" onclick="insertVar('{phone}')">📱 {phone}</div>
+            <div class="var-chip" onclick="insertVar('{city}')">📍 {city}</div>
+            <div class="var-chip" onclick="insertVar('{property}')">🏠 {property}</div>
+          </div>
+        </div>
+
+        <!-- CONTACTS -->
+        <div class="form-group">
+          <label class="form-label">Phone Numbers <span style="color:var(--c5)">*</span></label>
+          <div class="number-input-wrap">
+            <textarea class="form-textarea" id="phoneNumbers" placeholder="+919876543210&#10;+919876543211&#10;+919876543212&#10;&#10;Ya ek number per line..." rows="6" oninput="countNumbers()"></textarea>
+            <div class="number-count" id="numCount">0 numbers</div>
+          </div>
+        </div>
+
+        <!-- CSV UPLOAD -->
+        <div class="form-group">
+          <label class="form-label">Ya CSV Upload Karo</label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" accept=".csv,.txt" onchange="handleCSV(this)">
+            <i class="fas fa-file-csv"></i>
+            <p>CSV ya TXT file drag karo yahan</p>
+            <small>Format: phone,naam,city (ek line per contact)</small>
+          </div>
+        </div>
+
+        <!-- SCHEDULE -->
+        <div class="form-group">
+          <label class="form-label">Send Kab Karna Hai</label>
+          <div class="schedule-row">
+            <div>
+              <select class="form-select" id="scheduleType" onchange="toggleSchedule()">
+                <option value="now">Abhi Bhejo</option>
+                <option value="schedule">Schedule Karo</option>
+              </select>
+            </div>
+            <div id="scheduleDateTime" style="display:none">
+              <input type="datetime-local" class="form-input" id="scheduleTime">
+            </div>
+          </div>
+        </div>
+
+        <!-- SEND SPEED -->
+        <div class="form-group">
+          <label class="form-label">Send Speed (Messages per minute)</label>
+          <select class="form-select" id="sendSpeed">
+            <option value="10">Slow — 10/min (Safest)</option>
+            <option value="20" selected>Normal — 20/min (Recommended)</option>
+            <option value="30">Fast — 30/min (Risky)</option>
+          </select>
+        </div>
+
+        <!-- SEND BUTTON -->
+        <button class="send-btn" id="sendBtn" onclick="startBroadcast()">
+          <i class="fab fa-whatsapp"></i> Send WhatsApp Broadcast
+        </button>
+
+        <!-- PROGRESS -->
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">Preparing...</div>
+        </div>
+
+      </div>
+
+      <!-- CONTACTS TAB -->
+      <div class="tab-content" id="tab-contacts">
+        <div class="form-group">
+          <label class="form-label">Add Contact Manually</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px">
+            <input class="form-input" id="addPhone" placeholder="+91 98765 43210">
+            <input class="form-input" id="addName" placeholder="Naam">
+            <input class="form-input" id="addCity" placeholder="City">
+            <button onclick="addContact()" style="padding:11px 16px;background:var(--c1);border:none;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap">+ Add</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Phone</th><th>Naam</th><th>City</th><th>Action</th></tr></thead>
+          <tbody id="contactsBody"><tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text3)">Koi contact nahi. Upar add karo ya CSV upload karo.</td></tr></tbody>
+        </table>
+      </div>
+
+      <!-- HISTORY TAB -->
+      <div class="tab-content" id="tab-history">
+        <div id="historyEmpty" style="text-align:center;padding:40px;color:var(--text3)">
+          <i class="fas fa-history" style="font-size:2rem;margin-bottom:12px;opacity:.3"></i><br>
+          Abhi tak koi broadcast nahi bheja
+        </div>
+        <div id="historyList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: PREVIEW -->
+  <div>
+    <div style="font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Live Preview</div>
+    <div class="preview-phone">
+      <div class="preview-screen">
+        <div class="preview-header">
+          <div class="preview-avatar">👤</div>
+          <div>
+            <div class="preview-name" id="previewName">Contact</div>
+            <div class="preview-status">● WhatsApp</div>
+          </div>
+        </div>
+        <div class="preview-body" id="previewBody">
+          <div class="preview-placeholder">Upar message type karo — preview yahan dikhega 👆</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPS -->
+    <div style="margin-top:16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px">
+      <div style="font-size:.78rem;font-weight:700;color:var(--c4);margin-bottom:10px">💡 Best Practices</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:.78rem;color:var(--text2)">
+        <div>✅ Personalize karo — naam use karo</div>
+        <div>✅ Chhota rakho — max 300 characters</div>
+        <div>✅ Clear CTA do — "Reply 1 for details"</div>
+        <div>✅ Subah 10-12 ya Shaam 5-7 pe bhejo</div>
+        <div>❌ Raat ko mat bhejo</div>
+        <div>❌ Ek din mein 200+ mat bhejo</div>
+        <div>❌ Links mat daalo (spam lagta hai)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BROADCAST CONFIRM MODAL -->
+<div id="confirmModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:100;place-items:center;display:none">
+  <div style="background:#141e3c;border:1px solid rgba(99,102,241,.3);border-radius:20px;padding:36px;max-width:440px;width:90%;text-align:center">
+    <div style="font-size:2.5rem;margin-bottom:12px">📤</div>
+    <h2 style="font-family:'Inter',sans-serif;font-size:1.3rem;margin-bottom:8px">Broadcast Confirm Karo</h2>
+    <p id="confirmText" style="color:var(--text2);font-size:.88rem;margin-bottom:24px"></p>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button onclick="closeModal()" style="padding:11px 24px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">Cancel</button>
+      <button onclick="confirmSend()" style="padding:11px 24px;background:linear-gradient(135deg,var(--wa),#128c7e);border:none;border-radius:10px;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700"><i class="fab fa-whatsapp"></i> Haan, Bhejo!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let contacts=[], broadcastHistory=[], isSending=false;
+
+// ── Templates ────────────────────────────────────────────────────────────────
+const templates = {
+  new_launch: `🏠 *NAYI PROPERTY LAUNCH!*\n\nNamaste {naam} ji! 🙏\n\n*[Property Name]* ab available hai:\n📍 [Location]\n💰 Starting ₹[Price]\n📐 [BHK] | [Area] sqft\n✨ [Key Amenity]\n\nLimited units! Site visit book karein?\nReply *1* for YES 👇`,
+  price_drop: `💰 *PRICE DROP ALERT!*\n\nNamaste {naam} ji!\n\n[Property Name] ka price *₹[Amount] reduce* ho gaya hai!\n\nNaya Price: *₹[New Price]*\n📍 [Location]\n\nYeh offer limited time ke liye hai.\nAbhi book karein — Reply *VISIT*`,
+  site_visit: `📅 *SITE VISIT INVITATION*\n\nNamaste {naam} ji! 🙏\n\nIs weekend humari special site visit hai:\n🏠 [Property Name]\n📍 [Location]\n📅 [Date] | ⏰ [Time]\n\nFree bus service + lunch included!\n\nConfirm karein: Reply *YES*\nAgent: +91-98765-43210`,
+  follow_up: `Namaste {naam} ji! 🙏\n\nAapne kuch din pehle [Property] mein interest dikhaya tha.\n\nKya aap abhi bhi interested hain?\n\n1️⃣ Haan, details chahiye\n2️⃣ Site visit book karni hai\n3️⃣ Baad mein contact karein\n\nReply karein 😊`
+};
+
+function useTemplate(el, key) {
+  document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('msgText').value = templates[key];
+  updatePreview();
+  countChars();
+}
+
+// ── Preview ──────────────────────────────────────────────────────────────────
+function updatePreview() {
+  const msg = document.getElementById('msgText').value;
+  const body = document.getElementById('previewBody');
+  if (!msg.trim()) {
+    body.innerHTML = '<div class="preview-placeholder">Upar message type karo — preview yahan dikhega 👆</div>';
+    return;
+  }
+  const sample = msg.replace(/{naam}/g,'Rahul').replace(/{city}/g,'Noida').replace(/{property}/g,'DLF Skycourt');
+  const formatted = sample.replace(/\*(.*?)\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  body.innerHTML = `<div class="preview-msg">${formatted}<div class="preview-time">${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})} ✓✓</div></div>`;
+}
+
+// ── Char count ───────────────────────────────────────────────────────────────
+function countChars() {
+  const n = document.getElementById('msgText').value.length;
+  const el = document.getElementById('charCount');
+  el.textContent = n;
+  el.style.color = n > 1000 ? 'var(--c5)' : n > 500 ? 'var(--c4)' : 'var(--text3)';
+}
+
+// ── Number count ─────────────────────────────────────────────────────────────
+function countNumbers() {
+  const lines = document.getElementById('phoneNumbers').value.split('\n').filter(l=>l.trim().length>6);
+  const el = document.getElementById('numCount');
+  el.textContent = lines.length + ' numbers';
+  document.getElementById('statContacts').textContent = lines.length;
+}
+
+// ── CSV Upload ───────────────────────────────────────────────────────────────
+function handleCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split('\n').filter(l=>l.trim());
+    const phones = [];
+    lines.forEach(line => {
+      const parts = line.split(',');
+      const phone = parts[0]?.trim();
+      const naam = parts[1]?.trim() || '';
+      const city = parts[2]?.trim() || '';
+      if (phone && phone.length > 6) {
+        phones.push(phone);
+        if (!contacts.find(c=>c.phone===phone)) {
+          contacts.push({phone, naam, city});
+        }
+      }
+    });
+    document.getElementById('phoneNumbers').value = phones.join('\n');
+    countNumbers();
+    renderContacts();
+    document.getElementById('uploadZone').style.borderColor = 'var(--c3)';
+    document.getElementById('uploadZone').innerHTML = `<i class="fas fa-check-circle" style="color:var(--c3)"></i><p style="color:var(--c3)">${phones.length} numbers loaded!</p>`;
+  };
+  reader.readAsText(file);
+}
+
+// ── Contacts ─────────────────────────────────────────────────────────────────
+function addContact() {
+  const phone = document.getElementById('addPhone').value.trim();
+  const naam = document.getElementById('addName').value.trim();
+  const city = document.getElementById('addCity').value.trim();
+  if (!phone) return;
+  contacts.push({phone, naam: naam||'Ji', city: city||''});
+  document.getElementById('addPhone').value='';
+  document.getElementById('addName').value='';
+  document.getElementById('addCity').value='';
+  // Add to textarea
+  const ta = document.getElementById('phoneNumbers');
+  ta.value += (ta.value?'\n':'') + phone;
+  countNumbers();
+  renderContacts();
+}
+
+function renderContacts() {
+  const tb = document.getElementById('contactsBody');
+  if (!contacts.length) { tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">Koi contact nahi.</td></tr>'; return; }
+  tb.innerHTML = contacts.map((c,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td style="font-family:monospace;font-size:.8rem">${c.phone}</td>
+      <td>${c.naam||'—'}</td>
+      <td style="color:var(--text2)">${c.city||'—'}</td>
+      <td><button onclick="contacts.splice(${i},1);renderContacts()" style="background:rgba(244,63,94,.15);border:1px solid rgba(244,63,94,.2);color:var(--c5);padding:3px 10px;border-radius:6px;cursor:pointer;font-size:.75rem;font-family:'Inter',sans-serif">Remove</button></td>
+    </tr>`).join('');
+}
+
+// ── Variables ────────────────────────────────────────────────────────────────
+function insertVar(v) {
+  const ta = document.getElementById('msgText');
+  const pos = ta.selectionStart;
+  ta.value = ta.value.slice(0,pos) + v + ta.value.slice(pos);
+  ta.selectionStart = ta.selectionEnd = pos + v.length;
+  ta.focus();
+  updatePreview();
+}
+
+// ── Schedule ─────────────────────────────────────────────────────────────────
+function toggleSchedule() {
+  const val = document.getElementById('scheduleType').value;
+  document.getElementById('scheduleDateTime').style.display = val==='schedule' ? 'block' : 'none';
+}
+
+// ── Broadcast ────────────────────────────────────────────────────────────────
+function startBroadcast() {
+  const msg = document.getElementById('msgText').value.trim();
+  const phones = document.getElementById('phoneNumbers').value.split('\n').filter(l=>l.trim().length>6);
+  if (!msg) { alert('Message likhna zaruri hai!'); return; }
+  if (!phones.length) { alert('Koi phone number nahi hai!'); return; }
+  document.getElementById('confirmText').innerHTML = `<strong style="color:var(--text)">${phones.length} contacts</strong> ko message bheja jaayega.<br><br>Speed: ${document.getElementById('sendSpeed').value} messages/minute<br><br>Kya aap confirm karte hain?`;
+  document.getElementById('confirmModal').style.display = 'grid';
+}
+
+function closeModal() { document.getElementById('confirmModal').style.display = 'none'; }
+
+async function confirmSend() {
+  closeModal();
+  const msg = document.getElementById('msgText').value.trim();
+  const phoneLines = document.getElementById('phoneNumbers').value.split('\n').filter(l=>l.trim().length>6);
+  const speed = parseInt(document.getElementById('sendSpeed').value);
+  const delay = Math.floor(60000/speed);
+
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('mainSendBtn').disabled = true;
+  document.getElementById('progressWrap').style.display = 'block';
+  isSending = true;
+
+  let sent=0, failed=0;
+  const results = [];
+
+  for (let i=0; i<phoneLines.length; i++) {
+    if (!isSending) break;
+    const phone = phoneLines[i].trim();
+    const contact = contacts.find(c=>c.phone===phone) || {phone, naam:'Ji', city:''};
+    const personalized = msg.replace(/{naam}/g, contact.naam||'Ji').replace(/{city}/g, contact.city||'').replace(/{phone}/g, phone);
+
+    // Update progress
+    const pct = Math.round((i/phoneLines.length)*100);
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressText').textContent = `Sending ${i+1} of ${phoneLines.length}... (${pct}%)`;
+    document.getElementById('statPending').textContent = phoneLines.length - i - 1;
+
+    try {
+      const res = await fetch('/api/broadcast/send', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({to: phone, message: personalized})
+      });
+      const data = await res.json();
+      if (data.success) {
+        sent++;
+        results.push({phone, status:'sent', time:new Date().toLocaleTimeString()});
+      } else {
+        failed++;
+        results.push({phone, status:'failed', error:data.error, time:new Date().toLocaleTimeString()});
+      }
+    } catch(e) {
+      failed++;
+      results.push({phone, status:'failed', error:'Network error', time:new Date().toLocaleTimeString()});
+    }
+
+    document.getElementById('statSent').textContent = sent;
+    document.getElementById('statFailed').textContent = failed;
+
+    // Delay between messages
+    if (i < phoneLines.length-1) await new Promise(r=>setTimeout(r, delay));
+  }
+
+  // Done
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = `✅ Done! ${sent} sent, ${failed} failed.`;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('mainSendBtn').disabled = false;
+
+  // Save to history
+  const campaign = {
+    id: Date.now(), date: new Date().toLocaleDateString('en-IN'),
+    time: new Date().toLocaleTimeString('en-IN'),
+    total: phoneLines.length, sent, failed,
+    message: msg.substring(0,60)+'...',
+    results
+  };
+  broadcastHistory.unshift(campaign);
+  renderHistory();
+  switchTab('history', document.querySelectorAll('.tab')[2]);
+}
+
+// ── History ──────────────────────────────────────────────────────────────────
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  const empty = document.getElementById('historyEmpty');
+  if (!broadcastHistory.length) { empty.style.display='block'; el.innerHTML=''; return; }
+  empty.style.display = 'none';
+  el.innerHTML = broadcastHistory.map(c=>`
+    <div style="border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <div style="font-weight:700;font-size:.9rem">${c.date} at ${c.time}</div>
+          <div style="font-size:.78rem;color:var(--text2);margin-top:2px">${c.message}</div>
+        </div>
+        <div style="text-align:right">
+          <span class="badge badge-sent">${c.sent} Sent</span>
+          ${c.failed>0?`<span class="badge badge-failed" style="margin-left:5px">${c.failed} Failed</span>`:''}
+        </div>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden">
+        <div style="height:100%;background:var(--wa);width:${Math.round(c.sent/c.total*100)}%;border-radius:3px"></div>
+      </div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:5px">${Math.round(c.sent/c.total*100)}% delivery rate</div>
+    </div>`).join('');
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el?.classList.add('active');
+  document.getElementById('tab-'+name)?.classList.add('active');
+}
+</script>
+</body>
+</html>
