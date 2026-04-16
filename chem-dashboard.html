@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Chemical — Inquiry Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:20px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #1a1a1a}
+.logo{font-size:1.4rem;font-weight:800}
+.logo span{color:#25d366}
+.live{display:flex;align-items:center;gap:6px;font-size:.78rem;color:#888}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#25d366;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:#111;border:1px solid #1e1e1e;border-radius:14px;padding:18px 20px}
+.stat-label{font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stat-value{font-size:2rem;font-weight:800;line-height:1}
+.stat-value.green{color:#25d366}
+.stat-value.yellow{color:#f59e0b}
+.stat-value.blue{color:#3b82f6}
+.stat-value.red{color:#ef4444}
+.stat-sub{font-size:.72rem;color:#444;margin-top:6px}
+
+/* TABLE */
+.section-title{font-size:.8rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.table-wrap{background:#111;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:#161616;padding:12px 16px;text-align:left;font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+td{padding:13px 16px;font-size:.82rem;border-bottom:1px solid #1a1a1a;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#131313}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.badge.bulk{background:rgba(37,211,102,.15);color:#25d366}
+.badge.medium{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge.small{background:rgba(107,114,128,.15);color:#9ca3af}
+.score{display:inline-flex;align-items:center;gap:2px}
+.star{color:#f59e0b;font-size:.75rem}
+.star.empty{color:#333}
+
+/* TYPE ICONS */
+.type-icon{font-size:1rem;margin-right:6px}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:#444}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:#111;border:1px solid #222;color:#888;padding:7px 14px;border-radius:8px;font-size:.78rem;cursor:pointer;transition:.2s}
+.filter-btn.active{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.08)}
+.refresh-btn{margin-left:auto;background:#25d366;color:#000;border:none;padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s}
+.refresh-btn:hover{opacity:.85}
+
+/* SCORE BAR */
+.score-bar{display:flex;gap:2px;align-items:center}
+.score-pip{width:10px;height:10px;border-radius:2px;background:#222}
+.score-pip.filled{background:#25d366}
+.score-pip.filled.high{background:#f59e0b}
+
+.timestamp{color:#555;font-size:.75rem}
+.phone-masked{font-family:monospace;font-size:.78rem;color:#888}
+
+@media(max-width:700px){
+  th:nth-child(4),td:nth-child(4),
+  th:nth-child(5),td:nth-child(5){display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">🧪 Shivam Chemical <span>Dashboard</span></div>
+    <div style="font-size:.75rem;color:#444;margin-top:4px">WhatsApp Bot Inquiries — Real Time</div>
+  </div>
+  <div class="live"><div class="live-dot"></div> Live</div>
+</div>
+
+<!-- STATS -->
+<div class="stats" id="stats">
+  <div class="stat-card"><div class="stat-label">Total Inquiries</div><div class="stat-value green" id="s-total">—</div><div class="stat-sub">All time</div></div>
+  <div class="stat-card"><div class="stat-label">Hot Leads</div><div class="stat-value yellow" id="s-hot">—</div><div class="stat-sub">Score 4-5</div></div>
+  <div class="stat-card"><div class="stat-label">Bulk Orders</div><div class="stat-value blue" id="s-bulk">—</div><div class="stat-sub">500+ units</div></div>
+  <div class="stat-card"><div class="stat-label">Today</div><div class="stat-value" id="s-today">—</div><div class="stat-sub">New inquiries</div></div>
+</div>
+
+<!-- TABLE -->
+<div class="filter-bar">
+  <div class="section-title" style="margin:0">Inquiries</div>
+  <button class="filter-btn active" onclick="filterBy('all',this)">All</button>
+  <button class="filter-btn" onclick="filterBy('bulk',this)">Bulk</button>
+  <button class="filter-btn" onclick="filterBy('hospital',this)">Hospital</button>
+  <button class="filter-btn" onclick="filterBy('restaurant',this)">Restaurant</button>
+  <button class="filter-btn" onclick="filterBy('factory',this)">Factory</button>
+  <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Customer</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Customer Type</th>
+        <th>City</th>
+        <th>Score</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="8"><div class="empty"><div class="empty-icon">⏳</div>Loading...</div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const typeMap = {
+  office:'🏢 Office', restaurant:'🍽️ Restaurant', hospital:'🏥 Hospital',
+  factory:'🏭 Factory', home:'🏠 Home', other:'📦 Other'
+};
+
+let allData = [];
+let currentFilter = 'all';
+
+function scoreBar(s) {
+  const n = parseInt(s) || 0;
+  let bars = '';
+  for (let i = 1; i <= 5; i++) {
+    const cls = i <= n ? (n >= 4 ? 'filled high' : 'filled') : '';
+    bars += `<div class="score-pip ${cls}"></div>`;
+  }
+  return `<div class="score-bar">${bars}</div>`;
+}
+
+function formatTime(ts) {
+  if (!ts) return '—';
+  try {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff/60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff/3600000)}h ago`;
+    return d.toLocaleDateString('en-IN', {day:'numeric',month:'short'});
+  } catch { return ts; }
+}
+
+function isToday(ts) {
+  if (!ts) return false;
+  const d = new Date(ts);
+  const now = new Date();
+  return d.toDateString() === now.toDateString();
+}
+
+function renderRows(data) {
+  const tbody = document.getElementById('tbody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">📭</div><div>Koi inquiry nahi mili</div></td></tr>`;
+    return;
+  }
+  const sorted = [...data].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+  tbody.innerHTML = sorted.map((r, i) => {
+    const qty = r.quantity || 'small';
+    const score = parseInt(r.score) || 0;
+    return `<tr>
+      <td class="timestamp">${i+1}</td>
+      <td><div style="font-weight:600">${r.name || '—'}</div><div class="phone-masked">${maskPhone(r.phone)}</div></td>
+      <td>${r.product || '—'}</td>
+      <td><span class="badge ${qty}">${qty.charAt(0).toUpperCase()+qty.slice(1)}</span></td>
+      <td>${typeMap[r.customerType] || r.customerType || '—'}</td>
+      <td>${r.city || '—'}</td>
+      <td>${scoreBar(score)}</td>
+      <td class="timestamp">${formatTime(r.timestamp)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function maskPhone(p) {
+  if (!p) return '—';
+  const clean = p.replace(/\D/g,'').slice(-10);
+  return clean.length === 10 ? `${clean.slice(0,5)}·····` : p;
+}
+
+function filterBy(key, btn) {
+  currentFilter = key;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = key === 'all' ? allData
+    : key === 'bulk' ? allData.filter(r => r.quantity === 'bulk')
+    : allData.filter(r => r.customerType === key);
+  renderRows(filtered);
+}
+
+function updateStats(data) {
+  document.getElementById('s-total').textContent = data.length;
+  document.getElementById('s-hot').textContent = data.filter(r => parseInt(r.score) >= 4).length;
+  document.getElementById('s-bulk').textContent = data.filter(r => r.quantity === 'bulk').length;
+  document.getElementById('s-today').textContent = data.filter(r => isToday(r.timestamp)).length;
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('/chem/api/inquiries');
+    const json = await res.json();
+    if (json.success) {
+      allData = json.inquiries || [];
+      updateStats(allData);
+      const filtered = currentFilter === 'all' ? allData
+        : currentFilter === 'bulk' ? allData.filter(r => r.quantity === 'bulk')
+        : allData.filter(r => r.customerType === currentFilter);
+      renderRows(filtered);
+    }
+  } catch(e) {
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⚠️</div>Data load failed. Check connection.</div></td></tr>`;
+  }
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
