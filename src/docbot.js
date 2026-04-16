@@ -1,5 +1,6 @@
 // ─── DocBot — AI WhatsApp Assistant for Doctors/Clinics ─────────────────────
 const express = require('express');
+const path    = require('path');
 const router  = express.Router();
 const path    = require('path');
 const { MessagingResponse } = require('twilio').twiml;
@@ -177,7 +178,6 @@ function getMockAppointments() {
 }
 
 // ─── Static Pages ─────────────────────────────────────────────────────────────
-const path = require('path');
 router.get('/landing', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot.html')));
 router.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot-dashboard.html')));
 
