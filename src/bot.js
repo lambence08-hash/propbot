@@ -283,8 +283,10 @@ app.post('/webhook', async (req, res) => {
   const twiml  = new MessagingResponse();
   const phone  = req.body.From || '';
   const body   = (req.body.Body || '').trim();
+  console.log(`📩 MSG FROM: ${phone} | BODY: ${body}`);
   const session = getSession(phone);
   const reply   = await handleMessage(phone, body, session);
+  console.log(`📤 REPLY TO: ${phone} | STEP: ${session.step}`);
   twiml.message(reply);
   res.type('text/xml').send(twiml.toString());
 });
