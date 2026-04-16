@@ -8,11 +8,16 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid #1a1a1a}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #1a1a1a}
 .logo{font-size:1.3rem;font-weight:800}.logo span{color:#25d366}
 .live{display:flex;align-items:center;gap:6px;font-size:.75rem;color:#555}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#25d366;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:22px;background:#0f0f0f;border:1px solid #1a1a1a;border-radius:10px;padding:4px;width:fit-content}
+.tab{padding:8px 20px;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;color:#555;transition:.2s;border:none;background:none;font-family:inherit}
+.tab.active{background:#111;color:#fff;border:1px solid #222}
 
 /* STATS */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
@@ -44,29 +49,78 @@ tr:hover td{background:#131313}
 .badge.medium{background:rgba(245,158,11,.15);color:#f59e0b}
 .badge.small{background:rgba(107,114,128,.12);color:#6b7280}
 
-/* SCORE PIPS */
 .score-bar{display:flex;gap:2px}
 .pip{width:9px;height:9px;border-radius:2px;background:#222}
 .pip.on{background:#25d366}.pip.on.hot{background:#f59e0b}
 
-/* FOLLOW-UP BUTTON */
 .fu-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;text-decoration:none;transition:.2s;font-family:inherit}
 .fu-btn.wa{background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3)}
 .fu-btn.wa:hover{background:rgba(37,211,102,.25)}
 .fu-btn.done-btn{background:rgba(107,114,128,.1);color:#6b7280;border:1px solid #222}
 .fu-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:700}
-.fu-badge.pending{background:rgba(239,68,68,.12);color:#ef4444}
 .fu-badge.done{background:rgba(37,211,102,.12);color:#25d366}
 
 .ts{color:#555;font-size:.72rem}
 .name-row{font-weight:600;font-size:.82rem}
 .phone-row{font-size:.7rem;color:#555;font-family:monospace;margin-top:1px}
-
-/* HOT LABEL */
-.hot-label{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;color:#f59e0b;font-weight:700;margin-left:6px}
-
-/* EMPTY */
+.hot-label{font-size:.7rem;color:#f59e0b;font-weight:700;margin-left:6px}
 .empty{text-align:center;padding:50px;color:#444}
+
+/* ── RETARGETING TAB ── */
+#tab-retarget{display:none}
+.rt-section{margin-bottom:24px}
+.rt-title{font-size:.75rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+
+/* Segment cards */
+.segments{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.seg-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:16px;cursor:pointer;transition:.2s}
+.seg-card:hover{border-color:#333}
+.seg-card.selected{border-color:#25d366;background:rgba(37,211,102,.05)}
+.seg-icon{font-size:1.5rem;margin-bottom:8px}
+.seg-name{font-size:.85rem;font-weight:700;margin-bottom:4px}
+.seg-desc{font-size:.72rem;color:#555;line-height:1.4}
+.seg-count{font-size:1.3rem;font-weight:800;color:#25d366;margin-top:8px}
+
+/* Template picker */
+.templates{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px}
+.tmpl-card{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px;cursor:pointer;transition:.2s}
+.tmpl-card:hover{border-color:#333}
+.tmpl-card.selected{border-color:#25d366;background:rgba(37,211,102,.05)}
+.tmpl-label{font-size:.72rem;color:#25d366;font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.tmpl-preview{font-size:.75rem;color:#888;line-height:1.5}
+
+/* Message editor */
+.msg-editor{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:18px;margin-bottom:18px}
+.msg-editor textarea{width:100%;background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#e9edef;padding:12px;font-size:.82rem;line-height:1.6;font-family:inherit;resize:vertical;min-height:100px;margin-bottom:10px}
+.msg-editor textarea:focus{outline:none;border-color:#25d366}
+.char-count{font-size:.7rem;color:#555;text-align:right;margin-top:-6px;margin-bottom:10px}
+
+/* Recipient list */
+.recipient-list{background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.recipient-header{background:#161616;padding:10px 16px;font-size:.72rem;color:#555;display:flex;justify-content:space-between;align-items:center}
+.recipient-row{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid #161616;font-size:.8rem}
+.recipient-row:last-child{border-bottom:none}
+.recipient-info{display:flex;flex-direction:column;gap:2px}
+.recipient-name{font-weight:600}
+.recipient-meta{font-size:.7rem;color:#555}
+.send-one{background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3);padding:5px 12px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;transition:.2s}
+.send-one:hover{background:rgba(37,211,102,.25)}
+
+/* Send all btn */
+.send-all-wrap{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.send-all-info{font-size:.82rem;color:#888}
+.send-all-info strong{color:#fff;display:block;font-size:.9rem;margin-bottom:2px}
+.send-all-btn{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:12px 24px;border-radius:9px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* AiSensy upgrade card */
+.upgrade-card{background:linear-gradient(135deg,rgba(37,211,102,.08),rgba(18,140,126,.05));border:1px solid rgba(37,211,102,.2);border-radius:12px;padding:20px;margin-top:24px}
+.upgrade-title{font-size:.9rem;font-weight:700;color:#25d366;margin-bottom:8px}
+.upgrade-desc{font-size:.78rem;color:#888;line-height:1.6;margin-bottom:12px}
+.upgrade-features{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.uf{font-size:.72rem;background:rgba(37,211,102,.1);color:#25d366;padding:4px 10px;border-radius:20px}
+.upgrade-btn{background:#25d366;color:#000;border:none;padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit}
+
+@media(max-width:600px){.segments{grid-template-columns:1fr 1fr}.send-all-wrap{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -74,192 +128,391 @@ tr:hover td{background:#131313}
 <div class="header">
   <div>
     <div class="logo">🧪 Shivam Chemical <span>Sales Dashboard</span></div>
-    <div style="font-size:.72rem;color:#444;margin-top:3px">WhatsApp Bot Inquiries — Auto Follow-Up Tracker</div>
+    <div style="font-size:.72rem;color:#444;margin-top:3px">WhatsApp Bot — Inquiries & Retargeting</div>
   </div>
   <div class="live"><div class="live-dot"></div> Live · auto-refresh 30s</div>
 </div>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat-card"><div class="stat-label">Total Inquiries</div><div class="stat-value green" id="s-total">—</div><div class="stat-sub">All time</div></div>
-  <div class="stat-card"><div class="stat-label">🔥 Hot Leads</div><div class="stat-value yellow" id="s-hot">—</div><div class="stat-sub">Score 4-5 → call first</div></div>
-  <div class="stat-card"><div class="stat-label">Follow-Up Pending</div><div class="stat-value red" id="s-pending">—</div><div class="stat-sub">Call karna baki hai</div></div>
-  <div class="stat-card"><div class="stat-label">Bulk Orders</div><div class="stat-value blue" id="s-bulk">—</div><div class="stat-sub">500+ units</div></div>
-  <div class="stat-card"><div class="stat-label">Converted ✅</div><div class="stat-value green" id="s-done">—</div><div class="stat-sub">Follow-up done</div></div>
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('inquiries',this)">📋 Inquiries</button>
+  <button class="tab" onclick="switchTab('retarget',this)">🎯 Retargeting</button>
 </div>
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterBy('all',this)">All</button>
-  <button class="filter-btn" onclick="filterBy('pending',this)">⚡ Pending Call</button>
-  <button class="filter-btn" onclick="filterBy('hot',this)">🔥 Hot Leads</button>
-  <button class="filter-btn" onclick="filterBy('bulk',this)">📦 Bulk</button>
-  <button class="filter-btn" onclick="filterBy('hospital',this)">🏥 Hospital</button>
-  <button class="filter-btn" onclick="filterBy('restaurant',this)">🍽️ Restaurant</button>
-  <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
+<!-- ══════════ TAB: INQUIRIES ══════════ -->
+<div id="tab-inquiries">
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">Total Inquiries</div><div class="stat-value green" id="s-total">—</div><div class="stat-sub">All time</div></div>
+    <div class="stat-card"><div class="stat-label">🔥 Hot Leads</div><div class="stat-value yellow" id="s-hot">—</div><div class="stat-sub">Score 4-5 → call first</div></div>
+    <div class="stat-card"><div class="stat-label">Follow-Up Pending</div><div class="stat-value red" id="s-pending">—</div><div class="stat-sub">Call karna baki hai</div></div>
+    <div class="stat-card"><div class="stat-label">Bulk Orders</div><div class="stat-value blue" id="s-bulk">—</div><div class="stat-sub">500+ units</div></div>
+    <div class="stat-card"><div class="stat-label">Converted ✅</div><div class="stat-value green" id="s-done">—</div><div class="stat-sub">Follow-up done</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterBy('all',this)">All</button>
+    <button class="filter-btn" onclick="filterBy('pending',this)">⚡ Pending Call</button>
+    <button class="filter-btn" onclick="filterBy('hot',this)">🔥 Hot Leads</button>
+    <button class="filter-btn" onclick="filterBy('bulk',this)">📦 Bulk</button>
+    <button class="filter-btn" onclick="filterBy('hospital',this)">🏥 Hospital</button>
+    <button class="filter-btn" onclick="filterBy('restaurant',this)">🍽️ Restaurant</button>
+    <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Customer</th><th>Product</th><th>Quantity</th><th>City</th><th>Score</th><th>Time</th><th>Follow-Up</th></tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="8"><div class="empty">⏳ Loading...</div></td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class="table-wrap">
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Customer</th>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>City</th>
-        <th>Score</th>
-        <th>Time</th>
-        <th>Follow-Up</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
-      <tr><td colspan="8"><div class="empty">⏳ Loading...</div></td></tr>
-    </tbody>
-  </table>
+<!-- ══════════ TAB: RETARGETING ══════════ -->
+<div id="tab-retarget">
+
+  <!-- STEP 1: Segment -->
+  <div class="rt-section">
+    <div class="rt-title">Step 1 — Kise bhejni hai message? (Segment select karo)</div>
+    <div class="segments">
+      <div class="seg-card selected" onclick="selectSegment('all',this)">
+        <div class="seg-icon">👥</div>
+        <div class="seg-name">Sab Customers</div>
+        <div class="seg-desc">Poori list ko ek saath message karo</div>
+        <div class="seg-count" id="seg-all">0</div>
+      </div>
+      <div class="seg-card" onclick="selectSegment('hot',this)">
+        <div class="seg-icon">🔥</div>
+        <div class="seg-name">Hot Leads Only</div>
+        <div class="seg-desc">Score 4-5 wale — sabse jyada chances</div>
+        <div class="seg-count" id="seg-hot">0</div>
+      </div>
+      <div class="seg-card" onclick="selectSegment('bulk',this)">
+        <div class="seg-icon">📦</div>
+        <div class="seg-name">Bulk Buyers</div>
+        <div class="seg-desc">500+ units wale — high value customers</div>
+        <div class="seg-count" id="seg-bulk">0</div>
+      </div>
+      <div class="seg-card" onclick="selectSegment('notcalled',this)">
+        <div class="seg-icon">⚡</div>
+        <div class="seg-name">Jinhein Call Nahi Ki</div>
+        <div class="seg-desc">Follow-up abhi tak pending hai</div>
+        <div class="seg-count" id="seg-pending">0</div>
+      </div>
+      <div class="seg-card" onclick="selectSegment('hospital',this)">
+        <div class="seg-icon">🏥</div>
+        <div class="seg-name">Hospital / Clinic</div>
+        <div class="seg-desc">Healthcare sector — high repeat orders</div>
+        <div class="seg-count" id="seg-hospital">0</div>
+      </div>
+      <div class="seg-card" onclick="selectSegment('restaurant',this)">
+        <div class="seg-icon">🍽️</div>
+        <div class="seg-name">Restaurant / Hotel</div>
+        <div class="seg-desc">F&B sector — monthly bulk buyers</div>
+        <div class="seg-count" id="seg-restaurant">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Template -->
+  <div class="rt-section">
+    <div class="rt-title">Step 2 — Message template select karo</div>
+    <div class="templates">
+      <div class="tmpl-card selected" onclick="selectTemplate('followup',this)">
+        <div class="tmpl-label">📞 Follow-Up</div>
+        <div class="tmpl-preview">Aapki inquiry ka update — kya aap order dena chahte hain?</div>
+      </div>
+      <div class="tmpl-card" onclick="selectTemplate('offer',this)">
+        <div class="tmpl-label">🎁 Special Offer</div>
+        <div class="tmpl-preview">Is hafte bulk order pe 15% discount — sirf 3 din baaki!</div>
+      </div>
+      <div class="tmpl-card" onclick="selectTemplate('newproduct',this)">
+        <div class="tmpl-label">🆕 New Product</div>
+        <div class="tmpl-preview">Hamara naya product launch hua — aapke liye bilkul sahi!</div>
+      </div>
+      <div class="tmpl-card" onclick="selectTemplate('reorder',this)">
+        <div class="tmpl-label">🔄 Reorder Reminder</div>
+        <div class="tmpl-preview">Stock khatam hone wala hoga — abhi reorder karo!</div>
+      </div>
+      <div class="tmpl-card" onclick="selectTemplate('festival',this)">
+        <div class="tmpl-label">🎉 Festival Offer</div>
+        <div class="tmpl-preview">Festival special discount — bulk order pe free delivery!</div>
+      </div>
+      <div class="tmpl-card" onclick="selectTemplate('custom',this)">
+        <div class="tmpl-label">✏️ Custom Message</div>
+        <div class="tmpl-preview">Apni marzi se message likho</div>
+      </div>
+    </div>
+
+    <div class="msg-editor">
+      <div style="font-size:.72rem;color:#555;margin-bottom:8px">Message Preview (edit kar sakte ho):</div>
+      <textarea id="msgText" oninput="updateCharCount()"></textarea>
+      <div class="char-count"><span id="charCount">0</span> characters</div>
+      <div style="font-size:.7rem;color:#444">💡 *bold* likho bold ke liye &nbsp;|&nbsp; {naam} aur {product} auto-fill ho jaata hai</div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Recipients -->
+  <div class="rt-section">
+    <div class="rt-title">Step 3 — Recipients dekho aur bhejo</div>
+    <div class="recipient-list">
+      <div class="recipient-header">
+        <span id="recipientCount">0 recipients selected</span>
+        <span style="font-size:.7rem">Click "Send" to open WhatsApp</span>
+      </div>
+      <div id="recipientRows"></div>
+    </div>
+
+    <div class="send-all-wrap">
+      <div class="send-all-info">
+        <strong>📲 Ek ek karke bhejo</strong>
+        Upar har customer ke samne "Send" button hai — click karo, WhatsApp khulega, message ready hoga. Bas bhej do!
+      </div>
+      <button class="send-all-btn" onclick="openAllWA()">📲 Sab ke liye WhatsApp Links Kholo</button>
+    </div>
+  </div>
+
+  <!-- UPGRADE CARD -->
+  <div class="upgrade-card">
+    <div class="upgrade-title">🚀 Ek Click mein 1000 Customers ko Message — AiSensy Upgrade</div>
+    <div class="upgrade-desc">
+      Abhi aap ek ek karke WhatsApp pe manually bhej rahe ho — jo time-consuming hai. AiSensy integrate karne ke baad, ek button se poori list ko ek saath broadcast ho jaayega — automatically, bina phone uthaye.
+    </div>
+    <div class="upgrade-features">
+      <span class="uf">✅ 1-click bulk broadcast</span>
+      <span class="uf">✅ Scheduled messages</span>
+      <span class="uf">✅ Auto re-engagement after 7/30 days</span>
+      <span class="uf">✅ Delivery + read receipts</span>
+      <span class="uf">✅ Official WhatsApp number</span>
+    </div>
+    <div style="font-size:.78rem;color:#888;margin-bottom:12px">Cost: AiSensy ~₹999/month + ₹8,000 integration (one-time)</div>
+    <button class="upgrade-btn" onclick="window.open('https://wa.me/919518709573?text=AiSensy+integration+ke+baare+mein+baat+karni+hai')">📲 Upgrade ke liye Contact Karo</button>
+  </div>
 </div>
 
 <script>
 const typeEmoji = {office:'🏢',restaurant:'🍽️',hospital:'🏥',factory:'🏭',home:'🏠',other:'📦'};
 let allData = [];
 let currentFilter = 'all';
+let currentSegment = 'all';
+let currentTemplate = 'followup';
 
-function scoreBar(s) {
-  const n = parseInt(s) || 0;
-  return Array.from({length:5},(_,i)=>`<div class="pip ${i<n?(n>=4?'on hot':'on'):''}"></div>`).join('');
+const templates = {
+  followup:   `Namaste {naam} ji! 🙏\n\nMain Shivam Chemical se bol raha hun.\n\nAapne *{product}* ke liye inquiry ki thi — kya aapne decide kiya?\n\nIs hafte order karo toh *special price* milegi! 🎁\n\nCall ya WhatsApp: *+91-93225 09198*\n\n_Shivam Chemical — Quality Guaranteed_ 🧪`,
+  offer:      `Namaste {naam} ji! 🎁\n\nShivam Chemical mein *Is Hafte Special Offer*:\n\n🔴 Bulk order (500+ units) pe *15% OFF*\n🔸 Medium order pe *8% OFF*\n✅ Free delivery Maharashtra mein\n\nYeh offer sirf *3 din* ke liye hai!\n\nAbhi order karo: *+91-93225 09198* 📲`,
+  newproduct: `Namaste {naam} ji! 🆕\n\nShivam Chemical ka *Naya Product* launch hua!\n\n🧴 Premium Floor Cleaner — Hospital Grade\n✅ 99.9% Germs ka khatma\n✅ Aapke *{product}* ke saath combo deal\n\nSample free mein try karna hai?\n\nCall karein: *+91-93225 09198* 🧪`,
+  reorder:    `Namaste {naam} ji! 🔄\n\nAapne pehle *{product}* order kiya tha.\n\nStock khatam hone wala hoga — *abhi reorder karo* aur:\n\n✅ Priority delivery\n✅ Same rate guaranteed\n✅ Extra 5% loyalty discount\n\nWhatsApp: *+91-93225 09198* 📲`,
+  festival:   `Namaste {naam} ji! 🎉\n\n*Shivam Chemical — Festival Special*\n\n🎁 Bulk order pe *20% OFF*\n🚚 Free delivery — Pan India\n📦 Fast dispatch — 24 hours\n\nSirf is weekend tak!\n\nOrder karo: *+91-93225 09198* 🧪`,
+  custom:     ``
+};
+
+// ── TAB SWITCH ───────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-inquiries').style.display = tab==='inquiries' ? 'block' : 'none';
+  document.getElementById('tab-retarget').style.display  = tab==='retarget'  ? 'block' : 'none';
+  if (tab === 'retarget') renderRetarget();
 }
 
+// ── INQUIRIES ────────────────────────────────────────────────
+function scoreBar(s) {
+  const n = parseInt(s)||0;
+  return Array.from({length:5},(_,i)=>`<div class="pip ${i<n?(n>=4?'on hot':'on'):''}"></div>`).join('');
+}
 function formatTime(ts) {
   if (!ts) return '—';
   try {
-    const d = new Date(ts), now = new Date(), diff = now - d;
-    if (diff < 60000) return 'Just now';
-    if (diff < 3600000) return `${Math.floor(diff/60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff/3600000)}h ago`;
+    const d=new Date(ts),now=new Date(),diff=now-d;
+    if(diff<60000)return'Just now';
+    if(diff<3600000)return`${Math.floor(diff/60000)}m ago`;
+    if(diff<86400000)return`${Math.floor(diff/3600000)}h ago`;
     return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
-  } catch { return ts; }
+  } catch{return ts;}
 }
-
-function maskPhone(p) {
-  if (!p) return '—';
-  const c = p.replace(/\D/g,'').slice(-10);
-  return c.length===10 ? `${c.slice(0,5)}·····` : p;
+function maskPhone(p){
+  if(!p)return'—';const c=p.replace(/\D/g,'').slice(-10);
+  return c.length===10?`${c.slice(0,5)}·····`:p;
 }
+function rawPhone(p){return(p||'').replace(/\D/g,'');}
 
-function rawPhone(p) {
-  return (p||'').replace(/\D/g,'');
-}
-
-function waLink(phone, name, product, quantity) {
+function waLink(phone, name, product, quantity, customMsg) {
   const num = rawPhone(phone);
-  const qty = quantity === 'bulk' ? 'bulk order' : quantity === 'medium' ? 'medium order' : 'order';
-  const msg = `Namaste ${name} ji, main Shivam Chemical se bol raha hun. Aapne ${product} ke liye ${qty} inquiry ki thi — kya abhi baat kar sakte hain? Aapke liye special price hai! 🧪`;
+  let msg = customMsg || `Namaste ${name} ji, main Shivam Chemical se bol raha hun. Aapne ${product} ke liye inquiry ki thi — kya abhi baat kar sakte hain? Special price hai! 🧪`;
   return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
 }
 
 function renderRows(data) {
   const tbody = document.getElementById('tbody');
-  if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">📭 Koi inquiry nahi mili</div></td></tr>`;
-    return;
-  }
-  const sorted = [...data].sort((a,b) => {
-    // Pending + hot first
-    const aP = a.followUpStatus !== 'done' ? 1 : 0;
-    const bP = b.followUpStatus !== 'done' ? 1 : 0;
-    if (aP !== bP) return bP - aP;
-    return new Date(b.timestamp) - new Date(a.timestamp);
+  if (!data.length) { tbody.innerHTML=`<tr><td colspan="8"><div class="empty">📭 Koi inquiry nahi mili</div></td></tr>`; return; }
+  const sorted=[...data].sort((a,b)=>{
+    const aP=a.followUpStatus!=='done'?1:0,bP=b.followUpStatus!=='done'?1:0;
+    if(aP!==bP)return bP-aP;
+    return new Date(b.timestamp)-new Date(a.timestamp);
   });
-  tbody.innerHTML = sorted.map((r, i) => {
-    const score = parseInt(r.score) || 0;
-    const isHot = score >= 4;
-    const isPending = r.followUpStatus !== 'done';
-    const qty = r.quantity || 'small';
+  tbody.innerHTML=sorted.map((r,i)=>{
+    const score=parseInt(r.score)||0,isHot=score>=4,isPending=r.followUpStatus!=='done',qty=r.quantity||'small';
     return `<tr>
       <td class="ts">${i+1}</td>
-      <td>
-        <div class="name-row">${typeEmoji[r.customerType]||''} ${r.name||'—'}${isHot?'<span class="hot-label">🔥 HOT</span>':''}</div>
-        <div class="phone-row">${maskPhone(r.phone)}</div>
-      </td>
+      <td><div class="name-row">${typeEmoji[r.customerType]||''} ${r.name||'—'}${isHot?'<span class="hot-label">🔥 HOT</span>':''}</div><div class="phone-row">${maskPhone(r.phone)}</div></td>
       <td>${r.product||'—'}</td>
       <td><span class="badge ${qty}">${qty.charAt(0).toUpperCase()+qty.slice(1)}</span></td>
       <td>${r.city||'—'}</td>
       <td><div class="score-bar">${scoreBar(score)}</div></td>
       <td class="ts">${formatTime(r.timestamp)}</td>
-      <td>
-        ${isPending
-          ? `<a href="${waLink(r.phone, r.name, r.product, r.quantity)}" target="_blank" class="fu-btn wa">📲 Follow Up</a>
-             <button class="fu-btn done-btn" style="margin-top:4px" onclick="markDone(this,'${r.phone}',${r.rowIndex||0})">✓ Done</button>`
-          : `<span class="fu-badge done">✅ Called</span>`
-        }
-      </td>
+      <td>${isPending
+        ?`<a href="${waLink(r.phone,r.name,r.product,r.quantity)}" target="_blank" class="fu-btn wa">📲 Follow Up</a>
+           <button class="fu-btn done-btn" style="margin-top:4px" onclick="markDone(this,'${r.phone}',${r.rowIndex||0})">✓ Done</button>`
+        :`<span class="fu-badge done">✅ Called</span>`}</td>
     </tr>`;
   }).join('');
 }
 
 async function markDone(btn, phone, rowIndex) {
-  btn.textContent = '...';
-  btn.disabled = true;
+  btn.textContent='...'; btn.disabled=true;
   try {
-    await fetch('/chem/api/followup-done', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ phone, rowIndex })
-    });
-    // Update local data
-    const item = allData.find(r => r.phone === phone);
-    if (item) item.followUpStatus = 'done';
-    const filtered = getFiltered();
-    renderRows(filtered);
-    updateStats(allData);
-  } catch(e) {
-    btn.textContent = '✓ Done';
-    btn.disabled = false;
-  }
+    await fetch('/chem/api/followup-done',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,rowIndex})});
+    const item=allData.find(r=>r.phone===phone);
+    if(item)item.followUpStatus='done';
+    renderRows(getFiltered()); updateStats(allData);
+  } catch(e){btn.textContent='✓ Done';btn.disabled=false;}
 }
 
 function getFiltered() {
-  switch(currentFilter) {
-    case 'pending':   return allData.filter(r => r.followUpStatus !== 'done');
-    case 'hot':       return allData.filter(r => parseInt(r.score) >= 4);
-    case 'bulk':      return allData.filter(r => r.quantity === 'bulk');
-    case 'hospital':  return allData.filter(r => r.customerType === 'hospital');
-    case 'restaurant':return allData.filter(r => r.customerType === 'restaurant');
-    default:          return allData;
+  switch(currentFilter){
+    case'pending':return allData.filter(r=>r.followUpStatus!=='done');
+    case'hot':return allData.filter(r=>parseInt(r.score)>=4);
+    case'bulk':return allData.filter(r=>r.quantity==='bulk');
+    case'hospital':return allData.filter(r=>r.customerType==='hospital');
+    case'restaurant':return allData.filter(r=>r.customerType==='restaurant');
+    default:return allData;
   }
 }
-
-function filterBy(key, btn) {
-  currentFilter = key;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function filterBy(key,btn){
+  currentFilter=key;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderRows(getFiltered());
 }
-
-function updateStats(data) {
-  document.getElementById('s-total').textContent   = data.length;
-  document.getElementById('s-hot').textContent     = data.filter(r => parseInt(r.score) >= 4).length;
-  document.getElementById('s-pending').textContent = data.filter(r => r.followUpStatus !== 'done').length;
-  document.getElementById('s-bulk').textContent    = data.filter(r => r.quantity === 'bulk').length;
-  document.getElementById('s-done').textContent    = data.filter(r => r.followUpStatus === 'done').length;
+function updateStats(data){
+  document.getElementById('s-total').textContent=data.length;
+  document.getElementById('s-hot').textContent=data.filter(r=>parseInt(r.score)>=4).length;
+  document.getElementById('s-pending').textContent=data.filter(r=>r.followUpStatus!=='done').length;
+  document.getElementById('s-bulk').textContent=data.filter(r=>r.quantity==='bulk').length;
+  document.getElementById('s-done').textContent=data.filter(r=>r.followUpStatus==='done').length;
 }
 
-async function loadData() {
-  try {
-    const res  = await fetch('/chem/api/inquiries');
-    const json = await res.json();
-    if (json.success) {
-      allData = json.inquiries || [];
-      updateStats(allData);
-      renderRows(getFiltered());
-    }
-  } catch(e) {
-    document.getElementById('tbody').innerHTML = `<tr><td colspan="8"><div class="empty">⚠️ Data load failed</div></td></tr>`;
+// ── RETARGETING ──────────────────────────────────────────────
+function getSegmentData() {
+  switch(currentSegment){
+    case'hot':return allData.filter(r=>parseInt(r.score)>=4);
+    case'bulk':return allData.filter(r=>r.quantity==='bulk');
+    case'notcalled':return allData.filter(r=>r.followUpStatus!=='done');
+    case'hospital':return allData.filter(r=>r.customerType==='hospital');
+    case'restaurant':return allData.filter(r=>r.customerType==='restaurant');
+    default:return allData;
   }
 }
 
+function selectSegment(key, card) {
+  currentSegment=key;
+  document.querySelectorAll('.seg-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  renderRetarget();
+}
+
+function selectTemplate(key, card) {
+  currentTemplate=key;
+  document.querySelectorAll('.tmpl-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('msgText').value=templates[key]||'';
+  updateCharCount();
+  renderRecipients();
+}
+
+function buildMsg(template, name, product) {
+  return template.replace(/{naam}/g,name||'').replace(/{product}/g,product||'');
+}
+
+function updateCharCount(){
+  document.getElementById('charCount').textContent=document.getElementById('msgText').value.length;
+  renderRecipients();
+}
+
+function renderRecipients() {
+  const data=getSegmentData();
+  const tmpl=document.getElementById('msgText').value;
+  document.getElementById('recipientCount').textContent=`${data.length} recipients selected`;
+  if(!data.length){
+    document.getElementById('recipientRows').innerHTML=`<div class="empty" style="padding:24px">Is segment mein koi nahi hai</div>`;
+    return;
+  }
+  document.getElementById('recipientRows').innerHTML=data.map(r=>{
+    const msg=buildMsg(tmpl,r.name,r.product);
+    const link=`https://wa.me/${rawPhone(r.phone)}?text=${encodeURIComponent(msg)}`;
+    return `<div class="recipient-row">
+      <div class="recipient-info">
+        <div class="recipient-name">${typeEmoji[r.customerType]||''} ${r.name||'—'}</div>
+        <div class="recipient-meta">${r.product||'—'} · ${r.city||'—'} · Score ${r.score||0}/5</div>
+      </div>
+      <a href="${link}" target="_blank" class="send-one">📲 Send</a>
+    </div>`;
+  }).join('');
+}
+
+function openAllWA() {
+  const data=getSegmentData();
+  const tmpl=document.getElementById('msgText').value;
+  if(!data.length){alert('Koi recipient nahi hai!');return;}
+  if(data.length>10){
+    if(!confirm(`${data.length} WhatsApp windows kholni hain? Browser pop-up allow karo.\n\nOK karo toh sab khulenge.`))return;
+  }
+  data.forEach((r,i)=>{
+    const msg=buildMsg(tmpl,r.name,r.product);
+    const link=`https://wa.me/${rawPhone(r.phone)}?text=${encodeURIComponent(msg)}`;
+    setTimeout(()=>window.open(link,'_blank'),i*500);
+  });
+}
+
+function renderRetarget() {
+  // Update segment counts
+  document.getElementById('seg-all').textContent=allData.length;
+  document.getElementById('seg-hot').textContent=allData.filter(r=>parseInt(r.score)>=4).length;
+  document.getElementById('seg-bulk').textContent=allData.filter(r=>r.quantity==='bulk').length;
+  document.getElementById('seg-pending').textContent=allData.filter(r=>r.followUpStatus!=='done').length;
+  document.getElementById('seg-hospital').textContent=allData.filter(r=>r.customerType==='hospital').length;
+  document.getElementById('seg-restaurant').textContent=allData.filter(r=>r.customerType==='restaurant').length;
+  // Set default template text
+  if(!document.getElementById('msgText').value) {
+    document.getElementById('msgText').value=templates[currentTemplate];
+    updateCharCount();
+  }
+  renderRecipients();
+}
+
+// ── DATA LOAD ─────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res=await fetch('/chem/api/inquiries');
+    const json=await res.json();
+    if(json.success){
+      allData=json.inquiries||[];
+      updateStats(allData);
+      renderRows(getFiltered());
+      if(document.getElementById('tab-retarget').style.display==='block') renderRetarget();
+    }
+  } catch(e){
+    document.getElementById('tbody').innerHTML=`<tr><td colspan="8"><div class="empty">⚠️ Data load failed</div></td></tr>`;
+  }
+}
+
+// Init
+document.getElementById('tab-retarget').style.display='none';
 loadData();
-setInterval(loadData, 30000);
+setInterval(loadData,30000);
 </script>
 </body>
 </html>
