@@ -60,4 +60,28 @@ async function getVisits() {
   } catch(e) { console.error('Sheets getVisits error:', e.message); return []; }
 }
 
-module.exports = { saveVisitBooking, saveLead, getLeads, getVisits };
+async function saveChemInquiry({ phone, name, customerType, product, quantity, city, score, timestamp }) {
+  try {
+    const sheets = await getSheets();
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'Chem Inquiries!A:H',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [[timestamp, phone, name, customerType, product, quantity, city, score]] }
+    });
+  } catch(e) { console.error('Sheets saveChemInquiry error:', e.message); }
+}
+
+async function getChemInquiries() {
+  try {
+    const sheets = await getSheets();
+    const res = await sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: 'Chem Inquiries!A:H' });
+    const rows = res.data.values || [];
+    return rows.slice(1).map(r => ({
+      timestamp: r[0], phone: r[1], name: r[2], customerType: r[3],
+      product: r[4], quantity: r[5], city: r[6], score: r[7]
+    }));
+  } catch(e) { console.error('Sheets getChemInquiries error:', e.message); return []; }
+}
+
+module.exports = { saveVisitBooking, saveLead, getLeads, getVisits, saveChemInquiry, getChemInquiries };

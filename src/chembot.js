@@ -3,6 +3,7 @@ const express = require('express');
 const path    = require('path');
 const router  = express.Router();
 const { MessagingResponse } = require('twilio').twiml;
+const { saveChemInquiry, getChemInquiries } = require('./sheets');
 
 const sessions = {};
 function getSession(phone) {
@@ -102,7 +103,13 @@ async function handleMessage(phone, body, session) {
       session.step = 'done';
       session.score = calcScore(session);
       await alertOwner(session);
-      return `✅ *Inquiry Received!*\n══════════════════\n\n👤 Naam: ${session.name}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city}\n\nHumari team aapko *24 ghante mein* contact karegi!\n\n📱 Abhi contact karna hai?\n*+91 9518709573* pe call karein\n\n*Shivam Chemical — Quality Guaranteed* 🧪`;
+      await saveChemInquiry({
+        phone: session.phone, name: session.name,
+        customerType: session.customerType, product: session.product,
+        quantity: session.quantity, city: session.city,
+        score: session.score, timestamp: new Date().toISOString()
+      });
+      return `✅ *Inquiry Received!*\n══════════════════\n\n👤 Naam: ${session.name}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city}\n\nHumari team aapko *24 ghante mein* contact karegi!\n\n📱 Abhi contact karna hai?\n*+91-93225 09198* pe call karein\n\n*Shivam Chemical — Quality Guaranteed* 🧪`;
 
     case 'done':
       session.step = 'start';
@@ -125,6 +132,27 @@ router.post('/webhook', async (req, res) => {
   twiml.message(reply);
   res.type('text/xml').send(twiml.toString());
 });
+
+router.get('/api/inquiries', async (req, res) => {
+  try {
+    const real = await getChemInquiries();
+    const data = real.length > 0 ? real : getMockInquiries();
+    res.json({ success: true, inquiries: data, total: data.length, mock: real.length === 0 });
+  } catch(e) {
+    res.json({ success: true, inquiries: getMockInquiries(), total: 6, mock: true });
+  }
+});
+
+function getMockInquiries() {
+  return [
+    { timestamp: new Date().toISOString(), phone:'+919876540001', name:'Ramesh Gupta',   customerType:'restaurant', product:'Kitchen Degreaser',    quantity:'bulk',   city:'Mumbai',  score:5 },
+    { timestamp: new Date().toISOString(), phone:'+919876540002', name:'Priya Sharma',   customerType:'hospital',   product:'Disinfectant Solution', quantity:'bulk',   city:'Pune',    score:5 },
+    { timestamp: new Date().toISOString(), phone:'+919876540003', name:'Suresh Patel',   customerType:'office',     product:'Floor Cleaner',         quantity:'medium', city:'Delhi',   score:4 },
+    { timestamp: new Date().toISOString(), phone:'+919876540004', name:'Kavita Singh',   customerType:'home',       product:'Handwash Liquid',        quantity:'small',  city:'Nagpur',  score:1 },
+    { timestamp: new Date().toISOString(), phone:'+919876540005', name:'Amit Joshi',     customerType:'factory',    product:'Heavy Duty Cleaner',     quantity:'bulk',   city:'Nashik',  score:5 },
+    { timestamp: new Date().toISOString(), phone:'+919876540006', name:'Meena Verma',    customerType:'restaurant', product:'Dishwash Liquid',        quantity:'medium', city:'Mumbai',  score:4 },
+  ];
+}
 
 router.get('/api/sessions', (req, res) => {
   const summary = Object.values(sessions).map(s => ({
