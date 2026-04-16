@@ -3,102 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shivam Chemical — Inquiry Dashboard</title>
+<title>Shivam Chemical — Sales Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #1a1a1a}
-.logo{font-size:1.4rem;font-weight:800}
-.logo span{color:#25d366}
-.live{display:flex;align-items:center;gap:6px;font-size:.78rem;color:#888}
-.live-dot{width:8px;height:8px;border-radius:50%;background:#25d366;animation:pulse 2s infinite}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid #1a1a1a}
+.logo{font-size:1.3rem;font-weight:800}.logo span{color:#25d366}
+.live{display:flex;align-items:center;gap:6px;font-size:.75rem;color:#555}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#25d366;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
-.stat-card{background:#111;border:1px solid #1e1e1e;border-radius:14px;padding:18px 20px}
-.stat-label{font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.stat-value{font-size:2rem;font-weight:800;line-height:1}
-.stat-value.green{color:#25d366}
-.stat-value.yellow{color:#f59e0b}
-.stat-value.blue{color:#3b82f6}
-.stat-value.red{color:#ef4444}
-.stat-sub{font-size:.72rem;color:#444;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+.stat-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:16px 18px}
+.stat-label{font-size:.68rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.stat-value{font-size:1.9rem;font-weight:800;line-height:1}
+.stat-value.green{color:#25d366}.stat-value.yellow{color:#f59e0b}
+.stat-value.blue{color:#3b82f6}.stat-value.red{color:#ef4444}
+.stat-sub{font-size:.68rem;color:#444;margin-top:4px}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:#111;border:1px solid #222;color:#666;padding:6px 13px;border-radius:7px;font-size:.75rem;cursor:pointer;transition:.2s;font-family:inherit}
+.filter-btn.active{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.08)}
+.filter-btn:hover:not(.active){border-color:#333;color:#aaa}
+.refresh-btn{margin-left:auto;background:#25d366;color:#000;border:none;padding:7px 14px;border-radius:7px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit}
 
 /* TABLE */
-.section-title{font-size:.8rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
-.table-wrap{background:#111;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden}
-table{width:100%;border-collapse:collapse}
-th{background:#161616;padding:12px 16px;text-align:left;font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
-td{padding:13px 16px;font-size:.82rem;border-bottom:1px solid #1a1a1a;vertical-align:middle}
+.table-wrap{background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th{background:#161616;padding:10px 14px;text-align:left;font-size:.68rem;color:#555;text-transform:uppercase;letter-spacing:.05em;font-weight:600;white-space:nowrap}
+td{padding:12px 14px;font-size:.8rem;border-bottom:1px solid #161616;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#131313}
 
 /* BADGES */
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:700}
 .badge.bulk{background:rgba(37,211,102,.15);color:#25d366}
 .badge.medium{background:rgba(245,158,11,.15);color:#f59e0b}
-.badge.small{background:rgba(107,114,128,.15);color:#9ca3af}
-.score{display:inline-flex;align-items:center;gap:2px}
-.star{color:#f59e0b;font-size:.75rem}
-.star.empty{color:#333}
+.badge.small{background:rgba(107,114,128,.12);color:#6b7280}
 
-/* TYPE ICONS */
-.type-icon{font-size:1rem;margin-right:6px}
+/* SCORE PIPS */
+.score-bar{display:flex;gap:2px}
+.pip{width:9px;height:9px;border-radius:2px;background:#222}
+.pip.on{background:#25d366}.pip.on.hot{background:#f59e0b}
+
+/* FOLLOW-UP BUTTON */
+.fu-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;text-decoration:none;transition:.2s;font-family:inherit}
+.fu-btn.wa{background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3)}
+.fu-btn.wa:hover{background:rgba(37,211,102,.25)}
+.fu-btn.done-btn{background:rgba(107,114,128,.1);color:#6b7280;border:1px solid #222}
+.fu-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:700}
+.fu-badge.pending{background:rgba(239,68,68,.12);color:#ef4444}
+.fu-badge.done{background:rgba(37,211,102,.12);color:#25d366}
+
+.ts{color:#555;font-size:.72rem}
+.name-row{font-weight:600;font-size:.82rem}
+.phone-row{font-size:.7rem;color:#555;font-family:monospace;margin-top:1px}
+
+/* HOT LABEL */
+.hot-label{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;color:#f59e0b;font-weight:700;margin-left:6px}
 
 /* EMPTY */
-.empty{text-align:center;padding:60px 20px;color:#444}
-.empty-icon{font-size:3rem;margin-bottom:12px}
-
-/* FILTER BAR */
-.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.filter-btn{background:#111;border:1px solid #222;color:#888;padding:7px 14px;border-radius:8px;font-size:.78rem;cursor:pointer;transition:.2s}
-.filter-btn.active{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.08)}
-.refresh-btn{margin-left:auto;background:#25d366;color:#000;border:none;padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s}
-.refresh-btn:hover{opacity:.85}
-
-/* SCORE BAR */
-.score-bar{display:flex;gap:2px;align-items:center}
-.score-pip{width:10px;height:10px;border-radius:2px;background:#222}
-.score-pip.filled{background:#25d366}
-.score-pip.filled.high{background:#f59e0b}
-
-.timestamp{color:#555;font-size:.75rem}
-.phone-masked{font-family:monospace;font-size:.78rem;color:#888}
-
-@media(max-width:700px){
-  th:nth-child(4),td:nth-child(4),
-  th:nth-child(5),td:nth-child(5){display:none}
-}
+.empty{text-align:center;padding:50px;color:#444}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div>
-    <div class="logo">🧪 Shivam Chemical <span>Dashboard</span></div>
-    <div style="font-size:.75rem;color:#444;margin-top:4px">WhatsApp Bot Inquiries — Real Time</div>
+    <div class="logo">🧪 Shivam Chemical <span>Sales Dashboard</span></div>
+    <div style="font-size:.72rem;color:#444;margin-top:3px">WhatsApp Bot Inquiries — Auto Follow-Up Tracker</div>
   </div>
-  <div class="live"><div class="live-dot"></div> Live</div>
+  <div class="live"><div class="live-dot"></div> Live · auto-refresh 30s</div>
 </div>
 
 <!-- STATS -->
-<div class="stats" id="stats">
+<div class="stats">
   <div class="stat-card"><div class="stat-label">Total Inquiries</div><div class="stat-value green" id="s-total">—</div><div class="stat-sub">All time</div></div>
-  <div class="stat-card"><div class="stat-label">Hot Leads</div><div class="stat-value yellow" id="s-hot">—</div><div class="stat-sub">Score 4-5</div></div>
+  <div class="stat-card"><div class="stat-label">🔥 Hot Leads</div><div class="stat-value yellow" id="s-hot">—</div><div class="stat-sub">Score 4-5 → call first</div></div>
+  <div class="stat-card"><div class="stat-label">Follow-Up Pending</div><div class="stat-value red" id="s-pending">—</div><div class="stat-sub">Call karna baki hai</div></div>
   <div class="stat-card"><div class="stat-label">Bulk Orders</div><div class="stat-value blue" id="s-bulk">—</div><div class="stat-sub">500+ units</div></div>
-  <div class="stat-card"><div class="stat-label">Today</div><div class="stat-value" id="s-today">—</div><div class="stat-sub">New inquiries</div></div>
+  <div class="stat-card"><div class="stat-label">Converted ✅</div><div class="stat-value green" id="s-done">—</div><div class="stat-sub">Follow-up done</div></div>
 </div>
 
-<!-- TABLE -->
+<!-- FILTER BAR -->
 <div class="filter-bar">
-  <div class="section-title" style="margin:0">Inquiries</div>
   <button class="filter-btn active" onclick="filterBy('all',this)">All</button>
-  <button class="filter-btn" onclick="filterBy('bulk',this)">Bulk</button>
-  <button class="filter-btn" onclick="filterBy('hospital',this)">Hospital</button>
-  <button class="filter-btn" onclick="filterBy('restaurant',this)">Restaurant</button>
-  <button class="filter-btn" onclick="filterBy('factory',this)">Factory</button>
+  <button class="filter-btn" onclick="filterBy('pending',this)">⚡ Pending Call</button>
+  <button class="filter-btn" onclick="filterBy('hot',this)">🔥 Hot Leads</button>
+  <button class="filter-btn" onclick="filterBy('bulk',this)">📦 Bulk</button>
+  <button class="filter-btn" onclick="filterBy('hospital',this)">🏥 Hospital</button>
+  <button class="filter-btn" onclick="filterBy('restaurant',this)">🍽️ Restaurant</button>
   <button class="refresh-btn" onclick="loadData()">⟳ Refresh</button>
 </div>
 
@@ -110,117 +107,154 @@ tr:hover td{background:#131313}
         <th>Customer</th>
         <th>Product</th>
         <th>Quantity</th>
-        <th>Customer Type</th>
         <th>City</th>
         <th>Score</th>
         <th>Time</th>
+        <th>Follow-Up</th>
       </tr>
     </thead>
     <tbody id="tbody">
-      <tr><td colspan="8"><div class="empty"><div class="empty-icon">⏳</div>Loading...</div></td></tr>
+      <tr><td colspan="8"><div class="empty">⏳ Loading...</div></td></tr>
     </tbody>
   </table>
 </div>
 
 <script>
-const typeMap = {
-  office:'🏢 Office', restaurant:'🍽️ Restaurant', hospital:'🏥 Hospital',
-  factory:'🏭 Factory', home:'🏠 Home', other:'📦 Other'
-};
-
+const typeEmoji = {office:'🏢',restaurant:'🍽️',hospital:'🏥',factory:'🏭',home:'🏠',other:'📦'};
 let allData = [];
 let currentFilter = 'all';
 
 function scoreBar(s) {
   const n = parseInt(s) || 0;
-  let bars = '';
-  for (let i = 1; i <= 5; i++) {
-    const cls = i <= n ? (n >= 4 ? 'filled high' : 'filled') : '';
-    bars += `<div class="score-pip ${cls}"></div>`;
-  }
-  return `<div class="score-bar">${bars}</div>`;
+  return Array.from({length:5},(_,i)=>`<div class="pip ${i<n?(n>=4?'on hot':'on'):''}"></div>`).join('');
 }
 
 function formatTime(ts) {
   if (!ts) return '—';
   try {
-    const d = new Date(ts);
-    const now = new Date();
-    const diff = now - d;
+    const d = new Date(ts), now = new Date(), diff = now - d;
     if (diff < 60000) return 'Just now';
     if (diff < 3600000) return `${Math.floor(diff/60000)}m ago`;
     if (diff < 86400000) return `${Math.floor(diff/3600000)}h ago`;
-    return d.toLocaleDateString('en-IN', {day:'numeric',month:'short'});
+    return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
   } catch { return ts; }
 }
 
-function isToday(ts) {
-  if (!ts) return false;
-  const d = new Date(ts);
-  const now = new Date();
-  return d.toDateString() === now.toDateString();
+function maskPhone(p) {
+  if (!p) return '—';
+  const c = p.replace(/\D/g,'').slice(-10);
+  return c.length===10 ? `${c.slice(0,5)}·····` : p;
+}
+
+function rawPhone(p) {
+  return (p||'').replace(/\D/g,'');
+}
+
+function waLink(phone, name, product, quantity) {
+  const num = rawPhone(phone);
+  const qty = quantity === 'bulk' ? 'bulk order' : quantity === 'medium' ? 'medium order' : 'order';
+  const msg = `Namaste ${name} ji, main Shivam Chemical se bol raha hun. Aapne ${product} ke liye ${qty} inquiry ki thi — kya abhi baat kar sakte hain? Aapke liye special price hai! 🧪`;
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
 }
 
 function renderRows(data) {
   const tbody = document.getElementById('tbody');
   if (!data.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">📭</div><div>Koi inquiry nahi mili</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">📭 Koi inquiry nahi mili</div></td></tr>`;
     return;
   }
-  const sorted = [...data].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sorted = [...data].sort((a,b) => {
+    // Pending + hot first
+    const aP = a.followUpStatus !== 'done' ? 1 : 0;
+    const bP = b.followUpStatus !== 'done' ? 1 : 0;
+    if (aP !== bP) return bP - aP;
+    return new Date(b.timestamp) - new Date(a.timestamp);
+  });
   tbody.innerHTML = sorted.map((r, i) => {
-    const qty = r.quantity || 'small';
     const score = parseInt(r.score) || 0;
+    const isHot = score >= 4;
+    const isPending = r.followUpStatus !== 'done';
+    const qty = r.quantity || 'small';
     return `<tr>
-      <td class="timestamp">${i+1}</td>
-      <td><div style="font-weight:600">${r.name || '—'}</div><div class="phone-masked">${maskPhone(r.phone)}</div></td>
-      <td>${r.product || '—'}</td>
+      <td class="ts">${i+1}</td>
+      <td>
+        <div class="name-row">${typeEmoji[r.customerType]||''} ${r.name||'—'}${isHot?'<span class="hot-label">🔥 HOT</span>':''}</div>
+        <div class="phone-row">${maskPhone(r.phone)}</div>
+      </td>
+      <td>${r.product||'—'}</td>
       <td><span class="badge ${qty}">${qty.charAt(0).toUpperCase()+qty.slice(1)}</span></td>
-      <td>${typeMap[r.customerType] || r.customerType || '—'}</td>
-      <td>${r.city || '—'}</td>
-      <td>${scoreBar(score)}</td>
-      <td class="timestamp">${formatTime(r.timestamp)}</td>
+      <td>${r.city||'—'}</td>
+      <td><div class="score-bar">${scoreBar(score)}</div></td>
+      <td class="ts">${formatTime(r.timestamp)}</td>
+      <td>
+        ${isPending
+          ? `<a href="${waLink(r.phone, r.name, r.product, r.quantity)}" target="_blank" class="fu-btn wa">📲 Follow Up</a>
+             <button class="fu-btn done-btn" style="margin-top:4px" onclick="markDone(this,'${r.phone}',${r.rowIndex||0})">✓ Done</button>`
+          : `<span class="fu-badge done">✅ Called</span>`
+        }
+      </td>
     </tr>`;
   }).join('');
 }
 
-function maskPhone(p) {
-  if (!p) return '—';
-  const clean = p.replace(/\D/g,'').slice(-10);
-  return clean.length === 10 ? `${clean.slice(0,5)}·····` : p;
+async function markDone(btn, phone, rowIndex) {
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    await fetch('/chem/api/followup-done', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ phone, rowIndex })
+    });
+    // Update local data
+    const item = allData.find(r => r.phone === phone);
+    if (item) item.followUpStatus = 'done';
+    const filtered = getFiltered();
+    renderRows(filtered);
+    updateStats(allData);
+  } catch(e) {
+    btn.textContent = '✓ Done';
+    btn.disabled = false;
+  }
+}
+
+function getFiltered() {
+  switch(currentFilter) {
+    case 'pending':   return allData.filter(r => r.followUpStatus !== 'done');
+    case 'hot':       return allData.filter(r => parseInt(r.score) >= 4);
+    case 'bulk':      return allData.filter(r => r.quantity === 'bulk');
+    case 'hospital':  return allData.filter(r => r.customerType === 'hospital');
+    case 'restaurant':return allData.filter(r => r.customerType === 'restaurant');
+    default:          return allData;
+  }
 }
 
 function filterBy(key, btn) {
   currentFilter = key;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = key === 'all' ? allData
-    : key === 'bulk' ? allData.filter(r => r.quantity === 'bulk')
-    : allData.filter(r => r.customerType === key);
-  renderRows(filtered);
+  renderRows(getFiltered());
 }
 
 function updateStats(data) {
-  document.getElementById('s-total').textContent = data.length;
-  document.getElementById('s-hot').textContent = data.filter(r => parseInt(r.score) >= 4).length;
-  document.getElementById('s-bulk').textContent = data.filter(r => r.quantity === 'bulk').length;
-  document.getElementById('s-today').textContent = data.filter(r => isToday(r.timestamp)).length;
+  document.getElementById('s-total').textContent   = data.length;
+  document.getElementById('s-hot').textContent     = data.filter(r => parseInt(r.score) >= 4).length;
+  document.getElementById('s-pending').textContent = data.filter(r => r.followUpStatus !== 'done').length;
+  document.getElementById('s-bulk').textContent    = data.filter(r => r.quantity === 'bulk').length;
+  document.getElementById('s-done').textContent    = data.filter(r => r.followUpStatus === 'done').length;
 }
 
 async function loadData() {
   try {
-    const res = await fetch('/chem/api/inquiries');
+    const res  = await fetch('/chem/api/inquiries');
     const json = await res.json();
     if (json.success) {
       allData = json.inquiries || [];
       updateStats(allData);
-      const filtered = currentFilter === 'all' ? allData
-        : currentFilter === 'bulk' ? allData.filter(r => r.quantity === 'bulk')
-        : allData.filter(r => r.customerType === currentFilter);
-      renderRows(filtered);
+      renderRows(getFiltered());
     }
   } catch(e) {
-    document.getElementById('tbody').innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⚠️</div>Data load failed. Check connection.</div></td></tr>`;
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="8"><div class="empty">⚠️ Data load failed</div></td></tr>`;
   }
 }
 

@@ -60,14 +60,14 @@ async function getVisits() {
   } catch(e) { console.error('Sheets getVisits error:', e.message); return []; }
 }
 
-async function saveChemInquiry({ phone, name, customerType, product, quantity, city, score, timestamp }) {
+async function saveChemInquiry({ phone, name, customerType, product, quantity, city, score, timestamp, followUpStatus }) {
   try {
     const sheets = await getSheets();
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Chem Inquiries!A:H',
+      range: 'Chem Inquiries!A:I',
       valueInputOption: 'USER_ENTERED',
-      requestBody: { values: [[timestamp, phone, name, customerType, product, quantity, city, score]] }
+      requestBody: { values: [[timestamp, phone, name, customerType, product, quantity, city, score, followUpStatus || 'pending']] }
     });
   } catch(e) { console.error('Sheets saveChemInquiry error:', e.message); }
 }
@@ -75,13 +75,27 @@ async function saveChemInquiry({ phone, name, customerType, product, quantity, c
 async function getChemInquiries() {
   try {
     const sheets = await getSheets();
-    const res = await sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: 'Chem Inquiries!A:H' });
+    const res = await sheets.spreadsheets.values.get({ spreadsheetId: SPREADSHEET_ID, range: 'Chem Inquiries!A:I' });
     const rows = res.data.values || [];
-    return rows.slice(1).map(r => ({
+    return rows.slice(1).map((r, i) => ({
+      rowIndex: i + 2,
       timestamp: r[0], phone: r[1], name: r[2], customerType: r[3],
-      product: r[4], quantity: r[5], city: r[6], score: r[7]
+      product: r[4], quantity: r[5], city: r[6], score: r[7],
+      followUpStatus: r[8] || 'pending'
     }));
   } catch(e) { console.error('Sheets getChemInquiries error:', e.message); return []; }
 }
 
-module.exports = { saveVisitBooking, saveLead, getLeads, getVisits, saveChemInquiry, getChemInquiries };
+async function updateChemFollowUp({ phone, rowIndex, status }) {
+  try {
+    const sheets = await getSheets();
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `Chem Inquiries!I${rowIndex}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [[status]] }
+    });
+  } catch(e) { console.error('Sheets updateChemFollowUp error:', e.message); }
+}
+
+module.exports = { saveVisitBooking, saveLead, getLeads, getVisits, saveChemInquiry, getChemInquiries, updateChemFollowUp };

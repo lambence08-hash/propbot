@@ -3,7 +3,7 @@ const express = require('express');
 const path    = require('path');
 const router  = express.Router();
 const { MessagingResponse } = require('twilio').twiml;
-const { saveChemInquiry, getChemInquiries } = require('./sheets');
+const { saveChemInquiry, getChemInquiries, updateChemFollowUp } = require('./sheets');
 
 const sessions = {};
 function getSession(phone) {
@@ -28,6 +28,12 @@ const customerTypeLabel = {
   other:      'Other'
 };
 
+// ─── Pricing Guide ────────────────────────────────────────────────────────────
+const pricingGuide = {
+  default: `💰 *Price Guide — Shivam Chemical*\n\n🔹 Trial Pack (5-10 units): ₹500 – ₹1,500\n🔸 Medium Order (50-100 units): ₹3,000 – ₹12,000\n🔴 Bulk (500+ units): *Special discount available*\n\n✅ GST Invoice included\n✅ Free delivery on bulk orders\n✅ 7-day return policy\n\n📞 Exact price ke liye: *+91-93225 09198*`,
+  bulk:    `💰 *Bulk Pricing — Shivam Chemical*\n\n🎯 500+ units pe *15-20% discount*\n🎯 1000+ units pe *25% discount*\n🎯 Monthly contract pe *best rates*\n\n✅ Dedicated account manager\n✅ Free delivery anywhere in Maharashtra\n✅ Net 30 payment terms available\n\n📞 Quote ke liye abhi call karein: *+91-93225 09198*`
+};
+
 // ─── Lead Score ───────────────────────────────────────────────────────────────
 function calcScore(s) {
   const qtyPts  = { bulk: 3, medium: 2, small: 1 };
@@ -39,10 +45,15 @@ function calcScore(s) {
 async function alertOwner(session) {
   try {
     const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    const isHot  = session.score >= 4;
+    const script = isHot
+      ? `💡 *Follow-Up Script:*\n"Namaste ${session.name} ji, main Shivam Chemical se bol raha hun. Aapne ${session.product} ke liye inquiry ki thi — kya aap abhi 5 min mein baat kar sakte hain? Bulk order pe aapko special price denge!"`
+      : `💡 *Follow-Up Script:*\n"Namaste ${session.name} ji, main Shivam Chemical se bol raha hun. Aapke ${session.product} ke liye hamara product bilkul sahi rahega. Kya main price details bhej dun?"`;
+
     await twilio.messages.create({
       from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
       to:   `whatsapp:+919518709573`,
-      body: `🧪 *NAYA INQUIRY — Shivam Chemical*\n\n👤 Naam: ${session.name}\n📱 Phone: ${session.phone.replace('whatsapp:','')}\n🏢 Customer Type: ${customerTypeLabel[session.customerType]}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city || 'N/A'}\n⭐ Score: ${session.score}/5\n\nJaldi contact karo! 🚀`
+      body: `${isHot ? '🔥' : '🧪'} *${isHot ? 'HOT LEAD' : 'NAYA INQUIRY'} — Shivam Chemical*\n\n👤 Naam: ${session.name}\n📱 Phone: ${session.phone.replace('whatsapp:','')}\n🏢 Type: ${customerTypeLabel[session.customerType]}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city || 'N/A'}\n⭐ Score: ${session.score}/5\n\n${script}\n\n⏰ *${isHot ? 'JALDI KARO — 1 ghante mein call karo!' : '24 ghante mein follow-up karo'}* 🚀`
     });
   } catch(e) { console.log('Alert error:', e.message); }
 }
@@ -98,22 +109,46 @@ async function handleMessage(phone, body, session) {
       return `Theek hai! Delivery kahan chahiye?\n\n*Apna city/state type karein* 📍\n\n_(Example: Mumbai, Pune, Delhi)_`;
     }
 
-    case 'ask_city':
+    case 'ask_city': {
       session.city = body;
-      session.step = 'done';
       session.score = calcScore(session);
+      session.followUpStatus = 'pending';
+      const ts = new Date().toISOString();
       await alertOwner(session);
       await saveChemInquiry({
         phone: session.phone, name: session.name,
         customerType: session.customerType, product: session.product,
         quantity: session.quantity, city: session.city,
-        score: session.score, timestamp: new Date().toISOString()
+        score: session.score, timestamp: ts, followUpStatus: 'pending'
       });
-      return `✅ *Inquiry Received!*\n══════════════════\n\n👤 Naam: ${session.name}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city}\n\nHumari team aapko *24 ghante mein* contact karegi!\n\n📱 Abhi contact karna hai?\n*+91-93225 09198* pe call karein\n\n*Shivam Chemical — Quality Guaranteed* 🧪`;
+      session.step = 'offer_catalog';
+      return `✅ *Inquiry Received!*\n══════════════════\n\n👤 Naam: ${session.name}\n📦 Product: ${session.product}\n🔢 Quantity: ${session.quantity}\n📍 City: ${session.city}\n\nHumari team aapko *24 ghante mein* contact karegi!\n\n━━━━━━━━━━━━━━━━━━\n📄 *Kya aapko hamara Product Catalog chahiye?*\n\nSaare products, variants aur pack sizes ek jagah!\n\n*"Haan"* ya *"Yes"* type karein 👇`;
+    }
+
+    case 'offer_catalog': {
+      if (text.includes('haan') || text.includes('han') || text.includes('yes') || text.includes('ha') || text === 'h') {
+        session.step = 'offer_price';
+        return `📄 *Shivam Chemical — Product Catalog 2025*\n\nYahan dekho:\n🔗 https://propbot-production-c3e6.up.railway.app/shivam-catalog\n\n_(Open karke Print / Save as PDF bhi kar sakte ho)_\n\n━━━━━━━━━━━━━━━━━━\n💰 *Kya aapko price list bhi chahiye?*\n\n*"Haan"* type karein 😊`;
+      } else {
+        session.step = 'offer_price';
+        return `💰 *Kya aapko price list chahiye?*\n\n*"Haan"* ya *"Yes"* type karein 😊`;
+      }
+    }
+
+    case 'offer_price': {
+      if (text.includes('haan') || text.includes('han') || text.includes('yes') || text.includes('ha') || text === 'h') {
+        session.step = 'done';
+        const priceMsg = session.quantity === 'bulk' ? pricingGuide.bulk : pricingGuide.default;
+        return `${priceMsg}\n\n━━━━━━━━━━━━━━━━━━\n📲 *Seedha order ya baat karna chahte hain?*\n\nWhatsApp karein: *+91-93225 09198*\n\nHumari team soon contact karegi! 🙏`;
+      } else {
+        session.step = 'done';
+        return `Theek hai! Humari team jald hi contact karegi.\n\n📱 Abhi baat karni ho toh:\n*+91-93225 09198* pe call ya WhatsApp karein\n\n*Shivam Chemical — Quality Guaranteed* 🧪`;
+      }
+    }
 
     case 'done':
       session.step = 'start';
-      return `Kya main aur madad kar sakta hoon?\n\n1️⃣ Naya inquiry karo\n2️⃣ Price list maango\n3️⃣ Agent se baat karo\n\n*1, 2, ya 3 type karein* 😊`;
+      return `Kya main aur madad kar sakta hoon?\n\n1️⃣ Naya inquiry karo\n2️⃣ Price list maango\n3️⃣ Product catalog dekho\n\n*"1", "price" ya "catalog" type karein* 😊`;
 
     default:
       session.step = 'start';
@@ -143,14 +178,25 @@ router.get('/api/inquiries', async (req, res) => {
   }
 });
 
+// ─── Mark Follow-Up Done ──────────────────────────────────────────────────────
+router.post('/api/followup-done', async (req, res) => {
+  try {
+    const { phone, rowIndex } = req.body;
+    await updateChemFollowUp({ phone, rowIndex, status: 'done' });
+    res.json({ success: true });
+  } catch(e) {
+    res.json({ success: false, error: e.message });
+  }
+});
+
 function getMockInquiries() {
   return [
-    { timestamp: new Date().toISOString(), phone:'+919876540001', name:'Ramesh Gupta',   customerType:'restaurant', product:'Kitchen Degreaser',    quantity:'bulk',   city:'Mumbai',  score:5 },
-    { timestamp: new Date().toISOString(), phone:'+919876540002', name:'Priya Sharma',   customerType:'hospital',   product:'Disinfectant Solution', quantity:'bulk',   city:'Pune',    score:5 },
-    { timestamp: new Date().toISOString(), phone:'+919876540003', name:'Suresh Patel',   customerType:'office',     product:'Floor Cleaner',         quantity:'medium', city:'Delhi',   score:4 },
-    { timestamp: new Date().toISOString(), phone:'+919876540004', name:'Kavita Singh',   customerType:'home',       product:'Handwash Liquid',        quantity:'small',  city:'Nagpur',  score:1 },
-    { timestamp: new Date().toISOString(), phone:'+919876540005', name:'Amit Joshi',     customerType:'factory',    product:'Heavy Duty Cleaner',     quantity:'bulk',   city:'Nashik',  score:5 },
-    { timestamp: new Date().toISOString(), phone:'+919876540006', name:'Meena Verma',    customerType:'restaurant', product:'Dishwash Liquid',        quantity:'medium', city:'Mumbai',  score:4 },
+    { timestamp: new Date(Date.now()-3600000).toISOString(), phone:'+919876540001', name:'Ramesh Gupta',   customerType:'restaurant', product:'Kitchen Degreaser',    quantity:'bulk',   city:'Mumbai',  score:5, followUpStatus:'pending' },
+    { timestamp: new Date(Date.now()-7200000).toISOString(), phone:'+919876540002', name:'Priya Sharma',   customerType:'hospital',   product:'Disinfectant Solution', quantity:'bulk',   city:'Pune',    score:5, followUpStatus:'done'    },
+    { timestamp: new Date(Date.now()-10800000).toISOString(),phone:'+919876540003', name:'Suresh Patel',   customerType:'office',     product:'Floor Cleaner',         quantity:'medium', city:'Delhi',   score:4, followUpStatus:'pending' },
+    { timestamp: new Date(Date.now()-86400000).toISOString(), phone:'+919876540004', name:'Kavita Singh',   customerType:'home',       product:'Handwash Liquid',        quantity:'small',  city:'Nagpur',  score:1, followUpStatus:'pending' },
+    { timestamp: new Date(Date.now()-90000000).toISOString(), phone:'+919876540005', name:'Amit Joshi',     customerType:'factory',    product:'Heavy Duty Cleaner',     quantity:'bulk',   city:'Nashik',  score:5, followUpStatus:'done'    },
+    { timestamp: new Date(Date.now()-93600000).toISOString(), phone:'+919876540006', name:'Meena Verma',    customerType:'restaurant', product:'Dishwash Liquid',        quantity:'medium', city:'Mumbai',  score:4, followUpStatus:'pending' },
   ];
 }
 
