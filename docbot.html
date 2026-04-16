@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocBot AI — India's #1 WhatsApp AI Assistant for Doctors & Clinics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--c1:#00b894;--c2:#00cec9;--c3:#fd79a8;--dark:#060d0d;--dark2:#0d1a1a;--dark3:#112222;--glass:rgba(0,184,148,.08);--glass-border:rgba(0,184,148,.15);--text:#f0fafa;--text2:#94b8b8;--wa:#25d366}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(6,13,13,.85);border-bottom:1px solid var(--glass-border);padding:0 5%}
+.nav-inner{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:10px;display:grid;place-items:center;font-size:1.1rem}
+.nav-cta{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;padding:9px 22px;border-radius:30px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;transition:.2s}
+.nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+/* HERO */
+.hero{min-height:100vh;display:grid;place-items:center;padding:80px 5% 60px;background:radial-gradient(ellipse at 20% 50%,rgba(0,184,148,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,206,201,.06) 0%,transparent 50%)}
+.hero-inner{max-width:1200px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,184,148,.15);border:1px solid rgba(0,184,148,.3);padding:6px 16px;border-radius:20px;font-size:.8rem;font-weight:600;color:var(--c1);margin-bottom:20px}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--c3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+h1{font-family:'Poppins',sans-serif;font-size:3rem;font-weight:800;line-height:1.15;margin-bottom:20px}
+h1 .grad{background:linear-gradient(135deg,var(--c1),var(--c2),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.05rem;color:var(--text2);line-height:1.7;margin-bottom:32px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.btn-primary{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;padding:14px 28px;border-radius:30px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,184,148,.4)}
+.btn-outline{border:1.5px solid var(--glass-border);color:var(--text);padding:14px 28px;border-radius:30px;font-weight:600;font-size:.95rem;background:transparent;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--c1);color:var(--c1)}
+.hero-stats{display:flex;gap:32px}
+.stat{text-align:center}
+.stat-num{font-family:'Poppins',sans-serif;font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.75rem;color:var(--text2);margin-top:2px}
+/* PHONE MOCKUP */
+.phone-frame{background:#0a0f0f;border-radius:36px;padding:12px;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);max-width:300px;margin:auto}
+.chat-window{background:#0c1717;border-radius:26px;overflow:hidden;font-size:13px;height:500px;display:flex;flex-direction:column}
+.chat-header{background:#1a2f2f;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;place-items:center;font-size:1rem}
+.chat-name{font-weight:600;font-size:.85rem}
+.chat-status{font-size:.7rem;color:var(--c1)}
+.chat-body{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:80%;padding:8px 12px;border-radius:8px;line-height:1.45;font-size:.75rem}
+.msg-bot{background:#1a2f2f;color:#e9edef;border-radius:0 8px 8px 8px;align-self:flex-start}
+.msg-user{background:linear-gradient(135deg,rgba(0,184,148,.7),rgba(0,206,201,.5));color:#fff;border-radius:8px 0 8px 8px;align-self:flex-end}
+.typing{display:flex;gap:4px;padding:10px 14px;background:#1a2f2f;border-radius:0 8px 8px 8px;align-self:flex-start;width:50px}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--c1);animation:typingDot 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-input-bar{background:#1a2f2f;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.chat-input-bar input{flex:1;background:#243535;border:none;border-radius:20px;padding:7px 14px;color:#e9edef;font-size:.75rem;outline:none}
+/* SECTIONS */
+section{padding:80px 5%}
+.section-inner{max-width:1200px;margin:auto}
+h2{font-family:'Poppins',sans-serif;font-size:2.4rem;font-weight:800;text-align:center;margin-bottom:12px}
+.section-sub{text-align:center;color:var(--text2);font-size:1rem;margin-bottom:50px}
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{background:var(--dark2);border:1px solid var(--glass-border);border-radius:20px;padding:28px;transition:.3s}
+.feat-card:hover{border-color:var(--c1);transform:translateY(-4px)}
+.feat-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:16px}
+.feat-icon.green{background:rgba(0,184,148,.15);color:var(--c1)}
+.feat-icon.teal{background:rgba(0,206,201,.15);color:var(--c2)}
+.feat-icon.pink{background:rgba(253,121,168,.15);color:var(--c3)}
+.feat-icon.blue{background:rgba(99,102,241,.15);color:#818cf8}
+.feat-icon.orange{background:rgba(251,146,60,.15);color:#fb923c}
+.feat-icon.red{background:rgba(239,68,68,.15);color:#ef4444}
+.feat-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+.feat-card p{font-size:.85rem;color:var(--text2);line-height:1.6}
+/* PROBLEMS */
+.problems-section{background:var(--dark2)}
+.problems-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.problem-list{display:flex;flex-direction:column;gap:16px}
+.problem-item{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:14px}
+.problem-icon{color:#ef4444;font-size:1.2rem;margin-top:2px}
+.solution-list{display:flex;flex-direction:column;gap:16px}
+.solution-item{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(0,184,148,.05);border:1px solid rgba(0,184,148,.15);border-radius:14px}
+.solution-icon{color:var(--c1);font-size:1.2rem;margin-top:2px}
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.price-card{background:var(--dark2);border:1px solid var(--glass-border);border-radius:24px;padding:32px;text-align:center;transition:.3s}
+.price-card.popular{border-color:var(--c1);position:relative;transform:scale(1.03)}
+.popular-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;padding:4px 18px;border-radius:20px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.plan-name{font-size:.85rem;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.plan-price{font-family:'Poppins',sans-serif;font-size:2.5rem;font-weight:800;margin-bottom:4px}
+.plan-price span{font-size:1rem;font-weight:500;color:var(--text2)}
+.plan-sub{font-size:.8rem;color:var(--text2);margin-bottom:24px}
+.plan-features{list-style:none;text-align:left;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.plan-features li{display:flex;align-items:center;gap:10px;font-size:.85rem}
+.plan-features i{color:var(--c1)}
+.plan-btn{width:100%;padding:13px;border-radius:30px;font-weight:700;font-size:.9rem;cursor:pointer;transition:.2s;border:none}
+.plan-btn.solid{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff}
+.plan-btn.outline{background:transparent;border:1.5px solid var(--glass-border);color:var(--text)}
+.plan-btn:hover{opacity:.9;transform:translateY(-2px)}
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi-card{background:var(--dark2);border:1px solid var(--glass-border);border-radius:20px;padding:24px}
+.stars{color:#fbbf24;font-size:1rem;margin-bottom:12px}
+.testi-text{font-size:.88rem;color:var(--text2);line-height:1.7;margin-bottom:16px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:.9rem}
+.testi-name{font-weight:600;font-size:.9rem}
+.testi-role{font-size:.75rem;color:var(--text2)}
+/* CTA */
+.cta-section{background:linear-gradient(135deg,rgba(0,184,148,.1),rgba(0,206,201,.08));border-top:1px solid var(--glass-border);text-align:center;padding:80px 5%}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+/* FOOTER */
+footer{background:var(--dark2);border-top:1px solid var(--glass-border);padding:50px 5% 30px}
+.footer-inner{max-width:1200px;margin:auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand .logo{margin-bottom:14px}
+.footer-col h4{font-weight:700;margin-bottom:16px;font-size:.9rem}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul li a{color:var(--text2);font-size:.85rem;transition:.2s}
+.footer-col ul li a:hover{color:var(--c1)}
+.footer-bottom{border-top:1px solid var(--glass-border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--text2)}
+.footer-social{display:flex;gap:16px}
+.footer-social a{color:var(--text2);transition:.2s;font-size:1.1rem}
+.footer-social a:hover{color:var(--c1)}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:999;place-items:center}
+.modal-overlay.open{display:grid}
+.modal{background:var(--dark3);border:1px solid var(--glass-border);border-radius:20px;padding:40px;max-width:500px;width:90%;position:relative}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.2rem}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px}
+.form-group input,.form-group select{width:100%;background:var(--dark2);border:1px solid var(--glass-border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:.9rem;outline:none;transition:.2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--c1)}
+.form-submit{width:100%;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;border:none;padding:13px;border-radius:30px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.2s;margin-top:8px}
+/* SCROLL ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-up-delay-1{transition-delay:.1s}.fade-up-delay-2{transition-delay:.2s}.fade-up-delay-3{transition-delay:.3s}
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:99;width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;font-size:1.5rem;color:#fff;box-shadow:0 8px 30px rgba(37,211,102,.4);transition:.2s;animation:waBounce 3s ease infinite}
+@keyframes waBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media(max-width:1024px){.hero-inner{grid-template-columns:1fr}.hero-visual{display:none}.features-grid{grid-template-columns:1fr 1fr}.pricing-grid{grid-template-columns:1fr}.problems-grid{grid-template-columns:1fr}.testi-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){h1{font-size:2.1rem}.features-grid{grid-template-columns:1fr}.hero-btns{flex-direction:column}.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-icon">🏥</div><span>DocBot AI</span></div>
+    <button class="nav-cta" onclick="openModal()">Free Demo Book Karein</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge"><span class="badge-dot"></span> AI-Powered • 24/7 • Hindi & English</div>
+      <h1>India's #1 <span class="grad">WhatsApp AI</span> Assistant for Doctors</h1>
+      <p class="hero-sub">Appointments khud book honge, patients ki details khud collect hogi, aur aapko sirf ek WhatsApp notification milega. Aap sirf treat karein — baaki sab DocBot karega.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="openModal()"><i class="fab fa-whatsapp"></i> Free Demo Book Karein</button>
+        <a href="#features" class="btn-outline"><i class="fas fa-play-circle"></i> Kaise Kaam Karta Hai</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" data-target="500">0</div><div class="stat-label">Doctors Using DocBot</div></div>
+        <div class="stat"><div class="stat-num" data-target="50000">0</div><div class="stat-label">Appointments Booked</div></div>
+        <div class="stat"><div class="stat-num" data-target="98">0</div><div class="stat-label">% Patient Satisfaction</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-frame">
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="chat-avatar">🏥</div>
+            <div><div class="chat-name">DocBot AI</div><div class="chat-status">Online • 24/7</div></div>
+          </div>
+          <div class="chat-body" id="chatBody"></div>
+          <div class="chat-input-bar"><input type="text" placeholder="Type a message..."></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM vs SOLUTION -->
+<section class="problems-section" id="features">
+  <div class="section-inner">
+    <h2 class="fade-up">Aapki Problem — <span style="background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Humara Solution</span></h2>
+    <p class="section-sub fade-up">Har doctor ki yehi takleef hai — DocBot isko hamesha ke liye khatam karta hai</p>
+    <div class="problems-grid">
+      <div class="problem-list fade-up">
+        <h3 style="margin-bottom:8px;color:#ef4444">❌ Pehle ki Problems</h3>
+        <div class="problem-item"><i class="fas fa-times-circle problem-icon"></i><div><strong>Phone pe ghante busy</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Receptionist appointments lene mein saara time waste kart hai</p></div></div>
+        <div class="problem-item"><i class="fas fa-times-circle problem-icon"></i><div><strong>Patients ko wait karna</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Busy line, no answer — patient dusre doctor ke paas chala jaata hai</p></div></div>
+        <div class="problem-item"><i class="fas fa-times-circle problem-icon"></i><div><strong>Emergency pe pata nahi</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Urgent patient aur routine checkup mein fark nahi pata</p></div></div>
+        <div class="problem-item"><i class="fas fa-times-circle problem-icon"></i><div><strong>No-shows aur cancellations</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Patients appointment bhool jaate hain, slot waste hota hai</p></div></div>
+      </div>
+      <div class="solution-list fade-up fade-up-delay-2">
+        <h3 style="margin-bottom:8px;color:var(--c1)">✅ DocBot ke Baad</h3>
+        <div class="solution-item"><i class="fas fa-check-circle solution-icon"></i><div><strong>24/7 WhatsApp pe appointment</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Raat 2 baje bhi patient appointment book kar sakta hai</p></div></div>
+        <div class="solution-item"><i class="fas fa-check-circle solution-icon"></i><div><strong>Instant confirmation</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Patient ko turant confirmation aur aapko alert milta hai</p></div></div>
+        <div class="solution-item"><i class="fas fa-check-circle solution-icon"></i><div><strong>Auto urgent/normal sorting</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">Emergency patients ko priority alert, aap seedha call kar sakte ho</p></div></div>
+        <div class="solution-item"><i class="fas fa-check-circle solution-icon"></i><div><strong>Automatic reminders</strong><p style="font-size:.82rem;color:var(--text2);margin-top:4px">1 din pehle patient ko reminder — no-shows 80% kam ho jaate hain</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="section-inner">
+    <h2 class="fade-up">Kya Kya <span style="background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Milta Hai</span></h2>
+    <p class="section-sub fade-up">Complete AI clinic management system — sirf WhatsApp pe</p>
+    <div class="features-grid">
+      <div class="feat-card fade-up"><div class="feat-icon green"><i class="fas fa-calendar-check"></i></div><h3>24/7 Appointment Booking</h3><p>Patient kisi bhi time WhatsApp pe appointment book kar sakta hai — bina receptionist ke, bina wait ke.</p></div>
+      <div class="feat-card fade-up fade-up-delay-1"><div class="feat-icon red"><i class="fas fa-exclamation-triangle"></i></div><h3>Emergency Detection</h3><p>AI automatically identify karta hai ki patient emergency mein hai ya routine checkup — instant doctor alert.</p></div>
+      <div class="feat-card fade-up fade-up-delay-2"><div class="feat-icon pink"><i class="fas fa-bell"></i></div><h3>Doctor WhatsApp Alert</h3><p>Har naye appointment pe aapko complete patient details ke saath instant WhatsApp notification milta hai.</p></div>
+      <div class="feat-card fade-up fade-up-delay-1"><div class="feat-icon teal"><i class="fas fa-user-injured"></i></div><h3>Patient Pre-Screening</h3><p>Appointment se pehle symptoms, urgency, aur details collect karta hai — aap prepared hote ho.</p></div>
+      <div class="feat-card fade-up fade-up-delay-2"><div class="feat-icon blue"><i class="fas fa-chart-bar"></i></div><h3>Admin Dashboard</h3><p>Sab appointments ek jagah — urgent, priority, routine — beautifully organized real-time dashboard mein.</p></div>
+      <div class="feat-card fade-up fade-up-delay-3"><div class="feat-icon orange"><i class="fas fa-table"></i></div><h3>Google Sheets CRM</h3><p>Saare patient records automatically Google Sheets mein save — kabhi bhi, kahin bhi access.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section style="background:var(--dark2)" id="pricing">
+  <div class="section-inner">
+    <h2 class="fade-up">Simple <span style="background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Pricing</span></h2>
+    <p class="section-sub fade-up">Ek baar setup — hamesha ke liye kaam</p>
+    <div class="pricing-grid">
+      <div class="price-card fade-up">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">₹8,000<span>/setup</span></div>
+        <div class="plan-sub">+ ₹2,000/month</div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check-circle"></i> 1 WhatsApp Number</li>
+          <li><i class="fas fa-check-circle"></i> 500 appointments/month</li>
+          <li><i class="fas fa-check-circle"></i> Appointment booking bot</li>
+          <li><i class="fas fa-check-circle"></i> Doctor WhatsApp alerts</li>
+          <li><i class="fas fa-check-circle"></i> Basic dashboard</li>
+        </ul>
+        <button class="plan-btn outline" onclick="openModal()">Start Free Trial</button>
+      </div>
+      <div class="price-card popular fade-up fade-up-delay-1">
+        <div class="popular-badge">⭐ Most Popular</div>
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">₹15,000<span>/setup</span></div>
+        <div class="plan-sub">+ ₹3,500/month</div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check-circle"></i> 2 WhatsApp Numbers</li>
+          <li><i class="fas fa-check-circle"></i> Unlimited appointments</li>
+          <li><i class="fas fa-check-circle"></i> Full AI pre-screening</li>
+          <li><i class="fas fa-check-circle"></i> 🔴 Emergency detection</li>
+          <li><i class="fas fa-check-circle"></i> Google Sheets CRM</li>
+          <li><i class="fas fa-check-circle"></i> Real-time dashboard</li>
+          <li><i class="fas fa-check-circle"></i> Priority support</li>
+        </ul>
+        <button class="plan-btn solid" onclick="openModal()">Start Free Trial</button>
+      </div>
+      <div class="price-card fade-up fade-up-delay-2">
+        <div class="plan-name">Clinic/Hospital</div>
+        <div class="plan-price">₹30,000<span>/setup</span></div>
+        <div class="plan-sub">+ ₹8,000/month</div>
+        <ul class="plan-features">
+          <li><i class="fas fa-check-circle"></i> Multiple doctors</li>
+          <li><i class="fas fa-check-circle"></i> Unlimited everything</li>
+          <li><i class="fas fa-check-circle"></i> White-label (your brand)</li>
+          <li><i class="fas fa-check-circle"></i> Custom integrations</li>
+          <li><i class="fas fa-check-circle"></i> 24/7 priority support</li>
+        </ul>
+        <button class="plan-btn outline" onclick="openModal()">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-inner">
+    <h2 class="fade-up">Doctors Kya Bol Rahe Hain</h2>
+    <p class="section-sub fade-up">500+ doctors already use DocBot across India</p>
+    <div class="testi-grid">
+      <div class="testi-card fade-up"><div class="stars">★★★★★</div><p class="testi-text">"Pehle 50-60 calls rozana aate the appointments ke liye. Ab sirf WhatsApp pe sab hota hai. Staff free hai, main free hoon. Seriously best investment."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,var(--c1),var(--c2))">RS</div><div><div class="testi-name">Dr. Rajesh Sharma</div><div class="testi-role">General Physician, Delhi</div></div></div></div>
+      <div class="testi-card fade-up fade-up-delay-1"><div class="stars">★★★★★</div><p class="testi-text">"Emergency detection feature ne ek patient ki jaan bachayi. Bot ne urgent detect kiya, maine turant call kiya. Yeh feature alone worth it hai."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">PM</div><div><div class="testi-name">Dr. Priya Mehta</div><div class="testi-role">Cardiologist, Mumbai</div></div></div></div>
+      <div class="testi-card fade-up fade-up-delay-2"><div class="stars">★★★★★</div><p class="testi-text">"No-shows 80% kam ho gaye reminders se. Revenue 40% badh gayi. Ek baar lagao — hamesha ka fayda. Har doctor ko yeh lena chahiye."</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">AK</div><div><div class="testi-name">Dr. Amit Kumar</div><div class="testi-role">Pediatrician, Noida</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="section-inner">
+    <h2 class="fade-up">Apna Clinic <span style="background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Transform Karein</span></h2>
+    <p class="fade-up" style="color:var(--text2);font-size:1rem;margin-top:12px">Free 30-minute demo mein dekhein — DocBot aapki clinic ke liye exactly kaise kaam karega</p>
+    <div class="cta-btns">
+      <button class="btn-primary" onclick="openModal()"><i class="fab fa-whatsapp"></i> Free Demo Book Karein</button>
+      <a href="tel:+919518709573" class="btn-outline"><i class="fas fa-phone"></i> Call: +91-9518-709573</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><div class="logo-icon">🏥</div><span>DocBot AI</span></div>
+        <p style="margin-top:14px;color:var(--text2);font-size:.85rem">India's most advanced AI WhatsApp assistant for doctors and clinics. Automate appointments, detect emergencies, grow your practice.</p>
+        <p style="margin-top:10px;color:#a0aec0"><i class="fas fa-envelope" style="margin-right:6px"></i><a href="mailto:lambence08@gmail.com" style="color:#a0aec0">lambence08@gmail.com</a></p>
+        <p style="margin-top:6px;color:#a0aec0"><i class="fab fa-whatsapp" style="margin-right:6px"></i><a href="https://wa.me/919518709573" style="color:#a0aec0">+91 9518709573</a></p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="/docbot-dashboard">Dashboard</a></li></ul></div>
+      <div class="footer-col"><h4>Also Available</h4><ul><li><a href="/">PropBot AI</a></li><li><a href="#">LeadBot AI</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="mailto:lambence08@gmail.com">Email Us</a></li><li><a href="https://wa.me/919518709573">WhatsApp</a></li><li><a href="tel:+919518709573">Call Us</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025 DocBot AI. All rights reserved. Made with ❤️ in India 🇮🇳</div>
+      <div class="footer-social">
+        <a href="https://wa.me/919518709573"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <h3>Free Demo Book Karein 🏥</h3>
+    <p style="color:var(--text2);font-size:.88rem;margin-top:6px">30 minute mein dekhein DocBot aapki clinic ko kaise transform karega.</p>
+    <form onsubmit="submitDemo(event)" style="margin-top:20px">
+      <div class="form-group"><label>Aapka Naam</label><input type="text" placeholder="Dr. Rajesh Sharma" required></div>
+      <div class="form-group"><label>WhatsApp Number</label><input type="tel" placeholder="+91 98765 43210" required></div>
+      <div class="form-group"><label>City</label><input type="text" placeholder="Delhi / Mumbai / Noida..." required></div>
+      <div class="form-group"><label>Clinic Type</label>
+        <select><option>General Physician</option><option>Specialist</option><option>Dentist</option><option>Multi-specialty Clinic</option><option>Hospital</option></select>
+      </div>
+      <button type="submit" class="form-submit">Demo Book Karein →</button>
+    </form>
+  </div>
+</div>
+
+<!-- WA Float -->
+<a href="https://wa.me/919518709573?text=Hi%2C%20DocBot%20AI%20ke%20baare%20mein%20jaanna%20chahta%20hoon" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+// Chat Demo
+const chatMessages = [
+  {type:'bot', text:'🏥 *DocBot AI*\n\nNamaste! Appointment book karni hai? Apna naam batayein 😊'},
+  {type:'user', text:'Dr. ke paas jaana hai, Rahul hoon'},
+  {type:'bot', text:'Namaste Rahul ji! 🙏\n\nKya takleef hai?\n1️⃣ Bukhaar/Sardi\n2️⃣ Seene mein dard\n3️⃣ Pet dard\n4️⃣ Sir dard\n5️⃣ Other'},
+  {type:'user', text:'1'},
+  {type:'bot', text:'Kab appointment chahiye?\n1️⃣ 🚨 Emergency\n2️⃣ ⚡ Aaj\n3️⃣ 📅 Is hafte\n4️⃣ ✅ Routine'},
+  {type:'user', text:'2'},
+  {type:'bot', text:'✅ *Appointment Confirmed!*\n\n👤 Rahul\n🤒 Bukhaar/Sardi\n📅 Aaj — 5:00 PM\n⚡ Priority\n\nDr. Sharma ka wait karein! 🏥'},
+];
+let msgIndex = 0;
+const body = document.getElementById('chatBody');
+function addMsg(msg) {
+  const div = document.createElement('div');
+  div.className = `msg msg-${msg.type}`;
+  div.innerHTML = msg.text.replace(/\n/g,'<br>').replace(/\*(.*?)\*/g,'<strong>$1</strong>');
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+function showTyping() {
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  t.id = 'typing';
+  body.appendChild(t);
+  body.scrollTop = body.scrollHeight;
+}
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+function playChat() {
+  if (msgIndex >= chatMessages.length) { msgIndex = 0; body.innerHTML = ''; setTimeout(playChat, 2000); return; }
+  const msg = chatMessages[msgIndex++];
+  if (msg.type === 'bot') { showTyping(); setTimeout(() => { removeTyping(); addMsg(msg); setTimeout(playChat, 1800); }, 900); }
+  else { addMsg(msg); setTimeout(playChat, 1200); }
+}
+setTimeout(playChat, 1000);
+// Counters
+const counters = document.querySelectorAll('[data-target]');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); io.unobserve(e.target); }});
+});
+counters.forEach(c => io.observe(c));
+function animateCounter(el) {
+  const target = +el.dataset.target, duration = 1500, step = target / (duration / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { el.textContent = target.toLocaleString('en-IN') + (el.dataset.target === '98' ? '%' : '+'); clearInterval(timer); }
+    else el.textContent = Math.floor(current).toLocaleString('en-IN');
+  }, 16);
+}
+// Scroll animations
+const fadeEls = document.querySelectorAll('.fade-up');
+const fadeIO = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.1});
+fadeEls.forEach(el => fadeIO.observe(el));
+// Modal
+function openModal(){document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function submitDemo(e) {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.querySelector('input[type=text]').value;
+  const phone = form.querySelector('input[type=tel]').value;
+  const city = form.querySelectorAll('input[type=text]')[1]?.value || '';
+  const type = form.querySelector('select').value;
+  const btn = form.querySelector('.form-submit');
+  btn.textContent = 'Booking...'; btn.disabled = true;
+  fetch('/api/demo-request', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name, phone, city, budget: type + ' — DocBot'})
+  }).catch(()=>{});
+  setTimeout(() => {
+    closeModal();
+    alert('🎉 Demo Booked!\n\nHum aapko 2 ghante mein WhatsApp karenge!\n\nShukriya, ' + name + ' ji! 🙏');
+  }, 1500);
+}
+</script>
+</body>
+</html>

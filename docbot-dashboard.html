@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocBot Dashboard — Clinic Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--c1:#00b894;--c2:#00cec9;--c3:#fd79a8;--dark:#060d0d;--dark2:#0d1a1a;--dark3:#112222;--text:#f0fafa;--text2:#94b8b8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;display:flex;min-height:100vh}
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--dark2);border-right:1px solid rgba(0,184,148,.12);display:flex;flex-direction:column;padding:24px 0;position:fixed;top:0;left:0;bottom:0}
+.sidebar-logo{padding:0 20px 24px;border-bottom:1px solid rgba(0,184,148,.12);margin-bottom:16px}
+.sidebar-logo .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:8px;display:grid;place-items:center}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;color:var(--text2);font-size:.88rem;font-weight:500;cursor:pointer;transition:.2s;border-left:3px solid transparent}
+.nav-item:hover,.nav-item.active{color:var(--c1);border-left-color:var(--c1);background:rgba(0,184,148,.06)}
+.nav-item i{width:16px}
+/* MAIN */
+.main{margin-left:220px;flex:1;padding:28px;min-height:100vh}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.topbar h1{font-size:1.3rem;font-weight:700}
+.topbar-right{display:flex;gap:12px;align-items:center}
+.refresh-btn{background:rgba(0,184,148,.12);border:1px solid rgba(0,184,148,.2);color:var(--c1);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px;transition:.2s}
+.refresh-btn:hover{background:rgba(0,184,148,.2)}
+.live-badge{background:#1a2f2f;border:1px solid var(--c1);color:var(--c1);padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:700}
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.card{background:var(--dark2);border:1px solid rgba(0,184,148,.1);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:50%;filter:blur(20px);opacity:.4}
+.card.green::before{background:var(--c1)}.card.teal::before{background:var(--c2)}.card.pink::before{background:var(--c3)}.card.blue::before{background:#6366f1}
+.card-label{font-size:.75rem;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.card-value{font-size:2rem;font-weight:800;margin-bottom:4px}
+.card-sub{font-size:.75rem;color:var(--text2)}
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
+.chart-box{background:var(--dark2);border:1px solid rgba(0,184,148,.1);border-radius:16px;padding:20px}
+.chart-box h3{font-size:.9rem;font-weight:700;margin-bottom:16px;color:var(--text2)}
+/* TABLE */
+.table-box{background:var(--dark2);border:1px solid rgba(0,184,148,.1);border-radius:16px;padding:20px;margin-bottom:24px}
+.table-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.table-header h3{font-size:.95rem;font-weight:700}
+.search-box{background:var(--dark);border:1px solid rgba(0,184,148,.15);border-radius:8px;padding:7px 12px;color:var(--text);font-size:.82rem;outline:none;width:200px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:.75rem;font-weight:600;color:var(--text2);padding:10px 12px;border-bottom:1px solid rgba(0,184,148,.08);text-transform:uppercase}
+td{padding:12px;font-size:.84rem;border-bottom:1px solid rgba(255,255,255,.03)}
+tr:hover{background:rgba(0,184,148,.03)}
+.badge{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700}
+.badge.urgent{background:rgba(239,68,68,.15);color:#ef4444}
+.badge.priority{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.routine{background:rgba(0,184,148,.15);color:var(--c1)}
+.score-bar{display:flex;align-items:center;gap:8px}
+.score-fill{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--dark2);border:1px solid rgba(0,184,148,.1);border-radius:12px;padding:4px}
+.tab{padding:8px 16px;border-radius:9px;font-size:.83rem;font-weight:600;cursor:pointer;color:var(--text2);transition:.2s}
+.tab.active{background:rgba(0,184,148,.15);color:var(--c1)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo"><div class="logo-icon">🏥</div><span>DocBot Admin</span></div>
+  </div>
+  <div class="nav-item active" onclick="showTab('overview')"><i class="fas fa-chart-pie"></i> Overview</div>
+  <div class="nav-item" onclick="showTab('appointments')"><i class="fas fa-calendar-check"></i> All Appointments</div>
+  <div class="nav-item" onclick="showTab('urgent')"><i class="fas fa-exclamation-triangle"></i> Urgent Cases</div>
+  <div class="nav-item" onclick="location.href='/docbot-landing'"><i class="fas fa-globe"></i> Landing Page</div>
+  <div class="nav-item" onclick="location.href='/dashboard'"><i class="fas fa-home"></i> PropBot</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="pageTitle">Dashboard Overview</h1>
+    <div class="topbar-right">
+      <span class="live-badge" id="liveBadge">⬤ Loading...</span>
+      <button class="refresh-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview">
+    <div class="cards-grid">
+      <div class="card green"><div class="card-label">Total Appointments</div><div class="card-value" id="totalApt">--</div><div class="card-sub">All time</div></div>
+      <div class="card pink"><div class="card-label">🔴 Urgent Cases</div><div class="card-value" id="urgentCount" style="color:#ef4444">--</div><div class="card-sub">Need immediate attention</div></div>
+      <div class="card teal"><div class="card-label">🟡 Priority</div><div class="card-value" id="priorityCount" style="color:#fbbf24">--</div><div class="card-sub">Today's patients</div></div>
+      <div class="card blue"><div class="card-label">🟢 Routine</div><div class="card-value" id="routineCount" style="color:var(--c1)">--</div><div class="card-sub">Scheduled this week</div></div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-box"><h3>Appointment Activity (7 days)</h3><canvas id="activityChart" height="100"></canvas></div>
+      <div class="chart-box"><h3>Case Distribution</h3><canvas id="distChart" height="200"></canvas></div>
+    </div>
+    <div class="table-box">
+      <div class="table-header"><h3>Recent Appointments</h3></div>
+      <table><thead><tr><th>Patient</th><th>Problem</th><th>Slot</th><th>Priority</th><th>Score</th></tr></thead>
+      <tbody id="recentTable"></tbody></table>
+    </div>
+  </div>
+
+  <!-- APPOINTMENTS TAB -->
+  <div id="tab-appointments" style="display:none">
+    <div class="table-box">
+      <div class="table-header">
+        <h3>All Appointments</h3>
+        <input class="search-box" placeholder="Search patient..." oninput="filterTable(this.value)">
+      </div>
+      <table><thead><tr><th>Patient</th><th>Phone</th><th>Problem</th><th>Urgency</th><th>Slot</th><th>Priority</th><th>Score</th></tr></thead>
+      <tbody id="allTable"></tbody></table>
+    </div>
+  </div>
+
+  <!-- URGENT TAB -->
+  <div id="tab-urgent" style="display:none">
+    <div class="table-box">
+      <div class="table-header"><h3>🔴 Urgent & Priority Cases</h3></div>
+      <table><thead><tr><th>Patient</th><th>Phone</th><th>Problem</th><th>Slot</th><th>Priority</th></tr></thead>
+      <tbody id="urgentTable"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<script>
+let allAppointments = [];
+
+async function refreshData() {
+  document.getElementById('liveBadge').textContent = '⬤ Loading...';
+  try {
+    const [aptRes, sessRes] = await Promise.all([
+      fetch('/docbot/api/appointments').then(r=>r.json()),
+      fetch('/docbot/api/sessions').then(r=>r.json())
+    ]);
+    allAppointments = aptRes.appointments || [];
+    const live = sessRes.active || 0;
+    document.getElementById('liveBadge').textContent = live > 0 ? `🟢 ${live} LIVE` : '⬤ 0 Live';
+    document.title = live > 0 ? `🟢 ${live} LIVE — DocBot` : 'DocBot Dashboard';
+    renderDashboard();
+  } catch(e) {
+    document.getElementById('liveBadge').textContent = '⬤ Offline';
+  }
+}
+
+function renderDashboard() {
+  const apts = allAppointments;
+  const urgent   = apts.filter(a=>a.priority==='urgent').length;
+  const priority = apts.filter(a=>a.priority==='priority').length;
+  const routine  = apts.filter(a=>a.priority==='routine').length;
+
+  document.getElementById('totalApt').textContent     = apts.length;
+  document.getElementById('urgentCount').textContent   = urgent;
+  document.getElementById('priorityCount').textContent = priority;
+  document.getElementById('routineCount').textContent  = routine;
+
+  // Charts
+  const actCtx = document.getElementById('activityChart').getContext('2d');
+  if(window.actChart) window.actChart.destroy();
+  window.actChart = new Chart(actCtx, {
+    type:'bar',
+    data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Appointments',data:[8,12,7,15,10,18,9],backgroundColor:'rgba(0,184,148,.5)',borderRadius:6}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#94b8b8'}},y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#94b8b8'}}}}
+  });
+
+  const distCtx = document.getElementById('distChart').getContext('2d');
+  if(window.distChart) window.distChart.destroy();
+  window.distChart = new Chart(distCtx, {
+    type:'doughnut',
+    data:{labels:['Urgent','Priority','Routine'],datasets:[{data:[urgent,priority,routine],backgroundColor:['rgba(239,68,68,.7)','rgba(251,191,36,.7)','rgba(0,184,148,.7)'],borderWidth:0}]},
+    options:{plugins:{legend:{labels:{color:'#94b8b8',padding:16}}},cutout:'65%'}
+  });
+
+  // Recent table
+  const tbody = document.getElementById('recentTable');
+  tbody.innerHTML = apts.slice(0,6).map(a=>`
+    <tr>
+      <td><strong>${a.name}</strong></td>
+      <td>${a.symptoms}</td>
+      <td>${a.slot}</td>
+      <td><span class="badge ${a.priority}">${a.priority==='urgent'?'🔴 URGENT':a.priority==='priority'?'🟡 PRIORITY':'🟢 ROUTINE'}</span></td>
+      <td><div class="score-bar"><div class="score-fill" style="width:${a.score*10}px"></div><span>${a.score}/10</span></div></td>
+    </tr>`).join('');
+
+  // All table
+  const allTbody = document.getElementById('allTable');
+  allTbody.innerHTML = apts.map(a=>`
+    <tr>
+      <td><strong>${a.name}</strong></td>
+      <td>${a.phone}</td>
+      <td>${a.symptoms}</td>
+      <td>${a.urgency}</td>
+      <td>${a.slot}</td>
+      <td><span class="badge ${a.priority}">${a.priority==='urgent'?'🔴 URGENT':a.priority==='priority'?'🟡 PRIORITY':'🟢 ROUTINE'}</span></td>
+      <td>${a.score}/10</td>
+    </tr>`).join('');
+
+  // Urgent table
+  const urgTbody = document.getElementById('urgentTable');
+  urgTbody.innerHTML = apts.filter(a=>a.priority!=='routine').map(a=>`
+    <tr>
+      <td><strong>${a.name}</strong></td>
+      <td>${a.phone}</td>
+      <td>${a.symptoms}</td>
+      <td>${a.slot}</td>
+      <td><span class="badge ${a.priority}">${a.priority==='urgent'?'🔴 URGENT':'🟡 PRIORITY'}</span></td>
+    </tr>`).join('');
+}
+
+function showTab(tab) {
+  ['overview','appointments','urgent'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===tab?'block':'none';
+  });
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active', ['overview','appointments','urgent'][i]===tab);
+  });
+  const titles = {overview:'Dashboard Overview',appointments:'All Appointments',urgent:'Urgent Cases'};
+  document.getElementById('pageTitle').textContent = titles[tab]||'Dashboard';
+}
+
+function filterTable(val) {
+  const rows = document.querySelectorAll('#allTable tr');
+  rows.forEach(r => r.style.display = r.textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none');
+}
+
+refreshData();
+setInterval(refreshData, 30000);
+</script>
+</body>
+</html>
