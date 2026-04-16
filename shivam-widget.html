@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Shivam Chemical — WhatsApp Widget Script</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;background:#f5f5f5}
+.card{background:#fff;border-radius:12px;padding:30px;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+h1{color:#333;font-size:1.5rem}
+h2{color:#555;font-size:1.1rem;margin-bottom:12px}
+pre{background:#1e1e1e;color:#d4d4d4;padding:20px;border-radius:8px;overflow-x:auto;font-size:.85rem;line-height:1.6}
+.copy-btn{background:#25d366;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:bold;margin-top:12px}
+.copy-btn:hover{background:#1da851}
+.step{background:#e8f5e9;border-left:4px solid #25d366;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:10px}
+.step strong{color:#1a7f3c}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>🧪 Shivam Chemical — WhatsApp Bot Widget</h1>
+  <p style="color:#666">Yeh script apni website mein paste karo — WhatsApp bot automatically add ho jaayega!</p>
+</div>
+
+<div class="card">
+  <h2>📋 Installation Steps:</h2>
+  <div class="step"><strong>Step 1:</strong> Apni website ki HTML file kholo</div>
+  <div class="step"><strong>Step 2:</strong> <code>&lt;/body&gt;</code> tag dhundho (file ke bilkul end mein hoga)</div>
+  <div class="step"><strong>Step 3:</strong> Neeche diya hua code copy karo aur <code>&lt;/body&gt;</code> se pehle paste karo</div>
+  <div class="step"><strong>Step 4:</strong> File save karo aur website pe upload karo — Done! ✅</div>
+</div>
+
+<div class="card">
+  <h2>💻 Script (Copy Karo):</h2>
+  <pre id="scriptCode">&lt;!-- Shivam Chemical WhatsApp Bot Widget --&gt;
+&lt;script&gt;
+(function(){
+  // WhatsApp Button
+  var btn = document.createElement('a');
+  btn.href = 'https://wa.me/14155238886?text=join%20gan-smile';
+  btn.target = '_blank';
+  btn.id = 'shivam-wa-btn';
+  btn.style.cssText = [
+    'position:fixed',
+    'bottom:24px',
+    'right:24px',
+    'z-index:9999',
+    'width:64px',
+    'height:64px',
+    'background:#25d366',
+    'border-radius:50%',
+    'display:flex',
+    'align-items:center',
+    'justify-content:center',
+    'box-shadow:0 4px 20px rgba(37,211,102,0.5)',
+    'text-decoration:none',
+    'cursor:pointer'
+  ].join(';');
+
+  btn.innerHTML = '&lt;svg width="34" height="34" viewBox="0 0 24 24" fill="white"&gt;&lt;path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>&lt;path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.132 1.535 5.875L.057 23.5l5.773-1.456A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.16-1.426l-.369-.22-3.429.866.893-3.32-.242-.384A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>&lt;/svg&gt;';
+
+  // Tooltip
+  var tip = document.createElement('div');
+  tip.textContent = 'Product Inquiry Karein!';
+  tip.style.cssText = [
+    'position:fixed',
+    'bottom:96px',
+    'right:20px',
+    'background:#333',
+    'color:#fff',
+    'padding:8px 14px',
+    'border-radius:8px',
+    'font-size:13px',
+    'font-family:Arial,sans-serif',
+    'z-index:9998',
+    'white-space:nowrap',
+    'opacity:0',
+    'transition:opacity 0.3s'
+  ].join(';');
+
+  // Animation
+  var style = document.createElement('style');
+  style.textContent = '#shivam-wa-btn{animation:shivamPulse 2s infinite} @keyframes shivamPulse{0%,100%{transform:scale(1);box-shadow:0 4px 20px rgba(37,211,102,0.5)}50%{transform:scale(1.08);box-shadow:0 4px 30px rgba(37,211,102,0.8)}}';
+  document.head.appendChild(style);
+
+  btn.addEventListener('mouseenter', function(){ tip.style.opacity='1'; });
+  btn.addEventListener('mouseleave', function(){ tip.style.opacity='0'; });
+
+  document.body.appendChild(tip);
+  document.body.appendChild(btn);
+})();
+&lt;/script&gt;
+&lt;!-- Shivam Chemical Widget End --&gt;</pre>
+  <button class="copy-btn" onclick="copyScript()">📋 Script Copy Karein</button>
+</div>
+
+<div class="card">
+  <h2>📱 Preview:</h2>
+  <p style="color:#666">Aapki website pe yeh button dikhega — bottom right corner mein:</p>
+  <div style="background:#f0f0f0;height:200px;border-radius:8px;position:relative;margin-top:12px">
+    <div style="position:absolute;bottom:16px;right:16px;width:56px;height:56px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,0.5)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.132 1.535 5.875L.057 23.5l5.773-1.456A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.16-1.426l-.369-.22-3.429.866.893-3.32-.242-.384A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    </div>
+    <div style="position:absolute;bottom:80px;right:12px;background:#333;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px">Product Inquiry Karein!</div>
+  </div>
+</div>
+
+<script>
+function copyScript() {
+  var code = document.getElementById('scriptCode').textContent;
+  // Decode HTML entities
+  var txt = document.createElement('textarea');
+  txt.innerHTML = code;
+  var decoded = txt.value;
+  navigator.clipboard.writeText(decoded).then(function() {
+    alert('✅ Script copy ho gaya! Ab apni website mein paste karo.');
+  });
+}
+</script>
+</body>
+</html>

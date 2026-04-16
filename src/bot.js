@@ -5,12 +5,14 @@ const { MessagingResponse } = require('twilio').twiml;
 const sheets = require('./sheets');
 const properties = require('../config/properties');
 const { router: docbotRouter } = require('./docbot');
+const { router: chembotRouter } = require('./chembot');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 app.use('/docbot', docbotRouter);
+app.use('/chem', chembotRouter);
 
 // ─── In-memory session store ────────────────────────────────────────────────
 const sessions = {};
@@ -388,6 +390,7 @@ app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'das
 app.get('/demo-script', (req, res) => res.sendFile(path.join(__dirname, '..', 'demo-script.html')));
 app.get('/guide', (req, res) => res.sendFile(path.join(__dirname, '..', 'guide.html')));
 app.get('/broadcast', (req, res) => res.sendFile(path.join(__dirname, '..', 'broadcast.html')));
+app.get('/shivam-widget', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-widget.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
