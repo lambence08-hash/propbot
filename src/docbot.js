@@ -176,4 +176,9 @@ function getMockAppointments() {
   ];
 }
 
+// ─── Static Pages ─────────────────────────────────────────────────────────────
+const path = require('path');
+router.get('/landing', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot.html')));
+router.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot-dashboard.html')));
+
 module.exports = { router, sessions };

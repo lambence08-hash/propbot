@@ -388,8 +388,6 @@ app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'das
 app.get('/demo-script', (req, res) => res.sendFile(path.join(__dirname, '..', 'demo-script.html')));
 app.get('/guide', (req, res) => res.sendFile(path.join(__dirname, '..', 'guide.html')));
 app.get('/broadcast', (req, res) => res.sendFile(path.join(__dirname, '..', 'broadcast.html')));
-app.get('/docbot-landing', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot.html')));
-app.get('/docbot-dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'docbot-dashboard.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
