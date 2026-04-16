@@ -364,6 +364,22 @@ function getMockVisits() {
   ];
 }
 
+// ─── Demo Request ─────────────────────────────────────────────────────────────
+app.post('/api/demo-request', async (req, res) => {
+  try {
+    const { name, phone, city, budget } = req.body;
+    const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    await twilio.messages.create({
+      from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+      to: `whatsapp:+919518709573`,
+      body: `🔔 *NAYA DEMO REQUEST!*\n\n👤 Naam: ${name}\n📱 Phone: ${phone}\n🏙️ City: ${city}\n💰 Budget: ${budget}\n\nJaldi contact karo! 🚀`
+    });
+    res.json({ success: true });
+  } catch(e) {
+    res.json({ success: false });
+  }
+});
+
 // ─── Static pages ─────────────────────────────────────────────────────────────
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', 'index.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'dashboard.html')));

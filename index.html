@@ -707,11 +707,21 @@ function openModal(){document.getElementById('modal').classList.add('open');}
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 function submitDemo(e){
   e.preventDefault();
-  const btn=e.target.querySelector('.form-submit');
+  const form=e.target;
+  const name=form.querySelector('input[type=text]').value;
+  const phone=form.querySelector('input[type=tel]').value;
+  const city=form.querySelectorAll('input[type=text]')[1]?.value||'';
+  const budget=form.querySelector('select').value;
+  const btn=form.querySelector('.form-submit');
   btn.textContent='Booking...';btn.disabled=true;
+  fetch('/api/demo-request',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name,phone,city,budget})
+  }).catch(()=>{});
   setTimeout(()=>{
     closeModal();
-    alert('🎉 Demo booked successfully!\n\nOur team will WhatsApp you within 2 hours to schedule your personalized demo.\n\nThank you!');
+    alert('🎉 Demo booked!\n\nHum aapko 2 ghante mein WhatsApp karenge!\n\nThank you, '+name+'!');
   },1500);
 }
 </script>
