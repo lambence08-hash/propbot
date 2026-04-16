@@ -392,6 +392,7 @@ app.get('/guide', (req, res) => res.sendFile(path.join(__dirname, '..', 'guide.h
 app.get('/broadcast', (req, res) => res.sendFile(path.join(__dirname, '..', 'broadcast.html')));
 app.get('/shivam-widget', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-widget.html')));
 app.get('/shivam-catalog', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-catalog.html')));
+app.get('/shivam-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-demo.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
