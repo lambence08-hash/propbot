@@ -48,7 +48,8 @@ async function alertOwner(session) {
 
 // ─── Message Handler ──────────────────────────────────────────────────────────
 async function handleMessage(phone, body, session) {
-  const num = parseInt(body.trim());
+  const num  = parseInt(body.trim());
+  const text = body.toLowerCase().trim();
 
   switch(session.step) {
 
@@ -60,48 +61,40 @@ async function handleMessage(phone, body, session) {
       if (body.length < 2) return 'Kripya apna naam likhein 🙏';
       session.name = body;
       session.step = 'ask_customer_type';
-      return `Shukriya *${session.name} ji*! 🙏\n\nAap kiske liye product chahiye?\n\n1️⃣ Office / Corporate\n2️⃣ Restaurant / Hotel\n3️⃣ Hospital / Healthcare\n4️⃣ Factory / Industrial\n5️⃣ Home / Personal Use\n6️⃣ Other\n\n*1 se 6 number type karein* 😊`;
+      return `Shukriya *${session.name} ji*! 🙏\n\nAap kiske liye product chahiye?\n\n🏢 Office / Corporate\n🍽️ Restaurant / Hotel\n🏥 Hospital / Healthcare\n🏭 Factory / Industrial\n🏠 Home / Personal Use\n\n*Seedha type karein — jaise "Restaurant" ya "Hospital"* 😊`;
 
     case 'ask_customer_type': {
-      const map = {1:'office',2:'restaurant',3:'hospital',4:'factory',5:'home',6:'other'};
-      if (!map[num]) return '1 se 6 ke beech number type karein 😊';
-      session.customerType = map[num];
-      session.step = 'ask_category';
-      return `Achha! ${customerTypeLabel[map[num]]} ke liye chahiye.\n\nKaunsi category ka product chahiye?\n\n1️⃣ Industrial Cleaners\n2️⃣ Home Care Products\n3️⃣ Personal Care\n4️⃣ Lab Chemicals\n5️⃣ Sab categories dikhao\n\n*1 se 5 number type karein* 🧪`;
-    }
-
-    case 'ask_category': {
-      const catMap = {1:'industrial',2:'home',3:'personal',4:'lab'};
-      if (num === 5) {
-        session.step = 'ask_specific_product';
-        session.product = 'Multiple Categories';
-        return `Theek hai! Aapko kaunsa specific product chahiye?\n\nExample: Floor Cleaner, Sanitizer, Toilet Cleaner\n\n*Product ka naam type karein* 📝`;
+      const t = text;
+      let type = 'other';
+      if (t.includes('office') || t.includes('corporate') || t.includes('company')) type = 'office';
+      else if (t.includes('restaurant') || t.includes('hotel') || t.includes('cafe') || t.includes('dhaba')) type = 'restaurant';
+      else if (t.includes('hospital') || t.includes('clinic') || t.includes('health') || t.includes('medical')) type = 'hospital';
+      else if (t.includes('factory') || t.includes('industrial') || t.includes('warehouse') || t.includes('plant')) type = 'factory';
+      else if (t.includes('home') || t.includes('personal') || t.includes('ghar') || t.includes('house')) type = 'home';
+      else if (num >= 1 && num <= 6) {
+        const numMap = {1:'office',2:'restaurant',3:'hospital',4:'factory',5:'home',6:'other'};
+        type = numMap[num];
       }
-      if (!catMap[num]) return '1 se 5 ke beech number type karein 😊';
-      const cat = catMap[num];
-      const list = products[cat];
-      session.selectedCategory = cat;
+      session.customerType = type;
       session.step = 'ask_specific_product';
-      return `${cat.charAt(0).toUpperCase()+cat.slice(1)} Category:\n\n${list.map((p,i)=>`${i+1}️⃣ ${p}`).join('\n')}\n\nKaunsa product chahiye? *Number ya naam type karein* 📝`;
+      return `Samajh gaya — *${customerTypeLabel[type]}* ke liye! 👍\n\nKaunsa product chahiye?\n\nSeedha product ka naam likhein:\n\n🧹 Floor Cleaner\n🚽 Toilet / Bathroom Cleaner\n🧴 Handwash / Sanitizer\n🍳 Kitchen Degreaser\n🪟 Glass Cleaner\n🧪 Lab Chemicals\n📦 Koi bhi aur product\n\n*Bas product ka naam type karein* 😊`;
     }
 
     case 'ask_specific_product': {
-      if (session.selectedCategory && parseInt(body) > 0) {
-        const list = products[session.selectedCategory];
-        session.product = list[parseInt(body)-1] || body;
-      } else {
-        session.product = body;
-      }
+      session.product = body;
       session.step = 'ask_quantity';
-      return `*${session.product}* — achha choice! 👍\n\nKitna quantity chahiye?\n\n1️⃣ Small (Trial order — 5-10 units)\n2️⃣ Medium (50-100 units)\n3️⃣ Bulk (500+ units)\n\n*1 se 3 number type karein* 📦`;
+      return `*${session.product}* — bilkul! 👍\n\nKitna quantity chahiye?\n\n🔹 Thoda (Trial — 5-10 units)\n🔸 Medium (50-100 units)\n🔴 Bulk (500+ units)\n\n*"Thoda", "Medium" ya "Bulk" type karein* 📦`;
     }
 
     case 'ask_quantity': {
-      const map = {1:'small',2:'medium',3:'bulk'};
-      if (!map[num]) return '1 se 3 ke beech number type karein 😊';
-      session.quantity = map[num];
+      let qty = 'small';
+      if (text.includes('bulk') || text.includes('bada') || text.includes('zyada') || text.includes('500') || num >= 500) qty = 'bulk';
+      else if (text.includes('medium') || text.includes('beech') || text.includes('50') || text.includes('100')) qty = 'medium';
+      else if (text.includes('small') || text.includes('thoda') || text.includes('trial') || text.includes('kam')) qty = 'small';
+      else if (num >= 1 && num <= 3) { const m={1:'small',2:'medium',3:'bulk'}; qty=m[num]; }
+      session.quantity = qty;
       session.step = 'ask_city';
-      return `Theek hai! Delivery kahan chahiye?\n\n*Apna city/state type karein* 📍`;
+      return `Theek hai! Delivery kahan chahiye?\n\n*Apna city/state type karein* 📍\n\n_(Example: Mumbai, Pune, Delhi)_`;
     }
 
     case 'ask_city':
