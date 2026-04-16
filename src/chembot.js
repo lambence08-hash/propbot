@@ -6,9 +6,17 @@ const { MessagingResponse } = require('twilio').twiml;
 const { saveChemInquiry, getChemInquiries, updateChemFollowUp } = require('./sheets');
 
 const sessions = {};
+// lastInquiry stores { product, customerType, quantity, timestamp } per phone for repeat detection
+const lastInquiry = {};
+
 function getSession(phone) {
   if (!sessions[phone]) sessions[phone] = { step: 'start', phone };
   return sessions[phone];
+}
+
+function daysSince(ts) {
+  if (!ts) return 999;
+  return Math.floor((Date.now() - new Date(ts).getTime()) / 86400000);
 }
 
 // ─── Products ─────────────────────────────────────────────────────────────────
@@ -65,9 +73,38 @@ async function handleMessage(phone, body, session) {
 
   switch(session.step) {
 
-    case 'start':
+    case 'start': {
+      // Returning customer detection
+      const prev = lastInquiry[phone];
+      const days = daysSince(prev?.timestamp);
+      if (prev && days >= 7) {
+        session.step = 'returning_customer';
+        session.name = prev.name;
+        return `Namaste *${prev.name} ji*! 👋\n\nAap wapas aaye — shukriya! 🙏\n\nPehle aapne *${prev.product}* order kiya tha.\n\n*Kya aapko phir se order karna hai?* 😊\n\n1️⃣ Haan, same product chahiye\n2️⃣ Naya product dhundna hai\n3️⃣ Price/offer janna hai\n\n*"1", "2" ya "3" type karein*`;
+      }
       session.step = 'ask_name';
       return `🧪 *Shivam Chemical — AI Assistant*\n══════════════════════\n\nNamaste! Main aapko sahi chemical product dhundhne mein madad karunga!\n\n✅ 500+ quality products\n✅ Bulk orders available\n✅ Pan India delivery\n✅ Private labeling\n\nShuruaat karte hain! Aapka naam kya hai? 😊`;
+    }
+
+    case 'returning_customer': {
+      const prev = lastInquiry[phone];
+      if (num === 1 || text.includes('haan') || text.includes('han') || text.includes('yes') || text.includes('same')) {
+        // Shortcut reorder — skip to quantity
+        session.name = prev.name;
+        session.customerType = prev.customerType;
+        session.product = prev.product;
+        session.step = 'ask_quantity';
+        return `Perfect! *${prev.product}* — same product! 👍\n\nIs baar kitna quantity chahiye?\n\n🔹 Thoda (Trial — 5-10 units)\n🔸 Medium (50-100 units)\n🔴 Bulk (500+ units)\n\n*Type karein* 📦`;
+      } else if (num === 3 || text.includes('price') || text.includes('offer') || text.includes('discount')) {
+        session.step = 'done';
+        return `💰 *Current Offers — Shivam Chemical*\n\n🎁 Bulk order (500+) pe *15% OFF* this week\n🔸 Medium order pe *8% OFF*\n🚚 Free delivery Maharashtra\n\n📞 Best quote ke liye: *+91-93225 09198*\n\nOrder karna hai? WhatsApp karo! 🧪`;
+      } else {
+        // New product inquiry
+        session.name = prev.name;
+        session.step = 'ask_customer_type';
+        return `Theek hai *${prev.name} ji*! Naya product dhundho. 😊\n\nAap kiske liye chahiye?\n\n🏢 Office / Corporate\n🍽️ Restaurant / Hotel\n🏥 Hospital / Healthcare\n🏭 Factory / Industrial\n🏠 Home / Personal Use\n\n*Type karein*`;
+      }
+    }
 
     case 'ask_name':
       if (body.length < 2) return 'Kripya apna naam likhein 🙏';
@@ -114,6 +151,12 @@ async function handleMessage(phone, body, session) {
       session.score = calcScore(session);
       session.followUpStatus = 'pending';
       const ts = new Date().toISOString();
+      // Save for returning customer detection
+      lastInquiry[phone] = {
+        name: session.name, product: session.product,
+        customerType: session.customerType, quantity: session.quantity,
+        timestamp: ts
+      };
       await alertOwner(session);
       await saveChemInquiry({
         phone: session.phone, name: session.name,
