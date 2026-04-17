@@ -432,24 +432,44 @@ function toggleSpeaker() {
   if (!speakerOn) speechSynthesis.cancel();
 }
 
+// Preload voices — Chrome loads them async
+let cachedVoices = [];
+function loadVoices() { cachedVoices = speechSynthesis.getVoices(); }
+loadVoices();
+speechSynthesis.onvoiceschanged = loadVoices;
+
 // Speak interviewer text
 function speakText(text) {
   if (!speakerOn) return;
-  speechSynthesis.cancel();  // stop any ongoing speech
-  const clean = text.replace(/[*_~`#]/g, '');  // strip markdown
-  const utt   = new SpeechSynthesisUtterance(clean);
-  utt.lang  = 'en-IN';
-  utt.rate  = 0.88;
-  utt.pitch = 1.0;
-  // Pick a good English voice if available
-  const voices = speechSynthesis.getVoices();
-  const preferred = voices.find(v => v.lang === 'en-IN') ||
-                    voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male')) ||
-                    voices.find(v => v.lang.startsWith('en'));
-  if (preferred) utt.voice = preferred;
-  utt.onstart = () => { isSpeaking = true; };
-  utt.onend   = () => { isSpeaking = false; };
-  speechSynthesis.speak(utt);
+  speechSynthesis.cancel();
+  const clean = text.replace(/[*_~`#]/g, '');
+
+  const doSpeak = () => {
+    const utt = new SpeechSynthesisUtterance(clean);
+    utt.lang  = 'en-IN';
+    utt.rate  = 0.88;
+    utt.pitch = 1.0;
+    const voices = cachedVoices.length ? cachedVoices : speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.lang === 'en-IN') ||
+                      voices.find(v => v.lang.startsWith('en-') && v.name.toLowerCase().includes('google')) ||
+                      voices.find(v => v.lang.startsWith('en'));
+    if (preferred) utt.voice = preferred;
+    utt.onstart = () => { isSpeaking = true; };
+    utt.onend   = () => { isSpeaking = false; };
+    speechSynthesis.speak(utt);
+    // Chrome bug fix: resume if it pauses mid-speech
+    const resumeTimer = setInterval(() => {
+      if (!speechSynthesis.speaking) { clearInterval(resumeTimer); return; }
+      speechSynthesis.resume();
+    }, 5000);
+  };
+
+  if (cachedVoices.length > 0) {
+    doSpeak();
+  } else {
+    const prev = speechSynthesis.onvoiceschanged;
+    speechSynthesis.onvoiceschanged = () => { loadVoices(); doSpeak(); speechSynthesis.onvoiceschanged = prev; };
+  }
 }
 
 // Toggle mic recording
@@ -517,8 +537,6 @@ function stopRecording() {
   document.getElementById('voiceStatus').textContent = 'Mic dabao — bolke jawab do';
 }
 
-// Preload voices on page load (needed for Chrome)
-speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
 
 // ── START INTERVIEW ──────────────────────────────────────────
 async function startInterview() {
