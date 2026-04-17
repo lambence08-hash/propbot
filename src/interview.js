@@ -1,9 +1,9 @@
 // ─── AI Interview Platform — Backend ─────────────────────────────────────────
 const express = require('express');
 const router  = express.Router();
-const Anthropic = require('@anthropic-ai/sdk');
+const OpenAI = require('openai');
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // In-memory session store
 const interviewSessions = {};
@@ -113,14 +113,16 @@ router.post('/start', async (req, res) => {
 
     // Get first message from AI
     const systemPrompt = buildSystemPrompt(config);
-    const firstResponse = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+    const firstResponse = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
       max_tokens: 300,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: 'Start the interview now.' }]
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: 'Start the interview now.' }
+      ]
     });
 
-    const firstMessage = firstResponse.content[0].text;
+    const firstMessage = firstResponse.choices[0].message.content;
     interviewSessions[sessionId].conversation.push(
       { role: 'user',      content: 'Start the interview now.' },
       { role: 'assistant', content: firstMessage }
@@ -153,14 +155,16 @@ router.post('/answer', async (req, res) => {
     session.conversation.push({ role: 'user', content: answer });
 
     const systemPrompt = buildSystemPrompt(session.config);
-    const response = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+    const response = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
       max_tokens: 400,
-      system: systemPrompt,
-      messages: session.conversation
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...session.conversation
+      ]
     });
 
-    const aiMessage = response.content[0].text;
+    const aiMessage = response.choices[0].message.content;
     session.conversation.push({ role: 'assistant', content: aiMessage });
     session.questionCount++;
 
@@ -190,13 +194,13 @@ router.post('/report', async (req, res) => {
 
     const reportPrompt = buildReportPrompt(session.config, session.conversation);
 
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
+    const response = await client.chat.completions.create({
+      model: 'gpt-4o',
       max_tokens: 3000,
       messages: [{ role: 'user', content: reportPrompt }]
     });
 
-    const rawText = response.content[0].text.trim();
+    const rawText = response.choices[0].message.content.trim();
     // Extract JSON
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Report JSON not found');
