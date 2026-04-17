@@ -6,6 +6,9 @@ const sheets = require('./sheets');
 const properties = require('../config/properties');
 const { router: docbotRouter } = require('./docbot');
 const { router: chembotRouter } = require('./chembot');
+const { router: universalRouter } = require('./universalbot');
+const { startScheduler } = require('./scheduler');
+const { router: interviewRouter } = require('./interview');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -13,6 +16,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 app.use('/docbot', docbotRouter);
 app.use('/chem', chembotRouter);
+app.use('/lp', universalRouter);       // LeadPilot universal routes
+app.use('/interview', interviewRouter); // AI Interview Platform
+
+// ─── Start follow-up scheduler ───────────────────────────────────────────────
+startScheduler();
 
 // ─── In-memory session store ────────────────────────────────────────────────
 const sessions = {};
@@ -394,6 +402,8 @@ app.get('/shivam-widget', (req, res) => res.sendFile(path.join(__dirname, '..', 
 app.get('/shivam-catalog', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-catalog.html')));
 app.get('/shivam-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'shivam-demo.html')));
 app.get('/chem-dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'chem-dashboard.html')));
+app.get('/interview-platform', (req, res) => res.sendFile(path.join(__dirname, '..', 'interview.html')));
+app.get('/leadpilot', (req, res) => res.sendFile(path.join(__dirname, '..', 'leadpilot.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {

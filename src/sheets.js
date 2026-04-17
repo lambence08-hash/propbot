@@ -98,4 +98,63 @@ async function updateChemFollowUp({ phone, rowIndex, status }) {
   } catch(e) { console.error('Sheets updateChemFollowUp error:', e.message); }
 }
 
-module.exports = { saveVisitBooking, saveLead, getLeads, getVisits, saveChemInquiry, getChemInquiries, updateChemFollowUp };
+// ─── Universal Lead Functions (LeadPilot) ─────────────────────────────────────
+async function saveUniversalLead(client, session) {
+  try {
+    const sheets = await getSheets();
+    // Dynamic columns based on client flow
+    const flowValues = client.flow.map(f => session[f.key] || '');
+    const row = [
+      session.timestamp, session.phone, ...flowValues,
+      session.score || 0, 'pending', '', '', ''  // followUpStatus, day3, day7, day30
+    ];
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${client.sheetRange}!A:Z`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [row] }
+    });
+  } catch(e) { console.error(`Sheets saveUniversalLead (${client.id}) error:`, e.message); }
+}
+
+async function getUniversalLeads(client) {
+  try {
+    const sheets = await getSheets();
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${client.sheetRange}!A:Z`
+    });
+    const rows = res.data.values || [];
+    const flowKeys = client.flow.map(f => f.key);
+    return rows.slice(1).map((r, i) => {
+      const obj = { rowIndex: i + 2, timestamp: r[0], phone: r[1] };
+      flowKeys.forEach((k, fi) => { obj[k] = r[2 + fi] || ''; });
+      const base = 2 + flowKeys.length;
+      obj.score          = r[base]     || 0;
+      obj.followUpStatus = r[base + 1] || 'pending';
+      obj.followUpDay3   = r[base + 2] || '';
+      obj.followUpDay7   = r[base + 3] || '';
+      obj.followUpDay30  = r[base + 4] || '';
+      return obj;
+    });
+  } catch(e) { console.error(`Sheets getUniversalLeads (${client.id}) error:`, e.message); return []; }
+}
+
+async function updateFollowUpDay(client, rowIndex, day, status) {
+  try {
+    const sheets = await getSheets();
+    const flowKeys = client.flow.map(f => f.key);
+    const base = 2 + flowKeys.length; // timestamp + phone + flow fields
+    const colOffset = { 3: 2, 7: 3, 30: 4 };
+    const col = base + (colOffset[day] || 2);
+    const colLetter = String.fromCharCode(65 + col);
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${client.sheetRange}!${colLetter}${rowIndex}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [[status]] }
+    });
+  } catch(e) { console.error(`Sheets updateFollowUpDay error:`, e.message); }
+}
+
+module.exports = { saveVisitBooking, saveLead, getLeads, getVisits, saveChemInquiry, getChemInquiries, updateChemFollowUp, saveUniversalLead, getUniversalLeads, updateFollowUpDay };

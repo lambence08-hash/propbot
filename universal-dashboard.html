@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadPilot — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding:20px}
+
+/* HEADER */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #1a1a1a}
+.logo{font-size:1.1rem;font-weight:800;color:#fff}
+.logo span{color:#25d366}
+.logo sub{font-size:.65rem;color:#555;font-weight:400;display:block;margin-top:1px}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:.72rem;color:#555;background:#111;border:1px solid #1e1e1e;padding:5px 10px;border-radius:20px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#25d366;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ALERT BANNER */
+.alert-banner{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.06));border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.alert-banner.hidden{display:none}
+.alert-text{font-size:.82rem;font-weight:600;color:#fca5a5}
+.alert-sub{font-size:.72rem;color:#888;margin-top:2px}
+.alert-count{font-size:2rem;font-weight:800;color:#ef4444}
+
+/* TABS */
+.tabs{display:flex;gap:3px;margin-bottom:20px;background:#0f0f0f;border:1px solid #1a1a1a;border-radius:9px;padding:3px;width:fit-content}
+.tab{padding:7px 18px;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;color:#555;border:none;background:none;font-family:inherit;transition:.15s}
+.tab.active{background:#111;color:#fff;border:1px solid #222}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.stat{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px 16px}
+.stat-lbl{font-size:.65rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.stat-val{font-size:1.7rem;font-weight:800}
+.stat-val.g{color:#25d366}.stat-val.y{color:#f59e0b}.stat-val.r{color:#ef4444}.stat-val.b{color:#3b82f6}
+.stat-sub{font-size:.65rem;color:#444;margin-top:3px}
+
+/* TABLE */
+.tbl-wrap{background:#111;border:1px solid #1e1e1e;border-radius:10px;overflow:hidden;overflow-x:auto;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{background:#161616;padding:9px 13px;text-align:left;font-size:.65rem;color:#555;text-transform:uppercase;letter-spacing:.05em;font-weight:600;white-space:nowrap}
+td{padding:11px 13px;font-size:.78rem;border-bottom:1px solid #161616;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.due-row td{background:rgba(239,68,68,.04)}
+tr:hover td{background:#131313}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:700}
+.badge.bulk{background:rgba(37,211,102,.15);color:#25d366}
+.badge.medium{background:rgba(245,158,11,.15);color:#f59e0b}
+.badge.small{background:rgba(107,114,128,.12);color:#6b7280}
+
+.pip-bar{display:flex;gap:2px}
+.pip{width:8px;height:8px;border-radius:1px;background:#222}
+.pip.on{background:#25d366}.pip.on.hot{background:#f59e0b}
+
+.fu-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:5px;font-size:.7rem;font-weight:700;cursor:pointer;border:none;text-decoration:none;transition:.15s;font-family:inherit;white-space:nowrap}
+.fu-btn.wa{background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3)}
+.fu-btn.wa:hover{background:rgba(37,211,102,.25)}
+.fu-btn.grey{background:rgba(107,114,128,.1);color:#6b7280;border:1px solid #222}
+.fu-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.65rem;font-weight:700}
+.fu-badge.done{background:rgba(37,211,102,.12);color:#25d366}
+.fu-badge.auto{background:rgba(59,130,246,.12);color:#3b82f6}
+
+.name-strong{font-weight:600;font-size:.8rem}
+.sub-text{font-size:.68rem;color:#555;margin-top:1px}
+.due-chip{display:inline-block;background:rgba(239,68,68,.15);color:#ef4444;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:5px}
+.ts{color:#555;font-size:.7rem}
+.empty{text-align:center;padding:44px;color:#444}
+
+/* ─── RETARGETING TAB ─── */
+#tab-retarget{display:none}
+.rt-lbl{font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.segments{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.seg{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px;cursor:pointer;transition:.15s}
+.seg:hover{border-color:#333}
+.seg.sel{border-color:#25d366;background:rgba(37,211,102,.04)}
+.seg-icon{font-size:1.3rem;margin-bottom:6px}
+.seg-name{font-size:.8rem;font-weight:700;margin-bottom:3px}
+.seg-desc{font-size:.68rem;color:#555;line-height:1.4}
+.seg-count{font-size:1.2rem;font-weight:800;color:#25d366;margin-top:6px}
+
+.tmpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:16px}
+.tmpl{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px;cursor:pointer;transition:.15s}
+.tmpl:hover{border-color:#333}
+.tmpl.sel{border-color:#25d366;background:rgba(37,211,102,.04)}
+.tmpl-tag{font-size:.65rem;color:#25d366;font-weight:700;text-transform:uppercase;margin-bottom:5px}
+.tmpl-txt{font-size:.72rem;color:#777;line-height:1.4}
+
+.msg-box{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:16px;margin-bottom:14px}
+.msg-box textarea{width:100%;background:#0d0d0d;border:1px solid #222;border-radius:7px;color:#e9edef;padding:10px 12px;font-size:.78rem;line-height:1.6;font-family:inherit;resize:vertical;min-height:90px}
+.msg-box textarea:focus{outline:none;border-color:#25d366}
+
+.rcpt-list{background:#111;border:1px solid #1e1e1e;border-radius:10px;overflow:hidden;margin-bottom:14px}
+.rcpt-hdr{background:#161616;padding:9px 14px;font-size:.68rem;color:#555;display:flex;justify-content:space-between}
+.rcpt-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #161616;font-size:.78rem}
+.rcpt-row:last-child{border-bottom:none}
+.send-1{background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3);padding:4px 10px;border-radius:5px;font-size:.7rem;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;transition:.15s}
+.send-1:hover{background:rgba(37,211,102,.25)}
+
+.send-all-bar{background:#111;border:1px solid #1e1e1e;border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.send-all-info strong{display:block;font-size:.85rem;margin-bottom:2px}
+.send-all-info span{font-size:.72rem;color:#666}
+.send-all-btn{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+/* ─── FILTER BAR ─── */
+.fbar{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;align-items:center}
+.fbtn{background:#111;border:1px solid #222;color:#666;padding:5px 11px;border-radius:6px;font-size:.72rem;cursor:pointer;font-family:inherit;transition:.15s}
+.fbtn.active{border-color:#25d366;color:#25d366;background:rgba(37,211,102,.08)}
+.fbtn:hover:not(.active){border-color:#333;color:#aaa}
+.rbtn{margin-left:auto;background:#25d366;color:#000;border:none;padding:6px 12px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">⚡ LeadPilot <span id="clientName"></span><sub>Auto Follow-Up Dashboard</sub></div>
+  </div>
+  <div class="live-pill"><div class="live-dot"></div> Live · 30s refresh</div>
+</div>
+
+<!-- 3-DAY ALERT BANNER -->
+<div class="alert-banner hidden" id="alertBanner">
+  <div>
+    <div class="alert-text">🔴 Follow-Up Due — Abhi Call Karo!</div>
+    <div class="alert-sub" id="alertSub">leads ko 3+ din ho gaye, koi reply nahi</div>
+  </div>
+  <div class="alert-count" id="alertCount">0</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('leads',this)">📋 Leads</button>
+  <button class="tab" onclick="switchTab('retarget',this)">🎯 Retargeting</button>
+</div>
+
+<!-- ═══ TAB: LEADS ═══ -->
+<div id="tab-leads">
+  <div class="stats">
+    <div class="stat"><div class="stat-lbl">Total Leads</div><div class="stat-val g" id="s-total">—</div><div class="stat-sub">All time</div></div>
+    <div class="stat"><div class="stat-lbl">🔥 Hot</div><div class="stat-val y" id="s-hot">—</div><div class="stat-sub">Score 4-5</div></div>
+    <div class="stat"><div class="stat-lbl">⏰ Follow-Up Due</div><div class="stat-val r" id="s-due">—</div><div class="stat-sub">3+ din pending</div></div>
+    <div class="stat"><div class="stat-lbl">Bulk Orders</div><div class="stat-val b" id="s-bulk">—</div><div class="stat-sub">High value</div></div>
+    <div class="stat"><div class="stat-lbl">✅ Converted</div><div class="stat-val g" id="s-done">—</div><div class="stat-sub">Follow-up done</div></div>
+  </div>
+
+  <div class="fbar">
+    <button class="fbtn active" onclick="filterBy('all',this)">All</button>
+    <button class="fbtn" onclick="filterBy('due',this)">🔴 Due Now</button>
+    <button class="fbtn" onclick="filterBy('hot',this)">🔥 Hot</button>
+    <button class="fbtn" onclick="filterBy('pending',this)">⚡ Pending</button>
+    <button class="fbtn" onclick="filterBy('bulk',this)">📦 Bulk</button>
+    <button class="rbtn" onclick="loadData()">⟳ Refresh</button>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr id="thead-row"></tr></thead>
+      <tbody id="tbody"><tr><td colspan="8"><div class="empty">⏳ Loading...</div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ TAB: RETARGETING ═══ -->
+<div id="tab-retarget">
+  <div class="rt-lbl" style="margin-bottom:14px">Step 1 — Segment select karo</div>
+  <div class="segments">
+    <div class="seg sel" onclick="selSeg('all',this)"><div class="seg-icon">👥</div><div class="seg-name">Sab Leads</div><div class="seg-desc">Poori list</div><div class="seg-count" id="sg-all">0</div></div>
+    <div class="seg" onclick="selSeg('hot',this)"><div class="seg-icon">🔥</div><div class="seg-name">Hot Leads</div><div class="seg-desc">Score 4-5</div><div class="seg-count" id="sg-hot">0</div></div>
+    <div class="seg" onclick="selSeg('due',this)"><div class="seg-icon">⏰</div><div class="seg-name">Follow-Up Due</div><div class="seg-desc">3+ din pending</div><div class="seg-count" id="sg-due">0</div></div>
+    <div class="seg" onclick="selSeg('bulk',this)"><div class="seg-icon">📦</div><div class="seg-name">Bulk Buyers</div><div class="seg-desc">High value</div><div class="seg-count" id="sg-bulk">0</div></div>
+    <div class="seg" onclick="selSeg('pending',this)"><div class="seg-icon">⚡</div><div class="seg-name">Not Called</div><div class="seg-desc">Pending follow-up</div><div class="seg-count" id="sg-pend">0</div></div>
+  </div>
+
+  <div class="rt-lbl">Step 2 — Message template</div>
+  <div class="tmpls">
+    <div class="tmpl sel" onclick="selTmpl('followup',this)"><div class="tmpl-tag">📞 Follow-Up</div><div class="tmpl-txt">Inquiry ka update — order dena chahte hain?</div></div>
+    <div class="tmpl" onclick="selTmpl('offer',this)"><div class="tmpl-tag">🎁 Offer</div><div class="tmpl-txt">Is hafte bulk pe 15% OFF!</div></div>
+    <div class="tmpl" onclick="selTmpl('reorder',this)"><div class="tmpl-tag">🔄 Reorder</div><div class="tmpl-txt">Stock khatam hone wala hoga — reorder karo</div></div>
+    <div class="tmpl" onclick="selTmpl('festival',this)"><div class="tmpl-tag">🎉 Festival</div><div class="tmpl-txt">Festival special — bulk pe free delivery!</div></div>
+    <div class="tmpl" onclick="selTmpl('custom',this)"><div class="tmpl-tag">✏️ Custom</div><div class="tmpl-txt">Apna message likho</div></div>
+  </div>
+
+  <div class="msg-box">
+    <div style="font-size:.7rem;color:#555;margin-bottom:8px">Message ({naam} aur {product} auto-fill hoga):</div>
+    <textarea id="msgText" oninput="renderRcpts()"></textarea>
+  </div>
+
+  <div class="rt-lbl">Step 3 — Recipients aur bhejo</div>
+  <div class="rcpt-list">
+    <div class="rcpt-hdr"><span id="rcptCount">0 selected</span><span>Click Send to open WhatsApp</span></div>
+    <div id="rcptRows"></div>
+  </div>
+
+  <div class="send-all-bar">
+    <div class="send-all-info"><strong>📲 Ek ek karke bhejo</strong><span>Har "Send" button se WhatsApp khulega, message ready hoga</span></div>
+    <button class="send-all-btn" onclick="openAll()">📲 Sab ke Links Kholo</button>
+  </div>
+</div>
+
+<script>
+const clientId = location.pathname.split('/')[2]; // /lp/{clientId}/dashboard
+let allLeads=[], clientInfo={}, flowKeys=[], currentFilter='all', currentSeg='all', currentTmpl='followup';
+
+const TEMPLATES = {
+  followup: `Namaste {naam} ji! 🙏\n\nMain {bizname} se bol raha hun.\n\nAapne *{product}* ke liye inquiry ki thi — kya decide kiya?\n\nIs hafte order karo toh *special price* milegi! 🎁\n\n📞 Reply karein ya call karein`,
+  offer:    `Namaste {naam} ji! 🎁\n\n*Is hafte Special Offer — {bizname}*\n\n🔴 Bulk order pe *15% OFF*\n🔸 Medium order pe *8% OFF*\n🚚 Free delivery Maharashtra\n\nSirf 3 din baaki!\n\nAbhi order karein 📲`,
+  reorder:  `Namaste {naam} ji! 🔄\n\nAapne pehle *{product}* liya tha.\n\nStock khatam hone wala hoga — *abhi reorder karo* aur:\n\n✅ Priority delivery\n✅ Same rate guaranteed\n✅ Extra 5% loyalty discount\n\nReply karein! 📦`,
+  festival: `Namaste {naam} ji! 🎉\n\n*{bizname} — Festival Special*\n\n🎁 Bulk order pe *20% OFF*\n🚚 Free delivery — Pan India\n📦 Fast dispatch — 24 hours\n\nIs weekend tak!\n\nOrder karein 🧪`,
+  custom:   ``
+};
+
+function daysAgo(ts){ if(!ts)return 999; return Math.floor((Date.now()-new Date(ts))/86400000); }
+function raw(p){ return (p||'').replace(/\D/g,''); }
+function maskPhone(p){ const c=raw(p).slice(-10); return c.length===10?`${c.slice(0,5)}·····`:p||'—'; }
+function fmt(ts){
+  if(!ts)return'—';
+  const d=new Date(ts),now=new Date(),diff=now-d;
+  if(diff<60000)return'Just now';
+  if(diff<3600000)return`${Math.floor(diff/60000)}m ago`;
+  if(diff<86400000)return`${Math.floor(diff/3600000)}h ago`;
+  if(diff<86400000*2)return'Yesterday';
+  return`${Math.floor(diff/86400000)} days ago`;
+}
+function pipBar(s){
+  const n=parseInt(s)||0;
+  return `<div class="pip-bar">${Array.from({length:5},(_,i)=>`<div class="pip ${i<n?(n>=4?'on hot':'on'):''}"></div>`).join('')}</div>`;
+}
+function isDue(l){ return daysAgo(l.timestamp)>=3 && l.followUpStatus!=='done' && l.followUpDay3!=='sent'; }
+
+function getFiltered(){
+  switch(currentFilter){
+    case'due':     return allLeads.filter(isDue);
+    case'hot':     return allLeads.filter(l=>parseInt(l.score)>=4);
+    case'pending': return allLeads.filter(l=>l.followUpStatus!=='done');
+    case'bulk':    return allLeads.filter(l=>l.quantity==='bulk'||l[flowKeys[2]]?.toLowerCase().includes('bulk'));
+    default:       return allLeads;
+  }
+}
+
+function buildWALink(lead, tmpl){
+  const biz=clientInfo.name||'';
+  const name=lead.name||lead[flowKeys[0]]||'';
+  const product=lead[flowKeys[1]]||lead[flowKeys[2]]||'product';
+  const msg=(tmpl||'').replace(/{naam}/g,name).replace(/{product}/g,product).replace(/{bizname}/g,biz);
+  return `https://wa.me/${raw(lead.phone)}?text=${encodeURIComponent(msg)}`;
+}
+
+function defaultWALink(lead){
+  const name=lead.name||lead[flowKeys[0]]||'';
+  const product=lead[flowKeys[1]]||lead[flowKeys[2]]||'product';
+  const msg=`Namaste ${name} ji! ${biz()} se bol raha hun. Aapne ${product} ke liye inquiry ki thi — kya abhi baat kar sakte hain? Special price hai! 🙏`;
+  return `https://wa.me/${raw(lead.phone)}?text=${encodeURIComponent(msg)}`;
+}
+function biz(){ return clientInfo.name||''; }
+
+function renderTable(data){
+  const tb=document.getElementById('tbody');
+  if(!data.length){ tb.innerHTML=`<tr><td colspan="10"><div class="empty">📭 Koi lead nahi</div></td></tr>`; return; }
+  const sorted=[...data].sort((a,b)=>{
+    const aD=isDue(a)?2:(a.followUpStatus!=='done'?1:0);
+    const bD=isDue(b)?2:(b.followUpStatus!=='done'?1:0);
+    if(aD!==bD)return bD-aD;
+    return new Date(b.timestamp)-new Date(a.timestamp);
+  });
+  tb.innerHTML=sorted.map((l,i)=>{
+    const due=isDue(l), isPend=l.followUpStatus!=='done', score=parseInt(l.score)||0;
+    const name=l.name||l[flowKeys[0]]||'—';
+    const product=l[flowKeys[1]]||l[flowKeys[2]]||'—';
+    const link=defaultWALink(l);
+    return `<tr class="${due?'due-row':''}">
+      <td class="ts">${i+1}</td>
+      <td><div class="name-strong">${name}${due?'<span class="due-chip">3-DAY DUE</span>':''}</div><div class="sub-text">${maskPhone(l.phone)}</div></td>
+      <td>${product}</td>
+      <td>${pipBar(score)}</td>
+      <td class="ts">${fmt(l.timestamp)}</td>
+      <td>${isPend
+        ?`<div style="display:flex;flex-direction:column;gap:4px">
+            <a href="${link}" target="_blank" class="fu-btn wa">📲 WhatsApp</a>
+            <button class="fu-btn grey" onclick="markDone(this,'${l.phone}',${l.rowIndex||0})">✓ Called</button>
+          </div>`
+        :`<span class="fu-badge done">✅ Done</span>`
+      }</td>
+    </tr>`;
+  }).join('');
+}
+
+function buildTableHeader(){
+  const keys=['#','Customer','Product','Score','Time','Action'];
+  document.getElementById('thead-row').innerHTML=keys.map(k=>`<th>${k}</th>`).join('');
+}
+
+function updateStats(data){
+  document.getElementById('s-total').textContent=data.length;
+  document.getElementById('s-hot').textContent=data.filter(l=>parseInt(l.score)>=4).length;
+  const due=data.filter(isDue);
+  document.getElementById('s-due').textContent=due.length;
+  document.getElementById('s-bulk').textContent=data.filter(l=>l.quantity==='bulk'||l[flowKeys[2]]?.toLowerCase().includes('bulk')).length;
+  document.getElementById('s-done').textContent=data.filter(l=>l.followUpStatus==='done').length;
+  // Banner
+  const banner=document.getElementById('alertBanner');
+  if(due.length>0){
+    banner.classList.remove('hidden');
+    document.getElementById('alertCount').textContent=due.length;
+    document.getElementById('alertSub').textContent=`${due.length} lead${due.length>1?'s':''} ko 3+ din ho gaye — abhi call karo!`;
+  } else { banner.classList.add('hidden'); }
+}
+
+function updateSegCounts(data){
+  document.getElementById('sg-all').textContent=data.length;
+  document.getElementById('sg-hot').textContent=data.filter(l=>parseInt(l.score)>=4).length;
+  document.getElementById('sg-due').textContent=data.filter(isDue).length;
+  document.getElementById('sg-bulk').textContent=data.filter(l=>l.quantity==='bulk'||l[flowKeys[2]]?.toLowerCase().includes('bulk')).length;
+  document.getElementById('sg-pend').textContent=data.filter(l=>l.followUpStatus!=='done').length;
+}
+
+function getSegData(){
+  switch(currentSeg){
+    case'hot':  return allLeads.filter(l=>parseInt(l.score)>=4);
+    case'due':  return allLeads.filter(isDue);
+    case'bulk': return allLeads.filter(l=>l.quantity==='bulk'||l[flowKeys[2]]?.toLowerCase().includes('bulk'));
+    case'pending':return allLeads.filter(l=>l.followUpStatus!=='done');
+    default:    return allLeads;
+  }
+}
+
+function renderRcpts(){
+  const data=getSegData();
+  const tmpl=document.getElementById('msgText').value;
+  document.getElementById('rcptCount').textContent=`${data.length} recipients`;
+  if(!data.length){ document.getElementById('rcptRows').innerHTML=`<div class="empty" style="padding:20px">Koi nahi is segment mein</div>`; return; }
+  document.getElementById('rcptRows').innerHTML=data.map(l=>{
+    const name=l.name||l[flowKeys[0]]||'—';
+    const product=l[flowKeys[1]]||l[flowKeys[2]]||'—';
+    const link=buildWALink(l, tmpl);
+    return `<div class="rcpt-row">
+      <div><div class="name-strong">${name}</div><div class="sub-text">${product} · ${l.city||'—'} · Score ${l.score||0}/5</div></div>
+      <a href="${link}" target="_blank" class="send-1">📲 Send</a>
+    </div>`;
+  }).join('');
+}
+
+function openAll(){
+  const data=getSegData(), tmpl=document.getElementById('msgText').value;
+  if(!data.length){alert('Koi recipient nahi!');return;}
+  if(data.length>8&&!confirm(`${data.length} WhatsApp windows kholni hain?`))return;
+  data.forEach((l,i)=>setTimeout(()=>window.open(buildWALink(l,tmpl),'_blank'),i*600));
+}
+
+async function markDone(btn, phone, rowIndex){
+  btn.textContent='...'; btn.disabled=true;
+  try{
+    await fetch(`/lp/${clientId}/followup-done`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,rowIndex})});
+    const item=allLeads.find(l=>l.phone===phone);
+    if(item)item.followUpStatus='done';
+    renderTable(getFiltered()); updateStats(allLeads); updateSegCounts(allLeads);
+  }catch(e){btn.textContent='✓ Called';btn.disabled=false;}
+}
+
+function filterBy(key,btn){
+  currentFilter=key;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable(getFiltered());
+}
+function selSeg(key,card){
+  currentSeg=key;
+  document.querySelectorAll('.seg').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  renderRcpts();
+}
+function selTmpl(key,card){
+  currentTmpl=key;
+  document.querySelectorAll('.tmpl').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel');
+  document.getElementById('msgText').value=TEMPLATES[key]||'';
+  renderRcpts();
+}
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-leads').style.display=tab==='leads'?'block':'none';
+  document.getElementById('tab-retarget').style.display=tab==='retarget'?'block':'none';
+  if(tab==='retarget'){ updateSegCounts(allLeads); renderRcpts(); }
+}
+
+async function loadData(){
+  try{
+    const res=await fetch(`/lp/${clientId}/leads`);
+    const json=await res.json();
+    if(json.success){
+      allLeads=json.leads||[];
+      clientInfo={name:json.client||''};
+      document.getElementById('clientName').textContent=`— ${clientInfo.name}`;
+      document.title=`LeadPilot — ${clientInfo.name}`;
+      // Detect flow keys from first lead
+      if(allLeads[0]) flowKeys=Object.keys(allLeads[0]).filter(k=>!['rowIndex','timestamp','phone','score','followUpStatus','followUpDay3','followUpDay7','followUpDay30'].includes(k));
+      buildTableHeader();
+      updateStats(allLeads);
+      updateSegCounts(allLeads);
+      renderTable(getFiltered());
+    }
+  }catch(e){ console.error(e); }
+}
+
+// Init
+document.getElementById('tab-retarget').style.display='none';
+document.getElementById('msgText').value=TEMPLATES.followup;
+loadData();
+setInterval(loadData,30000);
+</script>
+</body>
+</html>

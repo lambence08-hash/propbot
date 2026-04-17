@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lambence Interview — AI Mock Interview Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+
+/* ── LANDING ── */
+#page-landing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.brand{font-size:1rem;font-weight:800;color:#fff;margin-bottom:40px;letter-spacing:1px}
+.brand span{color:#25d366}
+.landing-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:16px;letter-spacing:-1px}
+.landing-title span{background:linear-gradient(135deg,#25d366,#128c7e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.landing-sub{color:#666;font-size:1rem;line-height:1.7;max-width:480px;margin:0 auto 40px}
+
+.setup-card{background:#111;border:1px solid #1e1e1e;border-radius:20px;padding:36px;width:100%;max-width:480px;text-align:left}
+.setup-title{font-size:1.1rem;font-weight:700;margin-bottom:24px;text-align:center}
+.form-group{margin-bottom:16px}
+.form-label{font-size:.75rem;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block}
+.form-input{width:100%;background:#0d0d0d;border:1px solid #222;border-radius:9px;padding:12px 14px;color:#fff;font-size:.9rem;font-family:inherit;outline:none;transition:.2s}
+.form-input:focus{border-color:#25d366}
+.form-select{width:100%;background:#0d0d0d;border:1px solid #222;border-radius:9px;padding:12px 14px;color:#fff;font-size:.9rem;font-family:inherit;outline:none;appearance:none;cursor:pointer}
+.form-select:focus{border-color:#25d366}
+.start-btn{width:100%;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:15px;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:.2s}
+.start-btn:hover{opacity:.9}
+.start-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.features{display:flex;gap:20px;margin-bottom:40px;flex-wrap:wrap;justify-content:center}
+.feat-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#555}
+.feat-item span{color:#25d366}
+
+/* ── INTERVIEW ── */
+#page-interview{display:none;min-height:100vh;flex-direction:column}
+.int-header{background:#0f0f0f;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.int-logo{font-size:.9rem;font-weight:800}
+.int-logo span{color:#25d366}
+.int-meta{display:flex;align-items:center;gap:16px}
+.int-role{font-size:.78rem;color:#666;background:#161616;padding:5px 12px;border-radius:20px}
+.int-progress{font-size:.78rem;color:#25d366;font-weight:600}
+.rec-indicator{display:flex;align-items:center;gap:5px;font-size:.72rem;color:#ef4444}
+.rec-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.int-body{flex:1;display:flex;gap:0;overflow:hidden}
+
+/* Interviewer panel */
+.interviewer-panel{width:280px;background:#0d0d0d;border-right:1px solid #1a1a1a;padding:24px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.interviewer-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1e3a2f,#0d1f17);border:3px solid #25d366;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:14px;position:relative}
+.avatar-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;border-top-color:#25d366;animation:spin 2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avatar-ring.speaking{border-top-color:#f59e0b;animation-duration:.8s}
+.interviewer-name{font-size:.95rem;font-weight:700;margin-bottom:4px}
+.interviewer-title{font-size:.72rem;color:#555;margin-bottom:20px;text-align:center}
+.int-status{font-size:.72rem;padding:5px 12px;border-radius:20px;font-weight:600}
+.int-status.listening{background:rgba(37,211,102,.1);color:#25d366}
+.int-status.thinking{background:rgba(245,158,11,.1);color:#f59e0b}
+.int-status.speaking{background:rgba(59,130,246,.1);color:#3b82f6}
+.company-badge{margin-top:20px;background:#161616;border:1px solid #222;border-radius:10px;padding:12px;width:100%;text-align:center}
+.company-name{font-size:.8rem;font-weight:700;margin-bottom:2px}
+.company-role{font-size:.7rem;color:#555}
+.q-counter{margin-top:16px;width:100%}
+.q-counter-label{font-size:.65rem;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.q-dots{display:flex;gap:5px;flex-wrap:wrap}
+.q-dot{width:10px;height:10px;border-radius:50%;background:#1a1a1a;transition:.3s}
+.q-dot.done{background:#25d366}
+.q-dot.current{background:#f59e0b;animation:dotPulse 1s infinite}
+@keyframes dotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+/* Chat area */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-track{background:#0d0d0d}
+.chat-messages::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+
+.msg-wrap{display:flex;gap:10px;align-items:flex-start;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg-wrap.user{flex-direction:row-reverse}
+.msg-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.msg-avatar.bot{background:linear-gradient(135deg,#1e3a2f,#0d1f17);border:1px solid #25d366}
+.msg-avatar.user{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #3b82f6}
+.msg-bubble{max-width:70%;padding:12px 16px;border-radius:12px;font-size:.85rem;line-height:1.6}
+.msg-bubble.bot{background:#111;border:1px solid #1e1e1e;border-radius:0 12px 12px 12px}
+.msg-bubble.user{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(29,78,216,.1));border:1px solid rgba(59,130,246,.2);border-radius:12px 0 12px 12px;text-align:right}
+.msg-time{font-size:.65rem;color:#444;margin-top:4px}
+
+.typing-indicator{display:flex;gap:4px;padding:14px 18px;background:#111;border:1px solid #1e1e1e;border-radius:0 12px 12px 12px;width:fit-content}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:#25d366;animation:typeDot 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typeDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+.chat-input-area{padding:16px 24px;border-top:1px solid #1a1a1a;background:#0d0d0d}
+.input-wrap{display:flex;gap:10px;align-items:flex-end}
+.answer-input{flex:1;background:#111;border:1px solid #222;border-radius:12px;padding:12px 16px;color:#fff;font-size:.88rem;font-family:inherit;resize:none;outline:none;line-height:1.5;min-height:50px;max-height:120px;transition:.2s}
+.answer-input:focus{border-color:#25d366}
+.answer-input::placeholder{color:#444}
+.send-btn{width:46px;height:46px;background:linear-gradient(135deg,#25d366,#128c7e);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+.input-hint{font-size:.68rem;color:#333;margin-top:6px;text-align:center}
+
+/* ── REPORT ── */
+#page-report{display:none;min-height:100vh;padding:30px 20px;max-width:900px;margin:0 auto}
+.report-header{text-align:center;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #1a1a1a}
+.report-logo{font-size:.9rem;font-weight:800;margin-bottom:20px;color:#666}
+.report-logo span{color:#25d366}
+.report-name{font-size:1.8rem;font-weight:800;margin-bottom:6px}
+.report-meta{font-size:.82rem;color:#555}
+
+.verdict-card{border-radius:16px;padding:24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.verdict-card.shortlisted{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3)}
+.verdict-card.hold{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3)}
+.verdict-card.rejected{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3)}
+.verdict-text{font-size:1.1rem;font-weight:700}
+.verdict-score{font-size:3rem;font-weight:900}
+.verdict-score.shortlisted{color:#25d366}
+.verdict-score.hold{color:#f59e0b}
+.verdict-score.rejected{color:#ef4444}
+
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.report-card{background:#111;border:1px solid #1e1e1e;border-radius:14px;padding:20px}
+.report-card-title{font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.skill-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.skill-name{font-size:.82rem;color:#ccc}
+.skill-bar-wrap{flex:1;height:6px;background:#1a1a1a;border-radius:3px;margin:0 12px}
+.skill-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#25d366,#128c7e);transition:width 1s ease}
+.skill-score{font-size:.78rem;font-weight:700;color:#25d366;width:24px;text-align:right}
+
+.list-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:.82rem;color:#aaa;line-height:1.5}
+.list-dot{font-size:.7rem;margin-top:3px;flex-shrink:0}
+.list-dot.green{color:#25d366}
+.list-dot.red{color:#ef4444}
+
+.qa-section{margin-bottom:24px}
+.qa-title{font-size:.8rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.qa-card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:18px;margin-bottom:12px}
+.qa-question{font-size:.85rem;font-weight:600;margin-bottom:8px;color:#fff}
+.qa-answer{font-size:.78rem;color:#666;margin-bottom:10px;line-height:1.5;padding:8px 12px;background:#0d0d0d;border-radius:7px;border-left:2px solid #222}
+.qa-score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qa-score-badge{padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.qa-feedback{font-size:.78rem;color:#888;margin-bottom:8px;line-height:1.5}
+.qa-better{font-size:.78rem;color:#25d366;line-height:1.5;padding:8px 12px;background:rgba(37,211,102,.05);border-radius:7px;border-left:2px solid #25d366}
+.qa-better-label{font-size:.65rem;color:#25d366;font-weight:700;text-transform:uppercase;margin-bottom:4px}
+
+.improvement-card{background:#111;border:1px solid #1e1e1e;border-radius:14px;padding:20px;margin-bottom:24px}
+.imp-title{font-size:.72rem;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.imp-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:.82rem;color:#aaa;line-height:1.5}
+.imp-num{width:22px;height:22px;border-radius:50%;background:rgba(37,211,102,.15);color:#25d366;font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.report-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:30px}
+.action-btn{padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.action-btn.primary{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.action-btn.secondary{background:#111;border:1px solid #222;color:#ccc}
+.action-btn:hover{opacity:.85}
+
+/* Certificate */
+#certificate{background:#fff;color:#000;border-radius:16px;padding:40px;text-align:center;margin-bottom:24px;display:none}
+.cert-border{border:3px solid #25d366;border-radius:12px;padding:30px}
+.cert-logo{font-size:1.2rem;font-weight:900;color:#25d366;margin-bottom:20px}
+.cert-title{font-size:.85rem;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.cert-name{font-size:2rem;font-weight:900;color:#000;margin-bottom:8px}
+.cert-text{font-size:.85rem;color:#444;line-height:1.6;margin-bottom:20px}
+.cert-score{font-size:3rem;font-weight:900;color:#25d366;margin-bottom:4px}
+.cert-score-label{font-size:.78rem;color:#666;margin-bottom:20px}
+.cert-details{display:flex;justify-content:center;gap:30px;margin-bottom:20px;flex-wrap:wrap}
+.cert-detail{text-align:center}
+.cert-detail-label{font-size:.68rem;color:#888;text-transform:uppercase}
+.cert-detail-value{font-size:.88rem;font-weight:700;color:#000}
+.cert-footer{font-size:.72rem;color:#888;border-top:1px solid #eee;padding-top:16px;margin-top:16px}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;background:rgba(8,8,8,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;display:none}
+.loading-spinner{width:50px;height:50px;border:3px solid #1a1a1a;border-top-color:#25d366;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px}
+.loading-text{font-size:.9rem;color:#666}
+
+@media(max-width:768px){
+  .int-body{flex-direction:column}
+  .interviewer-panel{width:100%;flex-direction:row;padding:14px 16px;gap:14px;border-right:none;border-bottom:1px solid #1a1a1a}
+  .interviewer-avatar{width:50px;height:50px;font-size:1.2rem;margin-bottom:0}
+  .interviewer-title{display:none}
+  .company-badge{display:none}
+  .q-counter{display:none}
+  .report-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Starting your interview...</div>
+</div>
+
+<!-- ══ PAGE: LANDING ══ -->
+<div id="page-landing">
+  <div class="brand">⚡ LAMBENCE <span>INTERVIEW</span></div>
+  <h1 class="landing-title">Practice karo.<br><span>Confident bano. Job pao.</span></h1>
+  <p class="landing-sub">AI interviewer se real interview do — company specific questions, instant feedback, detailed report. Ghar baithe placement ready bano.</p>
+
+  <div class="features">
+    <div class="feat-item"><span>✅</span> Real interview feel</div>
+    <div class="feat-item"><span>✅</span> Company specific questions</div>
+    <div class="feat-item"><span>✅</span> Detailed report + certificate</div>
+    <div class="feat-item"><span>✅</span> Free pehla interview</div>
+  </div>
+
+  <div class="setup-card">
+    <div class="setup-title">🎯 Apna Interview Setup Karo</div>
+
+    <div class="form-group">
+      <label class="form-label">Tumhara Naam</label>
+      <input type="text" class="form-input" id="candidateName" placeholder="Jaise: Rahul Sharma">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Kaunsi Job / Role ke liye?</label>
+      <input type="text" class="form-input" id="jobRole" placeholder="Jaise: Software Engineer, HR Manager, Data Analyst">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Target Company (optional)</label>
+      <input type="text" class="form-input" id="company" placeholder="Jaise: TCS, Infosys, Wipro, Google">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Domain / Field</label>
+      <select class="form-select" id="domain">
+        <option value="Information Technology">💻 Information Technology</option>
+        <option value="Core Engineering">⚙️ Core Engineering</option>
+        <option value="Management / MBA">📊 Management / MBA</option>
+        <option value="Banking & Finance">🏦 Banking & Finance</option>
+        <option value="Government / UPSC">🏛️ Government / UPSC</option>
+        <option value="Sales & Marketing">📈 Sales & Marketing</option>
+        <option value="Healthcare">🏥 Healthcare</option>
+        <option value="Data Science / AI">🤖 Data Science / AI</option>
+        <option value="General HR Round">👔 General HR Round</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Experience Level</label>
+      <select class="form-select" id="experience">
+        <option value="Fresher (0 years)">🎓 Fresher (0 years)</option>
+        <option value="0-1 year">📚 0-1 year</option>
+        <option value="1-3 years">💼 1-3 years</option>
+        <option value="3-5 years">🚀 3-5 years</option>
+        <option value="5+ years">⭐ 5+ years</option>
+      </select>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startInterview()">
+      🎤 Interview Shuru Karo — Free
+    </button>
+  </div>
+</div>
+
+<!-- ══ PAGE: INTERVIEW ══ -->
+<div id="page-interview" style="display:none;min-height:100vh;flex-direction:column">
+  <div class="int-header">
+    <div class="int-logo">⚡ LAMBENCE <span>INTERVIEW</span></div>
+    <div class="int-meta">
+      <div class="int-role" id="headerRole">—</div>
+      <div class="rec-indicator"><div class="rec-dot"></div> LIVE</div>
+      <div class="int-progress" id="headerProgress">Q 1/10</div>
+    </div>
+  </div>
+
+  <div class="int-body">
+    <!-- Interviewer Panel -->
+    <div class="interviewer-panel">
+      <div class="interviewer-avatar" id="avatarWrap">
+        <div class="avatar-ring" id="avatarRing"></div>
+        👔
+      </div>
+      <div class="interviewer-name" id="interviewerName">—</div>
+      <div class="interviewer-title">Senior Interviewer</div>
+      <div class="int-status listening" id="intStatus">Listening...</div>
+      <div class="company-badge">
+        <div class="company-name" id="companyDisplay">—</div>
+        <div class="company-role" id="roleDisplay">—</div>
+      </div>
+      <div class="q-counter">
+        <div class="q-counter-label">Questions</div>
+        <div class="q-dots" id="qDots"></div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-area">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-area">
+        <div class="input-wrap">
+          <textarea class="answer-input" id="answerInput" placeholder="Yahan apna jawab likho... (Enter = send, Shift+Enter = new line)" rows="2" onkeydown="handleKeydown(event)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendAnswer()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </button>
+        </div>
+        <div class="input-hint">Shift+Enter for new line · Enter to send</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: REPORT ══ -->
+<div id="page-report" style="display:none">
+  <div class="report-header">
+    <div class="report-logo">⚡ LAMBENCE <span>INTERVIEW</span></div>
+    <div class="report-name" id="rCandidateName">—</div>
+    <div class="report-meta" id="rMeta">—</div>
+  </div>
+
+  <!-- Verdict -->
+  <div class="verdict-card" id="verdictCard">
+    <div>
+      <div style="font-size:.72rem;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Interview Result</div>
+      <div class="verdict-text" id="rVerdict">—</div>
+      <div style="font-size:.8rem;color:#666;margin-top:6px" id="rSummary">—</div>
+    </div>
+    <div style="text-align:center">
+      <div class="verdict-score" id="rScore">—</div>
+      <div style="font-size:.72rem;color:#666">Overall Score</div>
+    </div>
+  </div>
+
+  <!-- Certificate -->
+  <div id="certificate">
+    <div class="cert-border">
+      <div class="cert-logo">⚡ LAMBENCE INTERVIEW</div>
+      <div class="cert-title">Certificate of Completion</div>
+      <div style="font-size:.8rem;color:#666;margin-bottom:12px">This certifies that</div>
+      <div class="cert-name" id="certName">—</div>
+      <div class="cert-text" id="certText">—</div>
+      <div class="cert-score" id="certScore">—</div>
+      <div class="cert-score-label">Interview Score</div>
+      <div class="cert-details" id="certDetails"></div>
+      <div class="cert-footer">Issued by Lambence · lambence.in · <span id="certDate">—</span></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="report-actions">
+    <button class="action-btn primary" onclick="showCertificate()">🏆 Certificate Dekho</button>
+    <button class="action-btn secondary" onclick="downloadReport()">📥 Report Download</button>
+    <button class="action-btn secondary" onclick="shareWhatsApp()">📲 WhatsApp Share</button>
+    <button class="action-btn secondary" onclick="startNew()">🔄 Naya Interview Do</button>
+  </div>
+
+  <!-- Skill Scores -->
+  <div class="report-grid">
+    <div class="report-card">
+      <div class="report-card-title">📊 Skill Assessment</div>
+      <div id="skillBars"></div>
+    </div>
+    <div class="report-card">
+      <div class="report-card-title">💪 Strengths</div>
+      <div id="strengthsList"></div>
+    </div>
+  </div>
+
+  <div class="report-card" style="margin-bottom:16px">
+    <div class="report-card-title">⚠️ Areas to Improve</div>
+    <div id="weaknessesList"></div>
+  </div>
+
+  <!-- Q&A Analysis -->
+  <div class="qa-section">
+    <div class="qa-title">📝 Question-wise Analysis</div>
+    <div id="qaList"></div>
+  </div>
+
+  <!-- Improvement Plan -->
+  <div class="improvement-card">
+    <div class="imp-title">🚀 Improvement Plan</div>
+    <div id="impList"></div>
+    <div style="margin-top:16px;padding:12px;background:rgba(37,211,102,.05);border-radius:8px;border-left:2px solid #25d366">
+      <div style="font-size:.7rem;color:#25d366;font-weight:700;margin-bottom:4px">NEXT STEPS</div>
+      <div style="font-size:.82rem;color:#aaa;line-height:1.5" id="nextSteps">—</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let sessionId = null;
+let questionCount = 0;
+let interviewConfig = {};
+let reportData = null;
+
+// ── START INTERVIEW ──────────────────────────────────────────
+async function startInterview() {
+  const name     = document.getElementById('candidateName').value.trim();
+  const role     = document.getElementById('jobRole').value.trim();
+  const company  = document.getElementById('company').value.trim();
+  const domain   = document.getElementById('domain').value;
+  const exp      = document.getElementById('experience').value;
+
+  if (!name) { alert('Apna naam daalo!'); return; }
+  if (!role) { alert('Job role daalo!'); return; }
+
+  interviewConfig = { name, role, company, domain, experience: exp };
+
+  showLoading('Interview setup ho raha hai...');
+  document.getElementById('startBtn').disabled = true;
+
+  try {
+    const res  = await fetch('/interview/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role, company, experience: exp, domain, candidateName: name })
+    });
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error);
+
+    sessionId    = data.sessionId;
+    questionCount = 1;
+
+    // Setup interview UI
+    document.getElementById('interviewerName').textContent  = data.interviewerName;
+    document.getElementById('headerRole').textContent        = role + (company ? ` @ ${company}` : '');
+    document.getElementById('companyDisplay').textContent    = company || 'Your Company';
+    document.getElementById('roleDisplay').textContent       = role;
+    initQDots();
+
+    hideLoading();
+    showPage('interview');
+
+    // Show first message
+    addBotMessage(data.message);
+    setStatus('listening');
+
+  } catch(e) {
+    hideLoading();
+    document.getElementById('startBtn').disabled = false;
+    alert('Error: ' + e.message);
+  }
+}
+
+// ── SEND ANSWER ──────────────────────────────────────────────
+async function sendAnswer() {
+  const input  = document.getElementById('answerInput');
+  const answer = input.value.trim();
+  if (!answer || !sessionId) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+
+  addUserMessage(answer);
+  showTyping();
+  setStatus('thinking');
+  markQDot(questionCount - 1, 'done');
+
+  try {
+    const res  = await fetch('/interview/answer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, answer })
+    });
+    const data = await res.json();
+
+    removeTyping();
+
+    if (!data.success) throw new Error(data.error);
+
+    questionCount++;
+    document.getElementById('headerProgress').textContent = `Q ${Math.min(questionCount, 10)}/10`;
+    markQDot(questionCount - 1, 'current');
+
+    if (data.ended) {
+      addBotMessage(data.message);
+      setStatus('done');
+      document.getElementById('answerInput').disabled = true;
+      document.getElementById('sendBtn').disabled = true;
+      setTimeout(generateReport, 2000);
+    } else {
+      addBotMessage(data.message);
+      setStatus('listening');
+      document.getElementById('sendBtn').disabled = false;
+    }
+
+  } catch(e) {
+    removeTyping();
+    setStatus('listening');
+    document.getElementById('sendBtn').disabled = false;
+    addBotMessage('Sorry, kuch error hua. Dobara try karo.');
+  }
+}
+
+// ── GENERATE REPORT ──────────────────────────────────────────
+async function generateReport() {
+  showLoading('Report generate ho rahi hai... (30-40 seconds)');
+  try {
+    const res  = await fetch('/interview/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId })
+    });
+    const data = await res.json();
+
+    hideLoading();
+    if (!data.success) throw new Error(data.error);
+
+    reportData = data.report;
+    renderReport(data.report);
+    showPage('report');
+
+  } catch(e) {
+    hideLoading();
+    alert('Report generation mein error. Try again: ' + e.message);
+  }
+}
+
+// ── RENDER REPORT ─────────────────────────────────────────────
+function renderReport(r) {
+  // Header
+  document.getElementById('rCandidateName').textContent = r.candidateName;
+  document.getElementById('rMeta').textContent = `${r.role} @ ${r.company} · ${r.domain} · ${r.date} · ${r.duration} min`;
+
+  // Verdict
+  const vc  = document.getElementById('verdictCard');
+  const cls = r.verdict?.toLowerCase().includes('shortlist') ? 'shortlisted' : r.verdict?.toLowerCase().includes('hold') ? 'hold' : 'rejected';
+  vc.className = `verdict-card ${cls}`;
+  document.getElementById('rVerdict').textContent = r.verdict || '—';
+  document.getElementById('rScore').textContent   = `${r.overallScore}%`;
+  document.getElementById('rScore').className     = `verdict-score ${cls}`;
+  document.getElementById('rSummary').textContent = r.summary || '';
+
+  // Skill bars
+  const skills = r.skillScores || {};
+  const skillNames = { communication:'Communication', technicalKnowledge:'Technical Knowledge', problemSolving:'Problem Solving', confidence:'Confidence', clarity:'Clarity' };
+  document.getElementById('skillBars').innerHTML = Object.entries(skills).map(([k,v]) =>
+    `<div class="skill-row">
+      <div class="skill-name">${skillNames[k]||k}</div>
+      <div class="skill-bar-wrap"><div class="skill-bar" style="width:${v*10}%"></div></div>
+      <div class="skill-score">${v}</div>
+    </div>`
+  ).join('');
+
+  // Strengths
+  document.getElementById('strengthsList').innerHTML = (r.strengths||[]).map(s =>
+    `<div class="list-item"><div class="list-dot green">✅</div>${s}</div>`
+  ).join('');
+
+  // Weaknesses
+  document.getElementById('weaknessesList').innerHTML = (r.weaknesses||[]).map(w =>
+    `<div class="list-item"><div class="list-dot red">⚠️</div>${w}</div>`
+  ).join('');
+
+  // Q&A
+  document.getElementById('qaList').innerHTML = (r.questionAnalysis||[]).map((q,i) => {
+    const sc   = q.score || 0;
+    const scCls = sc >= 7 ? '#25d366' : sc >= 5 ? '#f59e0b' : '#ef4444';
+    return `<div class="qa-card">
+      <div class="qa-question">Q${i+1}. ${q.question}</div>
+      <div class="qa-answer">Your answer: ${q.candidateAnswer}</div>
+      <div class="qa-score-row">
+        <span class="qa-score-badge" style="background:${scCls}20;color:${scCls}">Score: ${sc}/10</span>
+      </div>
+      <div class="qa-feedback">💬 ${q.feedback}</div>
+      <div class="qa-better"><div class="qa-better-label">✅ Better Answer</div>${q.betterAnswer}</div>
+    </div>`;
+  }).join('');
+
+  // Improvement plan
+  document.getElementById('impList').innerHTML = (r.improvementPlan||[]).map((tip,i) =>
+    `<div class="imp-item"><div class="imp-num">${i+1}</div>${tip}</div>`
+  ).join('');
+  document.getElementById('nextSteps').textContent = r.nextSteps || '';
+
+  // Certificate
+  document.getElementById('certName').textContent  = r.candidateName;
+  document.getElementById('certText').textContent  = `has successfully completed an AI Mock Interview for the role of ${r.role} at ${r.company} in the domain of ${r.domain}.`;
+  document.getElementById('certScore').textContent = `${r.overallScore}%`;
+  document.getElementById('certDate').textContent  = r.date;
+  document.getElementById('certDetails').innerHTML = `
+    <div class="cert-detail"><div class="cert-detail-label">Role</div><div class="cert-detail-value">${r.role}</div></div>
+    <div class="cert-detail"><div class="cert-detail-label">Company</div><div class="cert-detail-value">${r.company}</div></div>
+    <div class="cert-detail"><div class="cert-detail-label">Grade</div><div class="cert-detail-value">${r.grade}</div></div>
+    <div class="cert-detail"><div class="cert-detail-label">Duration</div><div class="cert-detail-value">${r.duration} min</div></div>
+  `;
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────
+function addBotMessage(text) {
+  const body = document.getElementById('chatMessages');
+  const div  = document.createElement('div');
+  div.className = 'msg-wrap';
+  div.innerHTML = `
+    <div class="msg-avatar bot">👔</div>
+    <div>
+      <div class="msg-bubble bot">${text.replace(/\n/g,'<br>').replace(/\*(.*?)\*/g,'<strong>$1</strong>')}</div>
+      <div class="msg-time">${getTime()}</div>
+    </div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  setStatus('speaking');
+  setTimeout(() => setStatus('listening'), 1500);
+}
+
+function addUserMessage(text) {
+  const body = document.getElementById('chatMessages');
+  const div  = document.createElement('div');
+  div.className = 'msg-wrap user';
+  div.innerHTML = `
+    <div class="msg-avatar user">👤</div>
+    <div>
+      <div class="msg-bubble user">${text.replace(/\n/g,'<br>')}</div>
+      <div class="msg-time" style="text-align:right">${getTime()}</div>
+    </div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+
+function showTyping() {
+  const body = document.getElementById('chatMessages');
+  const div  = document.createElement('div');
+  div.className = 'msg-wrap';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="msg-avatar bot">👔</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function setStatus(status) {
+  const el   = document.getElementById('intStatus');
+  const ring = document.getElementById('avatarRing');
+  const labels = { listening:'Listening...', thinking:'Thinking...', speaking:'Speaking...', done:'Interview Complete' };
+  el.className = `int-status ${status}`;
+  el.textContent = labels[status] || status;
+  ring.className = `avatar-ring ${status === 'speaking' ? 'speaking' : ''}`;
+}
+
+function initQDots() {
+  const wrap = document.getElementById('qDots');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement('div');
+    d.className = 'q-dot' + (i === 0 ? ' current' : '');
+    wrap.appendChild(d);
+  }
+}
+
+function markQDot(idx, cls) {
+  const dots = document.querySelectorAll('.q-dot');
+  if (dots[idx]) {
+    dots[idx].className = 'q-dot ' + cls;
+  }
+  if (dots[idx+1]) {
+    dots[idx+1].className = 'q-dot current';
+  }
+}
+
+function handleKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendAnswer();
+  }
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+}
+
+function showPage(page) {
+  ['landing','interview','report'].forEach(p => {
+    const el = document.getElementById(`page-${p}`);
+    el.style.display = p === page ? (p === 'interview' ? 'flex' : 'block') : 'none';
+  });
+}
+
+function showLoading(text) {
+  document.getElementById('loadingText').textContent = text;
+  document.getElementById('loadingOverlay').style.display = 'flex';
+}
+
+function hideLoading() {
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+function showCertificate() {
+  const cert = document.getElementById('certificate');
+  cert.style.display = cert.style.display === 'none' ? 'block' : 'none';
+  cert.scrollIntoView({ behavior:'smooth' });
+}
+
+function shareWhatsApp() {
+  if (!reportData) return;
+  const msg = `🎯 Maine AI Mock Interview complete kiya!\n\n👤 ${reportData.candidateName}\n💼 Role: ${reportData.role}\n🏢 Company: ${reportData.company}\n📊 Score: ${reportData.overallScore}%\n🏆 Grade: ${reportData.grade}\n✅ Result: ${reportData.verdict}\n\nLambence Interview Platform pe try karo: lambence.in/interview`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function downloadReport() {
+  window.print();
+}
+
+function startNew() {
+  sessionId = null;
+  questionCount = 0;
+  document.getElementById('chatMessages').innerHTML = '';
+  document.getElementById('answerInput').disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('startBtn').disabled = false;
+  showPage('landing');
+}
+</script>
+</body>
+</html>

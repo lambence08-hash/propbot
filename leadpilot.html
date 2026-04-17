@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadPilot — WhatsApp Lead Automation for Indian Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:'Inter',sans-serif}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid #111;position:sticky;top:0;background:rgba(8,8,8,.95);backdrop-filter:blur(10px);z-index:100}
+.nav-logo{font-size:1.2rem;font-weight:800}
+.nav-logo span{color:#25d366}
+.nav-cta{background:#25d366;color:#000;padding:9px 20px;border-radius:8px;font-weight:700;font-size:.85rem;transition:.2s}
+.nav-cta:hover{opacity:.85}
+
+/* HERO */
+.hero{text-align:center;padding:80px 20px 60px;max-width:800px;margin:0 auto}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:#25d366;padding:6px 16px;border-radius:20px;font-size:.78rem;font-weight:600;margin-bottom:28px}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-1px}
+.hero h1 span{background:linear-gradient(135deg,#25d366,#128c7e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.1rem;color:#888;line-height:1.7;max-width:560px;margin:0 auto 36px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:.95rem;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-secondary{background:#111;border:1px solid #222;color:#ccc;padding:14px 28px;border-radius:10px;font-weight:600;font-size:.9rem;transition:.2s}
+.btn-secondary:hover{border-color:#25d366;color:#25d366}
+
+/* LOGOS */
+.social-proof{text-align:center;padding:40px 20px;border-bottom:1px solid #111}
+.sp-text{font-size:.8rem;color:#444;margin-bottom:16px;text-transform:uppercase;letter-spacing:.08em}
+.industries{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.ind{background:#111;border:1px solid #1a1a1a;padding:8px 18px;border-radius:20px;font-size:.8rem;color:#666}
+
+/* PROBLEM */
+.section{padding:70px 20px;max-width:1000px;margin:0 auto}
+.sec-label{font-size:.72rem;color:#25d366;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:12px}
+.sec-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin-bottom:16px;letter-spacing:-.5px}
+.sec-sub{color:#666;font-size:1rem;line-height:1.7;max-width:520px}
+
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:36px}
+.prob-card{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:14px;padding:22px}
+.prob-icon{font-size:1.6rem;margin-bottom:10px}
+.prob-title{font-size:.9rem;font-weight:700;margin-bottom:6px;color:#fff}
+.prob-desc{font-size:.8rem;color:#555;line-height:1.5}
+
+/* HOW IT WORKS */
+.how-wrap{background:#0d0d0d;padding:70px 20px;border-top:1px solid #111;border-bottom:1px solid #111}
+.how-inner{max-width:900px;margin:0 auto}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:44px;position:relative}
+.steps::before{content:'';position:absolute;top:28px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#222,#222,transparent);display:none}
+.step{text-align:center;padding:0 16px}
+.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;margin:0 auto 16px;color:#000}
+.step-title{font-size:.9rem;font-weight:700;margin-bottom:8px}
+.step-desc{font-size:.78rem;color:#555;line-height:1.5}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:44px}
+.feat{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:14px;padding:24px;position:relative;overflow:hidden}
+.feat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.feat.green::before{background:linear-gradient(90deg,#25d366,#128c7e)}
+.feat.blue::before{background:linear-gradient(90deg,#3b82f6,#1d4ed8)}
+.feat.yellow::before{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.feat.purple::before{background:linear-gradient(90deg,#a855f7,#7c3aed)}
+.feat-icon{font-size:1.8rem;margin-bottom:14px}
+.feat-title{font-size:1rem;font-weight:700;margin-bottom:8px}
+.feat-desc{font-size:.8rem;color:#666;line-height:1.6}
+.feat-tag{display:inline-block;margin-top:12px;background:rgba(37,211,102,.1);color:#25d366;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px}
+
+/* DEMO PREVIEW */
+.demo-wrap{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:20px;padding:30px;margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.demo-phone{background:#1a1a1a;border-radius:30px;padding:12px;max-width:260px;margin:0 auto;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.phone-inner{background:#0d1f17;border-radius:22px;overflow:hidden}
+.phone-hdr{background:#1a3a2a;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.phone-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:grid;place-items:center;font-size:1rem}
+.phone-name{font-size:.82rem;font-weight:700}
+.phone-online{font-size:.65rem;color:#25d366}
+.phone-body{padding:12px;display:flex;flex-direction:column;gap:8px;min-height:280px}
+.msg{padding:8px 12px;border-radius:7px;font-size:.72rem;line-height:1.5;max-width:85%}
+.msg.bot{background:#1a3a2a;align-self:flex-start;border-radius:0 7px 7px 7px}
+.msg.user{background:rgba(37,211,102,.6);align-self:flex-end;border-radius:7px 0 7px 7px}
+.auto-tag{background:rgba(59,130,246,.2);color:#3b82f6;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:4px;display:inline-block}
+.demo-points{display:flex;flex-direction:column;gap:16px}
+.demo-point{display:flex;align-items:flex-start;gap:12px}
+.dp-icon{width:36px;height:36px;border-radius:10px;background:rgba(37,211,102,.1);display:grid;place-items:center;font-size:1rem;flex-shrink:0}
+.dp-title{font-size:.85rem;font-weight:700;margin-bottom:3px}
+.dp-desc{font-size:.75rem;color:#666;line-height:1.4}
+
+/* PRICING */
+.pricing-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:44px}
+.plan{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:16px;padding:28px;position:relative}
+.plan.popular{border-color:#25d366;background:rgba(37,211,102,.03)}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#25d366;color:#000;font-size:.7rem;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:.8rem;color:#666;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.plan-price{font-size:2.2rem;font-weight:900;margin-bottom:4px}
+.plan-price sub{font-size:.9rem;color:#666;font-weight:400}
+.plan-period{font-size:.78rem;color:#555;margin-bottom:20px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.plan-features li{font-size:.8rem;color:#888;display:flex;align-items:center;gap:8px}
+.plan-features li::before{content:'✅';font-size:.75rem}
+.plan-features li.no{color:#444}
+.plan-features li.no::before{content:'❌'}
+.plan-btn{display:block;text-align:center;padding:12px;border-radius:9px;font-weight:700;font-size:.88rem;transition:.2s}
+.plan-btn.primary{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.plan-btn.outline{background:transparent;border:1px solid #222;color:#ccc}
+.plan-btn:hover{opacity:.85}
+
+/* TESTIMONIAL */
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:36px}
+.testi{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:14px;padding:22px}
+.testi-text{font-size:.85rem;color:#aaa;line-height:1.6;margin-bottom:16px;font-style:italic}
+.testi-name{font-size:.8rem;font-weight:700}
+.testi-biz{font-size:.72rem;color:#555}
+.stars{color:#f59e0b;font-size:.85rem;margin-bottom:10px}
+
+/* COMPARE */
+.compare-table{width:100%;border-collapse:collapse;margin-top:36px;background:#0f0f0f;border-radius:14px;overflow:hidden}
+.compare-table th{background:#161616;padding:14px 20px;text-align:left;font-size:.75rem;color:#555;font-weight:600}
+.compare-table td{padding:13px 20px;font-size:.82rem;border-bottom:1px solid #1a1a1a}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table .winner{color:#25d366;font-weight:700}
+.compare-table .loser{color:#444}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,rgba(37,211,102,.08),rgba(18,140,126,.05));border-top:1px solid rgba(37,211,102,.15);border-bottom:1px solid rgba(37,211,102,.15);padding:70px 20px;text-align:center}
+.cta-section h2{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin-bottom:12px}
+.cta-section p{color:#666;font-size:1rem;margin-bottom:32px}
+
+/* FOOTER */
+footer{padding:30px 40px;border-top:1px solid #111;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-logo{font-size:1rem;font-weight:800}
+.footer-logo span{color:#25d366}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:.78rem;color:#555;transition:.2s}
+.footer-links a:hover{color:#25d366}
+
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .demo-wrap{grid-template-columns:1fr}
+  .demo-phone{order:-1}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">⚡ Lead<span>Pilot</span></div>
+  <a href="https://wa.me/919518709573?text=LeadPilot%20ke%20baare%20mein%20baat%20karni%20hai" class="nav-cta">📲 Free Demo Book Karo</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill">🇮🇳 Made for Indian Businesses · Hinglish Support</div>
+  <h1>WhatsApp Bot jo Lead<br><span>Auto Follow-Up karta hai</span></h1>
+  <p>Aapka WhatsApp bot lead capture karta hai. Phir 3, 7 aur 30 din baad automatically follow-up karta hai — bina aapko kuch kiye. Zyada sales, less effort.</p>
+  <div class="hero-btns">
+    <a href="https://wa.me/919518709573?text=LeadPilot%20demo%20chahiye" class="btn-primary">📲 Free Demo Dekhein</a>
+    <a href="#pricing" class="btn-secondary">💰 Pricing Dekhein</a>
+  </div>
+</div>
+
+<!-- SOCIAL PROOF -->
+<div class="social-proof">
+  <div class="sp-text">Yeh businesses LeadPilot use karti hain</div>
+  <div class="industries">
+    <span class="ind">🧪 Chemical Dealers</span>
+    <span class="ind">🏠 Real Estate</span>
+    <span class="ind">🏥 Clinics & Doctors</span>
+    <span class="ind">🍽️ Restaurants & Hotels</span>
+    <span class="ind">🏭 Factories</span>
+    <span class="ind">📚 Coaching Institutes</span>
+    <span class="ind">🏋️ Gyms</span>
+    <span class="ind">🚗 Car Dealerships</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section">
+  <div class="sec-label">The Problem</div>
+  <div class="sec-title">Lead aata hai, sale nahi hoti — kyun?</div>
+  <div class="sec-sub">80% leads follow-up nahi hone ki wajah se convert nahi hote. Aap busy ho, bhool jaate ho, ya manually message karna time-consuming lagta hai.</div>
+  <div class="problem-grid">
+    <div class="prob-card"><div class="prob-icon">😴</div><div class="prob-title">Lead aaya, follow-up nahi hua</div><div class="prob-desc">Customer ne interest dikhaya but aap busy the. 3 din baad woh competitor ke paas gaya.</div></div>
+    <div class="prob-card"><div class="prob-icon">📱</div><div class="prob-title">Manually message karna impossible hai</div><div class="prob-desc">100 leads hain, sabko alag alag WhatsApp message karo — hours lagte hain, phir bhi bhool jaate ho.</div></div>
+    <div class="prob-card"><div class="prob-icon">💸</div><div class="prob-title">Marketing ka paisa waste ho raha hai</div><div class="prob-desc">Lead generation pe paise laga rahe ho, but conversion nahi ho rahi. Problem follow-up mein hai.</div></div>
+    <div class="prob-card"><div class="prob-icon">😤</div><div class="prob-title">Repeat customers nahi ban rahe</div><div class="prob-desc">Ek baar kharida, dobara koi reminder nahi, dobara order nahi. Revenue ek baar aata hai.</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-wrap">
+  <div class="how-inner">
+    <div style="text-align:center">
+      <div class="sec-label" style="justify-content:center;display:flex">How It Works</div>
+      <div class="sec-title" style="text-align:center">4 steps mein automatic sales machine</div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-title">Bot Capture</div><div class="step-desc">Customer WhatsApp pe message karta hai. Bot automatically qualify karta hai — naam, product, quantity, city.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-title">Owner Alert</div><div class="step-desc">Turant aapko WhatsApp pe notification aata hai — lead ka score, details, aur follow-up script.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-title">Auto Follow-Up</div><div class="step-desc">3 din, 7 din, 30 din baad bot automatically customer ko message karta hai. Aapko kuch nahi karna.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-title">Sale Close</div><div class="step-desc">Dashboard dekho, hot leads pe click karo, WhatsApp pe seedha baat karo. Deal close karo.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section">
+  <div class="sec-label">Features</div>
+  <div class="sec-title">Sab kuch ek jagah</div>
+  <div class="features">
+    <div class="feat green">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">Smart WhatsApp Bot</div>
+      <div class="feat-desc">Aapke business ke hisaab se custom bot. Natural Hinglish conversation. Customer ko lagta hai real person se baat ho rahi hai.</div>
+      <div class="feat-tag">24/7 Active</div>
+    </div>
+    <div class="feat blue">
+      <div class="feat-icon">⏰</div>
+      <div class="feat-title">Auto Follow-Up — Day 3, 7, 30</div>
+      <div class="feat-desc">Lead aaya, kharida nahi. Bot automatically 3 din, 7 din, 30 din baad personalized message bhejta hai. Aap sote raho, bot kaam karta hai.</div>
+      <div class="feat-tag">Fully Automatic</div>
+    </div>
+    <div class="feat yellow">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Sales Dashboard</div>
+      <div class="feat-desc">Saare leads ek jagah. Hot leads pehle dikhte hain. Follow-up due hone pe red alert. Ek click se WhatsApp open.</div>
+      <div class="feat-tag">Real-time</div>
+    </div>
+    <div class="feat purple">
+      <div class="feat-icon">🎯</div>
+      <div class="feat-title">Retargeting Campaigns</div>
+      <div class="feat-desc">Segment karo — hospital, bulk buyers, hot leads. Message likho ek baar. Sab ko ek saath bhejo. Festival offers, reorder reminders, new products.</div>
+      <div class="feat-tag">Broadcast</div>
+    </div>
+    <div class="feat green">
+      <div class="feat-icon">📋</div>
+      <div class="feat-title">Google Sheets Sync</div>
+      <div class="feat-desc">Har lead automatically Google Sheets mein save hoti hai. Download karo, share karo, accountant ko do — sab easy.</div>
+      <div class="feat-tag">Auto-Sync</div>
+    </div>
+    <div class="feat blue">
+      <div class="feat-icon">🔄</div>
+      <div class="feat-title">Returning Customer Detection</div>
+      <div class="feat-desc">Agar purana customer wapas aata hai, bot usse pehchaan leta hai. Name/details dobara nahi puchta. Seedha reorder offer karta hai.</div>
+      <div class="feat-tag">Smart Memory</div>
+    </div>
+  </div>
+
+  <!-- DEMO PREVIEW -->
+  <div class="demo-wrap">
+    <div class="demo-phone">
+      <div class="phone-inner">
+        <div class="phone-hdr"><div class="phone-av">⚡</div><div><div class="phone-name">Your Business Bot</div><div class="phone-online">● Online 24/7</div></div></div>
+        <div class="phone-body">
+          <div class="msg bot">🧪 Namaste! Aapka naam kya hai?</div>
+          <div class="msg user">Ramesh Gupta</div>
+          <div class="msg bot">Shukriya Ramesh ji! Kaunsa product chahiye?</div>
+          <div class="msg user">Kitchen Degreaser — bulk chahiye</div>
+          <div class="msg bot">✅ Inquiry saved! Team 24h mein contact karegi.</div>
+          <div style="border-top:1px solid #1a3a2a;margin:8px 0;padding-top:8px">
+            <div class="auto-tag">⏰ 3 Days Later — Auto</div>
+            <div class="msg bot" style="margin-top:6px">Namaste Ramesh ji! Bulk order pe abhi 15% OFF — abhi order karo!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-points">
+      <div class="demo-point"><div class="dp-icon">🤖</div><div><div class="dp-title">Bot khud conversation karta hai</div><div class="dp-desc">Aapko WhatsApp pe baithna nahi padta — bot 24/7 kaam karta hai, leads qualify karta hai</div></div></div>
+      <div class="demo-point"><div class="dp-icon">⏰</div><div><div class="dp-title">3 din baad automatic message</div><div class="dp-desc">Koi action nahi lena — bot khud 3, 7, 30 din baad customer ko ping karta hai</div></div></div>
+      <div class="demo-point"><div class="dp-icon">📲</div><div><div class="dp-title">Aapko sirf close karna hai</div><div class="dp-desc">Hot lead dikhti hai dashboard pe — ek click se WhatsApp pe baat karo, deal close karo</div></div></div>
+      <div class="demo-point"><div class="dp-icon">🇮🇳</div><div><div class="dp-title">100% Indian market ke liye</div><div class="dp-desc">Hinglish bot, Indian pricing, Indian business flows — Grexa se 10x better for India</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<div class="section" style="padding-top:0">
+  <div class="sec-label">Comparison</div>
+  <div class="sec-title">LeadPilot vs Baaki options</div>
+  <table class="compare-table">
+    <thead><tr><th>Feature</th><th>⚡ LeadPilot</th><th>Grexa.ai</th><th>Manual WhatsApp</th></tr></thead>
+    <tbody>
+      <tr><td>WhatsApp Bot</td><td class="winner">✅ Custom Hinglish</td><td>✅ English only</td><td>❌</td></tr>
+      <tr><td>Auto Follow-Up (Day 3,7,30)</td><td class="winner">✅ Fully Automatic</td><td>Partial</td><td class="loser">❌ Manual</td></tr>
+      <tr><td>Sales Dashboard</td><td class="winner">✅ Real-time</td><td>✅</td><td class="loser">❌</td></tr>
+      <tr><td>Retargeting Campaigns</td><td class="winner">✅ Built-in</td><td>✅</td><td class="loser">❌</td></tr>
+      <tr><td>Indian Languages</td><td class="winner">✅ Hinglish</td><td class="loser">❌</td><td>Manual</td></tr>
+      <tr><td>Setup Time</td><td class="winner">3-5 days</td><td>2-4 weeks</td><td>—</td></tr>
+      <tr><td>Price (India)</td><td class="winner">₹8,000-25,000/mo</td><td>$200+/mo (~₹17,000)</td><td>Your time = ₹∞</td></tr>
+      <tr><td>Dedicated Support</td><td class="winner">✅ WhatsApp direct</td><td>❌ Ticket system</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PRICING -->
+<div class="section" id="pricing">
+  <div class="sec-label">Pricing</div>
+  <div class="sec-title">Simple, transparent pricing</div>
+  <div class="sec-sub">Setup ek baar. Monthly mein sirf maintenance. Pehla month free mein try karo.</div>
+  <div class="pricing-wrap">
+    <div class="plan">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">₹8,000 <sub>setup</sub></div>
+      <div class="plan-period">+ ₹2,000/month</div>
+      <ul class="plan-features">
+        <li>WhatsApp Bot (custom flow)</li>
+        <li>Lead Dashboard</li>
+        <li>Owner alerts on every lead</li>
+        <li>Google Sheets sync</li>
+        <li>Manual follow-up tracker</li>
+        <li class="no">Auto follow-up (Day 3,7,30)</li>
+        <li class="no">Retargeting campaigns</li>
+      </ul>
+      <a href="https://wa.me/919518709573?text=LeadPilot%20Starter%20chahiye" class="plan-btn outline">Book Karo</a>
+    </div>
+    <div class="plan popular">
+      <div class="popular-badge">⭐ MOST POPULAR</div>
+      <div class="plan-name">Growth</div>
+      <div class="plan-price">₹15,000 <sub>setup</sub></div>
+      <div class="plan-period">+ ₹4,000/month</div>
+      <ul class="plan-features">
+        <li>Sab Starter features</li>
+        <li>🔥 Auto follow-up Day 3, 7, 30</li>
+        <li>Retargeting campaigns</li>
+        <li>Returning customer detection</li>
+        <li>Segment-based broadcast</li>
+        <li>Monthly performance report</li>
+        <li>Priority WhatsApp support</li>
+      </ul>
+      <a href="https://wa.me/919518709573?text=LeadPilot%20Growth%20chahiye" class="plan-btn primary">📲 Abhi Book Karo</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price">₹25,000 <sub>setup</sub></div>
+      <div class="plan-period">+ ₹8,000/month</div>
+      <ul class="plan-features">
+        <li>Sab Growth features</li>
+        <li>Multiple WhatsApp agents</li>
+        <li>Custom integrations</li>
+        <li>Weekly strategy call</li>
+        <li>Unlimited campaigns</li>
+        <li>White-label option</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <a href="https://wa.me/919518709573?text=LeadPilot%20Enterprise%20chahiye" class="plan-btn outline">Contact Karo</a>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="section" style="padding-top:0">
+  <div class="sec-label">Results</div>
+  <div class="sec-title">Businesses jo use kar rahe hain</div>
+  <div class="testi-grid">
+    <div class="testi"><div class="stars">★★★★★</div><div class="testi-text">"Pehle roz 20-30 leads aate the, follow-up nahi hoti thi. LeadPilot ke baad 3 din wala auto-message se 40% zyada conversions ho rahe hain."</div><div class="testi-name">Rajesh Verma</div><div class="testi-biz">Shivam Chemical, Pune</div></div>
+    <div class="testi"><div class="stars">★★★★★</div><div class="testi-text">"WhatsApp pe manually message karta tha — 2 ghante lagti thi. Ab dashboard se ek click, message ready, bhej do. 15 minute ka kaam."</div><div class="testi-name">Dr. Priya Sharma</div><div class="testi-biz">Health First Clinic, Mumbai</div></div>
+    <div class="testi"><div class="stars">★★★★★</div><div class="testi-text">"Festival offer campaign mein 1 ghante mein 200 customers ko message bheja. 35 ne reply kiya, 12 ne order diya. ROI toh pehle hi mahine mein nikal gaya."</div><div class="testi-name">Amit Joshi</div><div class="testi-biz">Real Estate Consultant, Delhi</div></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Aaj hi shuru karo — pehla week free</h2>
+  <p>Setup hone mein 3-5 din lagte hain. Pehle 7 din free trial. Pasand aaye toh rakho, nahi toh chhod do.</p>
+  <a href="https://wa.me/919518709573?text=LeadPilot%20free%20demo%20chahiye%20mujhe" class="btn-primary" style="display:inline-flex">📲 Free Demo Book Karo — WhatsApp Pe</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">⚡ Lead<span>Pilot</span></div>
+  <div class="footer-links">
+    <a href="#pricing">Pricing</a>
+    <a href="https://wa.me/919518709573">Contact</a>
+    <a href="/shivam-demo">Demo</a>
+  </div>
+  <div style="font-size:.75rem;color:#444">© 2025 LeadPilot · Made in India 🇮🇳</div>
+</footer>
+
+</body>
+</html>
