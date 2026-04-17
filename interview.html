@@ -120,6 +120,27 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
 .speaker-btn:hover{border-color:#25d366;color:#25d366}
 .speaker-btn.active{border-color:#3b82f6;color:#3b82f6}
 
+/* CAMERA */
+.cam-preview{position:fixed;bottom:24px;right:24px;width:180px;height:135px;border-radius:14px;overflow:hidden;border:2px solid #25d366;background:#000;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.cam-preview video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam-preview .cam-label{position:absolute;bottom:6px;left:8px;font-size:.6rem;color:#25d366;font-weight:700;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:4px}
+.cam-preview .cam-off-overlay{position:absolute;inset:0;background:#111;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#333}
+.cam-toggle{position:fixed;bottom:170px;right:24px;width:38px;height:38px;border-radius:50%;border:1px solid #222;background:#111;color:#666;cursor:pointer;font-size:1rem;z-index:1000;display:flex;align-items:center;justify-content:center;transition:.2s}
+.cam-toggle:hover{border-color:#25d366;color:#25d366}
+
+/* WAVEFORM */
+.waveform{display:flex;align-items:center;gap:3px;height:24px;justify-content:center}
+.wave-bar{width:3px;border-radius:2px;background:#25d366;animation:wave 1s ease-in-out infinite}
+.wave-bar:nth-child(1){animation-delay:0s}
+.wave-bar:nth-child(2){animation-delay:.1s}
+.wave-bar:nth-child(3){animation-delay:.2s}
+.wave-bar:nth-child(4){animation-delay:.3s}
+.wave-bar:nth-child(5){animation-delay:.4s}
+@keyframes wave{0%,100%{height:4px}50%{height:20px}}
+
+/* TIMER */
+.int-timer{font-size:.78rem;color:#444;font-weight:600;font-variant-numeric:tabular-nums}
+
 /* ── REPORT ── */
 #page-report{display:none;min-height:100vh;padding:30px 20px;max-width:900px;margin:0 auto}
 .report-header{text-align:center;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #1a1a1a}
@@ -283,6 +304,7 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
     <div class="int-meta">
       <div class="int-role" id="headerRole">—</div>
       <div class="rec-indicator"><div class="rec-dot"></div> LIVE</div>
+      <div class="int-timer" id="intTimer">00:00</div>
       <div class="int-progress" id="headerProgress">Q 1/10</div>
     </div>
   </div>
@@ -296,6 +318,9 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
       </div>
       <div class="interviewer-name" id="interviewerName">—</div>
       <div class="interviewer-title">Senior Interviewer</div>
+      <div class="waveform" id="waveform" style="display:none;margin:6px 0">
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+      </div>
       <div class="int-status listening" id="intStatus">Listening...</div>
       <div class="company-badge">
         <div class="company-name" id="companyDisplay">—</div>
@@ -332,6 +357,14 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
     </div>
   </div>
 </div>
+
+<!-- CAMERA PREVIEW (fixed bottom-right) -->
+<div class="cam-preview" id="camPreview" style="display:none">
+  <video id="camVideo" autoplay muted playsinline></video>
+  <div class="cam-label">YOU</div>
+  <div class="cam-off-overlay" id="camOffOverlay">📷</div>
+</div>
+<button class="cam-toggle" id="camToggle" onclick="toggleCamera()" title="Camera on/off" style="display:none">📷</button>
 
 <!-- ══ PAGE: REPORT ══ -->
 <div id="page-report" style="display:none">
@@ -416,6 +449,62 @@ let sessionId = null;
 let questionCount = 0;
 let interviewConfig = {};
 let reportData = null;
+
+// ── CAMERA ────────────────────────────────────────────────────
+let cameraStream = null;
+let cameraOn = false;
+
+async function startCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user' }, audio: false });
+    const video = document.getElementById('camVideo');
+    video.srcObject = cameraStream;
+    document.getElementById('camOffOverlay').style.display = 'none';
+    cameraOn = true;
+    document.getElementById('camToggle').textContent = '📷';
+    document.getElementById('camToggle').style.borderColor = '#25d366';
+    document.getElementById('camToggle').style.color = '#25d366';
+  } catch(e) {
+    document.getElementById('camOffOverlay').style.display = 'flex';
+    cameraOn = false;
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  cameraOn = false;
+  document.getElementById('camVideo').srcObject = null;
+  document.getElementById('camOffOverlay').style.display = 'flex';
+  document.getElementById('camToggle').textContent = '📷';
+  document.getElementById('camToggle').style.borderColor = '';
+  document.getElementById('camToggle').style.color = '';
+}
+
+function toggleCamera() {
+  if (cameraOn) stopCamera();
+  else startCamera();
+}
+
+// ── TIMER ─────────────────────────────────────────────────────
+let timerInterval = null;
+let timerSeconds = 0;
+
+function startTimer() {
+  timerSeconds = 0;
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    const m = String(Math.floor(timerSeconds / 60)).padStart(2,'0');
+    const s = String(timerSeconds % 60).padStart(2,'0');
+    document.getElementById('intTimer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(timerInterval); }
+
+// ── WAVEFORM ──────────────────────────────────────────────────
+function showWaveform(show) {
+  document.getElementById('waveform').style.display = show ? 'flex' : 'none';
+}
 
 // ── VOICE — Speech Recognition + Synthesis ───────────────────
 let recognition   = null;
@@ -577,6 +666,12 @@ async function startInterview() {
     hideLoading();
     showPage('interview');
 
+    // Start timer + camera
+    startTimer();
+    document.getElementById('camPreview').style.display = 'block';
+    document.getElementById('camToggle').style.display  = 'flex';
+    startCamera();
+
     // Show first message
     addBotMessage(data.message);
     setStatus('listening');
@@ -624,6 +719,10 @@ async function sendAnswer() {
       setStatus('done');
       document.getElementById('answerInput').disabled = true;
       document.getElementById('sendBtn').disabled = true;
+      stopTimer();
+      stopCamera();
+      document.getElementById('camPreview').style.display = 'none';
+      document.getElementById('camToggle').style.display  = 'none';
       setTimeout(generateReport, 2000);
     } else {
       addBotMessage(data.message);
@@ -747,15 +846,24 @@ function addBotMessage(text) {
   body.appendChild(div);
   body.scrollTop = body.scrollHeight;
   setStatus('speaking');
+  showWaveform(true);
   speakText(text);
-  // Wait for TTS to finish before switching to listening status
+  // Wait for TTS to finish, then auto-start mic
   const checkDone = setInterval(() => {
     if (!speechSynthesis.speaking) {
       clearInterval(checkDone);
+      showWaveform(false);
       setStatus('listening');
+      // Auto-mic: start recording after interviewer finishes
+      if (!isRecording && document.getElementById('sendBtn') && !document.getElementById('sendBtn').disabled === false) {
+        // only auto-mic if interview is active
+      }
+      if (sessionId && !document.getElementById('answerInput').disabled) {
+        setTimeout(() => startRecording(), 400);
+      }
     }
   }, 300);
-  setTimeout(() => { clearInterval(checkDone); setStatus('listening'); }, 15000);
+  setTimeout(() => { clearInterval(checkDone); showWaveform(false); setStatus('listening'); }, 20000);
 }
 
 function addUserMessage(text) {
@@ -860,6 +968,11 @@ function downloadReport() {
 }
 
 function startNew() {
+  stopTimer();
+  stopCamera();
+  document.getElementById('camPreview').style.display = 'none';
+  document.getElementById('camToggle').style.display  = 'none';
+  document.getElementById('intTimer').textContent = '00:00';
   sessionId = null;
   questionCount = 0;
   document.getElementById('chatMessages').innerHTML = '';
