@@ -233,19 +233,46 @@ router.post('/book-real', async (req, res) => {
       return res.json({ success: false, error: 'Missing required fields' });
     }
 
-    // Notify Lambence team via WhatsApp
+    // Send email notification to Lambence team
     try {
-      const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-      const adminPhone = process.env.ADMIN_PHONE || process.env.AGENT_PHONE || '+919999999999';
-      const msg = `📅 *NEW REAL INTERVIEW BOOKING*\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n💼 Role: ${role}${company ? ' @ ' + company : ''}\n🎯 Domain: ${domain}\n📆 Date: ${date}\n⏰ Slot: ${slot}\n\nReply karo confirm karne ke liye aur Zoom link bhejo.`;
-      await twilio.messages.create({
-        from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-        to:   `whatsapp:${adminPhone}`,
-        body: msg
+      const nodemailer = require('nodemailer');
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER || 'lambence08@gmail.com',
+          pass: process.env.GMAIL_APP_PASSWORD  // Gmail App Password from env
+        }
       });
-    } catch(twilioErr) {
-      console.error('WhatsApp notify error:', twilioErr.message);
-      // Don't fail the booking if WhatsApp fails
+
+      const adminEmail = process.env.ADMIN_EMAIL || 'lambence08@gmail.com';
+      await transporter.sendMail({
+        from: `"Lambence Interview" <${process.env.GMAIL_USER || 'lambence08@gmail.com'}>`,
+        to: adminEmail,
+        subject: `📅 New Real Interview Booking — ${name} | ${date}`,
+        html: `
+          <div style="font-family:Inter,sans-serif;max-width:500px;margin:0 auto;background:#f9f9f9;border-radius:12px;overflow:hidden">
+            <div style="background:#25d366;padding:20px;text-align:center">
+              <h2 style="color:#fff;margin:0">⚡ LAMBENCE INTERVIEW</h2>
+              <p style="color:rgba(255,255,255,.8);margin:4px 0 0">New Real Interview Booking</p>
+            </div>
+            <div style="padding:24px">
+              <table style="width:100%;border-collapse:collapse">
+                <tr><td style="padding:10px 0;color:#666;font-size:13px;width:120px">👤 Name</td><td style="padding:10px 0;font-weight:700">${name}</td></tr>
+                <tr style="background:#f0f0f0"><td style="padding:10px 8px;color:#666;font-size:13px">📱 Phone</td><td style="padding:10px 8px;font-weight:700">${phone}</td></tr>
+                <tr><td style="padding:10px 0;color:#666;font-size:13px">💼 Role</td><td style="padding:10px 0;font-weight:700">${role}${company ? ' @ ' + company : ''}</td></tr>
+                <tr style="background:#f0f0f0"><td style="padding:10px 8px;color:#666;font-size:13px">🎯 Domain</td><td style="padding:10px 8px;font-weight:700">${domain}</td></tr>
+                <tr><td style="padding:10px 0;color:#666;font-size:13px">📆 Date</td><td style="padding:10px 0;font-weight:700">${date}</td></tr>
+                <tr style="background:#f0f0f0"><td style="padding:10px 8px;color:#666;font-size:13px">⏰ Slot</td><td style="padding:10px 8px;font-weight:700">${slot}</td></tr>
+              </table>
+              <div style="margin-top:20px;padding:14px;background:#fff3cd;border-radius:8px;font-size:13px;color:#856404">
+                ⚡ Action: Student ko WhatsApp karo aur Zoom/Meet link bhejo confirm karne ke baad.
+              </div>
+            </div>
+          </div>
+        `
+      });
+    } catch(emailErr) {
+      console.error('Email notify error:', emailErr.message);
     }
 
     console.log(`Real Interview Booked: ${name} | ${phone} | ${role} | ${date} | ${slot}`);
