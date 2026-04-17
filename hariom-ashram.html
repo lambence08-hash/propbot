@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>हरिओम बाबा गौशाला आश्रम ट्रस्ट — लासनपुर, नागपुर</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --saffron:#FF6B00;
+  --deep-saffron:#E85D00;
+  --gold:#FFB800;
+  --cream:#FFF8F0;
+  --dark-brown:#2C1A0E;
+  --brown:#5C3D1E;
+  --light-brown:#8B5E3C;
+  --green:#2E7D32;
+}
+body{background:#FFF8F0;color:#2C1A0E;font-family:'Inter',sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* OM SYMBOL ANIMATION */
+.om-float{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.om-particle{position:absolute;color:rgba(255,107,0,.06);font-size:4rem;animation:floatUp 15s infinite linear}
+@keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:.5}100%{transform:translateY(-100px) rotate(360deg);opacity:0}}
+
+/* NAVBAR */
+nav{background:linear-gradient(135deg,#8B1A00,#C0392B,#FF6B00);padding:0;position:sticky;top:0;z-index:1000;box-shadow:0 4px 20px rgba(139,26,0,.4)}
+.nav-top{display:flex;justify-content:space-between;align-items:center;padding:12px 40px}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-om{font-size:2rem;color:#FFD700;text-shadow:0 0 20px rgba(255,215,0,.6)}
+.nav-name{color:#fff}
+.nav-name .hindi{font-size:1rem;font-weight:700;font-family:'Tiro Devanagari Hindi',serif;display:block;line-height:1.2}
+.nav-name .english{font-size:.65rem;color:rgba(255,255,255,.7);letter-spacing:.05em}
+.nav-links{display:flex;gap:24px}
+.nav-links a{color:rgba(255,255,255,.9);font-size:.82rem;font-weight:600;transition:.2s;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:#FFD700;border-bottom-color:#FFD700}
+.nav-donate{background:#FFD700;color:#8B1A00;padding:8px 20px;border-radius:8px;font-weight:800;font-size:.82rem;transition:.2s}
+.nav-donate:hover{background:#FFC000;transform:translateY(-1px)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,#8B1A00 0%,#C0392B 30%,#FF6B00 60%,#FFB800 100%);opacity:.9}
+.hero-pattern{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:2}
+.hero-om{font-size:5rem;color:#FFD700;text-shadow:0 0 40px rgba(255,215,0,.8);margin-bottom:20px;animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.8)}50%{text-shadow:0 0 80px rgba(255,215,0,1),0 0 120px rgba(255,215,0,.5)}}
+.hero-title-hindi{font-size:clamp(2rem,5vw,3.5rem);font-family:'Tiro Devanagari Hindi',serif;color:#FFD700;font-weight:700;line-height:1.2;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.hero-title-english{font-size:clamp(.9rem,2vw,1.2rem);color:rgba(255,255,255,.85);letter-spacing:.15em;font-weight:500;margin-bottom:30px;text-transform:uppercase}
+.hero-location{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 20px;border-radius:30px;font-size:.82rem;margin-bottom:40px}
+.hero-stats{display:flex;gap:0;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);border-radius:16px;overflow:hidden;margin-bottom:40px}
+.h-stat{padding:16px 28px;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
+.h-stat:last-child{border-right:none}
+.h-stat-num{font-size:1.8rem;font-weight:900;color:#FFD700}
+.h-stat-lbl{font-size:.68rem;color:rgba(255,255,255,.8);margin-top:2px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:#FFD700;color:#8B1A00;padding:14px 32px;border-radius:10px;font-weight:800;font-size:.95rem;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:#FFC000;transform:translateY(-2px)}
+.btn-secondary{background:transparent;border:2px solid rgba(255,255,255,.6);color:#fff;padding:14px 28px;border-radius:10px;font-weight:700;font-size:.9rem;transition:.2s}
+.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:#fff}
+
+/* MARQUEE */
+.marquee-wrap{background:linear-gradient(135deg,#FF6B00,#FFB800);padding:12px 0;overflow:hidden;position:relative}
+.marquee-text{display:flex;gap:60px;animation:marquee 20s linear infinite;white-space:nowrap}
+.marquee-text span{color:#fff;font-size:.85rem;font-weight:600;font-family:'Tiro Devanagari Hindi',serif}
+.marquee-text .dot{color:#FFD700;font-size:1.2rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.section{padding:80px 20px;max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.sec-label{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.3);color:#FF6B00;padding:6px 16px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:.08em}
+.sec-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:8px;letter-spacing:-.5px;color:#2C1A0E}
+.sec-title span{color:#FF6B00}
+.sec-title-hindi{font-family:'Tiro Devanagari Hindi',serif;font-size:clamp(1.2rem,3vw,1.8rem);color:#8B5E3C;margin-bottom:16px}
+.sec-sub{color:#8B5E3C;font-size:.95rem;line-height:1.8;max-width:600px}
+.divider{border:none;height:3px;background:linear-gradient(90deg,transparent,#FF6B00,#FFD700,#FF6B00,transparent);margin:0}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:50px}
+.about-img{background:linear-gradient(135deg,#FF6B00,#FFB800);border-radius:20px;height:380px;display:flex;align-items:center;justify-content:center;font-size:8rem;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(255,107,0,.3)}
+.about-img::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='8'/%3E%3C/g%3E%3C/svg%3E")}
+.about-text h3{font-size:1.4rem;font-weight:800;margin-bottom:16px;color:#2C1A0E}
+.about-text p{color:#5C3D1E;line-height:1.9;margin-bottom:16px;font-size:.92rem}
+.about-features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.af{display:flex;align-items:center;gap:10px;background:#FFF0E0;border:1px solid #FFD4A8;border-radius:10px;padding:12px}
+.af-icon{font-size:1.4rem;flex-shrink:0}
+.af-text{font-size:.8rem;font-weight:600;color:#5C3D1E}
+
+/* GAUSHALA */
+.gaushala-section{background:linear-gradient(135deg,#F0FFF4,#E8F5E9);padding:80px 20px}
+.gaushala-inner{max-width:1100px;margin:0 auto}
+.gaushala-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px}
+.gau-card{background:#fff;border-radius:16px;padding:28px;text-align:center;border:2px solid #E8F5E9;box-shadow:0 4px 20px rgba(46,125,50,.08);transition:.3s}
+.gau-card:hover{transform:translateY(-4px);border-color:#4CAF50;box-shadow:0 8px 30px rgba(46,125,50,.15)}
+.gau-icon{font-size:3rem;margin-bottom:14px}
+.gau-num{font-size:2.2rem;font-weight:900;color:#2E7D32;margin-bottom:4px}
+.gau-title{font-size:.9rem;font-weight:700;color:#1B5E20;margin-bottom:8px}
+.gau-desc{font-size:.78rem;color:#558B2F;line-height:1.6}
+
+/* FACILITIES */
+.facilities-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:50px}
+.fac-card{background:#fff;border-radius:14px;padding:24px;text-align:center;border:1px solid #FFE0CC;box-shadow:0 4px 16px rgba(255,107,0,.06);transition:.3s}
+.fac-card:hover{transform:translateY(-4px);border-color:#FF6B00;box-shadow:0 8px 30px rgba(255,107,0,.15)}
+.fac-icon{font-size:2.5rem;margin-bottom:12px}
+.fac-title{font-size:.88rem;font-weight:700;color:#2C1A0E;margin-bottom:6px}
+.fac-desc{font-size:.75rem;color:#8B5E3C;line-height:1.5}
+
+/* HOW TO REACH */
+.reach-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:50px}
+.reach-card{background:#fff;border-radius:16px;padding:28px;border:1px solid #FFE0CC}
+.reach-card h3{font-size:1rem;font-weight:700;margin-bottom:16px;color:#FF6B00;display:flex;align-items:center;gap:8px}
+.reach-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #FFF0E0}
+.reach-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.reach-num{width:28px;height:28px;border-radius:50%;background:#FF6B00;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.reach-text{font-size:.82rem;color:#5C3D1E;line-height:1.5}
+
+/* DONATION */
+.donation-section{background:linear-gradient(135deg,#8B1A00,#C0392B,#FF6B00);padding:80px 20px;text-align:center;position:relative;overflow:hidden}
+.donation-section::before{content:'🙏';position:absolute;top:-20px;left:10%;font-size:8rem;opacity:.05}
+.donation-section::after{content:'🙏';position:absolute;bottom:-20px;right:10%;font-size:8rem;opacity:.05}
+.donation-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#FFD700;margin-bottom:8px;font-family:'Tiro Devanagari Hindi',serif}
+.donation-sub{color:rgba(255,255,255,.8);font-size:.95rem;margin-bottom:50px;line-height:1.7}
+.donation-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:900px;margin:0 auto 40px}
+.don-card{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border:2px solid rgba(255,215,0,.3);border-radius:16px;padding:24px;cursor:pointer;transition:.3s}
+.don-card:hover,.don-card.active{background:rgba(255,215,0,.2);border-color:#FFD700;transform:translateY(-4px)}
+.don-amount{font-size:1.8rem;font-weight:900;color:#FFD700;margin-bottom:6px}
+.don-label{font-size:.75rem;color:rgba(255,255,255,.8);line-height:1.4}
+.don-ways{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.don-way{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:14px 28px;border-radius:12px;font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:8px;cursor:pointer;transition:.2s}
+.don-way:hover{background:rgba(255,255,255,.25)}
+.don-btn{display:inline-flex;align-items:center;gap:10px;background:#FFD700;color:#8B1A00;padding:16px 40px;border-radius:12px;font-weight:800;font-size:1rem;margin-top:30px;cursor:pointer;transition:.2s;border:none;font-family:inherit}
+.don-btn:hover{background:#FFC000;transform:translateY(-2px)}
+
+/* TESTIMONIALS */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px}
+.test-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #FFE0CC;box-shadow:0 4px 16px rgba(255,107,0,.06)}
+.test-stars{color:#FFB800;font-size:1rem;margin-bottom:12px}
+.test-text{font-size:.82rem;color:#5C3D1E;line-height:1.7;margin-bottom:16px;font-style:italic}
+.test-name{font-weight:700;font-size:.82rem;color:#2C1A0E}
+.test-city{font-size:.72rem;color:#8B5E3C}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:50px}
+.contact-card{background:#fff;border-radius:16px;padding:32px;border:1px solid #FFE0CC;box-shadow:0 4px 16px rgba(255,107,0,.06)}
+.contact-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #FFF0E0}
+.contact-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.contact-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF6B00,#FFB800);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.contact-label{font-size:.72rem;color:#8B5E3C;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+.contact-value{font-size:.88rem;font-weight:700;color:#2C1A0E}
+.map-placeholder{background:linear-gradient(135deg,#FF6B00,#FFB800);border-radius:16px;height:100%;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:center;padding:24px}
+.map-placeholder .map-icon{font-size:3rem}
+.map-placeholder p{font-size:.82rem;opacity:.9;line-height:1.6}
+.map-btn{background:#fff;color:#FF6B00;padding:10px 24px;border-radius:8px;font-weight:700;font-size:.82rem;margin-top:8px;display:inline-block;transition:.2s}
+.map-btn:hover{background:#FFF0E0}
+
+/* FOOTER */
+footer{background:linear-gradient(135deg,#2C1A0E,#5C3D1E);padding:50px 20px 24px;text-align:center}
+.footer-om{font-size:3rem;color:#FFD700;text-shadow:0 0 20px rgba(255,215,0,.5);margin-bottom:16px}
+.footer-name{font-family:'Tiro Devanagari Hindi',serif;font-size:1.4rem;color:#FFD700;margin-bottom:8px}
+.footer-sub{color:rgba(255,255,255,.5);font-size:.78rem;margin-bottom:30px}
+.footer-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.footer-links a{color:rgba(255,255,255,.6);font-size:.8rem;transition:.2s}
+.footer-links a:hover{color:#FFD700}
+.footer-copy{font-size:.72rem;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.1);padding-top:20px;margin-top:10px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .about-grid,.reach-grid,.contact-grid{grid-template-columns:1fr}
+  .gaushala-grid,.test-grid{grid-template-columns:1fr}
+  .donation-cards{grid-template-columns:repeat(2,1fr)}
+  .h-stat{padding:12px 16px}
+  .nav-top{padding:12px 20px}
+  .hero-stats{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating OM particles -->
+<div class="om-float">
+  <div class="om-particle" style="left:5%;animation-delay:0s;animation-duration:12s">ॐ</div>
+  <div class="om-particle" style="left:20%;animation-delay:3s;animation-duration:18s">ॐ</div>
+  <div class="om-particle" style="left:40%;animation-delay:6s;animation-duration:14s">ॐ</div>
+  <div class="om-particle" style="left:60%;animation-delay:2s;animation-duration:16s">ॐ</div>
+  <div class="om-particle" style="left:80%;animation-delay:8s;animation-duration:13s">ॐ</div>
+  <div class="om-particle" style="left:90%;animation-delay:4s;animation-duration:19s">ॐ</div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-top">
+    <div class="nav-logo">
+      <div class="nav-om">ॐ</div>
+      <div class="nav-name">
+        <span class="hindi">हरिओम बाबा गौशाला आश्रम ट्रस्ट</span>
+        <span class="english">Hariom Baba Gaushala Ashram Trust · Lasanpur</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#gaushala">Gaushala</a>
+      <a href="#facilities">Facilities</a>
+      <a href="#donation">Donate</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#donation" class="nav-donate">🙏 Gau Seva Donate</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-om">ॐ</div>
+    <div class="hero-title-hindi">हरिओम बाबा गौशाला आश्रम ट्रस्ट</div>
+    <div class="hero-title-english">Hariom Baba Gaushala Ashram Trust</div>
+    <div class="hero-location">📍 लासनपुर, नागपुर — महाराष्ट्र · 70 km from Nagpur</div>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-num">650+</div><div class="h-stat-lbl">Gaayein 🐄</div></div>
+      <div class="h-stat"><div class="h-stat-num">100+</div><div class="h-stat-lbl">Rooms</div></div>
+      <div class="h-stat"><div class="h-stat-num">₹40k</div><div class="h-stat-lbl">Daily Seva</div></div>
+      <div class="h-stat"><div class="h-stat-num">∞</div><div class="h-stat-lbl">Blessings 🙏</div></div>
+    </div>
+    <div class="hero-btns">
+      <a href="#donation" class="btn-primary">🐄 Gau Seva Karo — Donate Now</a>
+      <a href="#about" class="btn-secondary">🙏 Ashram Ke Baare Mein Jaano</a>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-text">
+    <span>ॐ नमः शिवाय</span><span class="dot">•</span>
+    <span>जय गो माता 🐄</span><span class="dot">•</span>
+    <span>हरे कृष्ण हरे राम</span><span class="dot">•</span>
+    <span>गौ सेवा ही ईश्वर सेवा है</span><span class="dot">•</span>
+    <span>ॐ नमः शिवाय</span><span class="dot">•</span>
+    <span>जय गो माता 🐄</span><span class="dot">•</span>
+    <span>हरे कृष्ण हरे राम</span><span class="dot">•</span>
+    <span>गौ सेवा ही ईश्वर सेवा है</span><span class="dot">•</span>
+    <span>ॐ नमः शिवाय</span><span class="dot">•</span>
+    <span>जय गो माता 🐄</span><span class="dot">•</span>
+    <span>हरे कृष्ण हरे राम</span><span class="dot">•</span>
+    <span>गौ सेवा ही ईश्वर सेवा है</span><span class="dot">•</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section" id="about">
+  <div class="sec-label">🙏 Parichay</div>
+  <div class="sec-title">Hamare <span>Ashram</span> Ke Baare Mein</div>
+  <div class="sec-title-hindi">आश्रम परिचय</div>
+  <div class="about-grid">
+    <div class="about-img">🕉️</div>
+    <div class="about-text">
+      <h3>एक पवित्र स्थान — शांति और सेवा का केंद्र</h3>
+      <p>हरिओम बाबा गौशाला आश्रम ट्रस्ट, लासनपुर — नागपुर से 70 किलोमीटर दूर स्थित एक पवित्र आश्रम है। यह स्थान गौ माता की सेवा, ध्यान और आध्यात्मिक शांति का केंद्र है।</p>
+      <p>आश्रम में 650 से अधिक गायों की देखभाल की जाती है। यहाँ का संपूर्ण खर्च समाज के योगदान से चलता है। प्रतिदिन लगभग ₹40,000 का व्यय होता है।</p>
+      <p>यहाँ आने वाले श्रद्धालुओं को शुद्ध सात्विक भोजन, ध्यान केंद्र, और आवास की सुविधा प्रदान की जाती है।</p>
+      <div class="about-features">
+        <div class="af"><div class="af-icon">🐄</div><div class="af-text">650+ Gaayein</div></div>
+        <div class="af"><div class="af-icon">🧘</div><div class="af-text">Meditation Centre</div></div>
+        <div class="af"><div class="af-icon">🍛</div><div class="af-text">Satvik Bhojan</div></div>
+        <div class="af"><div class="af-icon">🏠</div><div class="af-text">Aawas Suvidha</div></div>
+        <div class="af"><div class="af-icon">🌿</div><div class="af-text">Prakriti Ke Beech</div></div>
+        <div class="af"><div class="af-icon">🙏</div><div class="af-text">Daily Puja & Aarti</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- GAUSHALA -->
+<div class="gaushala-section" id="gaushala">
+  <div class="gaushala-inner">
+    <div class="sec-label" style="color:#2E7D32;border-color:rgba(46,125,50,.3);background:rgba(46,125,50,.08)">🐄 Gau Seva</div>
+    <div class="sec-title">Hamari <span style="color:#2E7D32">Gaushala</span></div>
+    <div class="sec-title-hindi" style="color:#1B5E20">गो माता सेवा — हमारा धर्म</div>
+    <div class="sec-sub">गौ माता हमारी माँ हैं। उनकी सेवा करना सबसे बड़ा पुण्य है। हमारी गौशाला में 650 से अधिक गायों की प्रेमपूर्वक देखभाल की जाती है।</div>
+    <div class="gaushala-grid">
+      <div class="gau-card">
+        <div class="gau-icon">🐄</div>
+        <div class="gau-num">650+</div>
+        <div class="gau-title">Total Gaayein</div>
+        <div class="gau-desc">Desi nasl ki gaayein — unki poori dekhbhal hamare ashram mein hoti hai</div>
+      </div>
+      <div class="gau-card">
+        <div class="gau-icon">🥛</div>
+        <div class="gau-num">100%</div>
+        <div class="gau-title">Shuddh Desi Doodh</div>
+        <div class="gau-desc">Gaushala ka doodh, ghee aur gobar ashram mein upyog hota hai</div>
+      </div>
+      <div class="gau-card">
+        <div class="gau-icon">💚</div>
+        <div class="gau-num">24/7</div>
+        <div class="gau-title">Seva Jaari Rehti Hai</div>
+        <div class="gau-desc">Din raat gayon ki dekhbhal, khana, saaf safai sab hoti rehti hai</div>
+      </div>
+      <div class="gau-card">
+        <div class="gau-icon">🌾</div>
+        <div class="gau-num">₹40k</div>
+        <div class="gau-title">Roz Ka Kharcha</div>
+        <div class="gau-desc">Samaj ke yogdaan se chalta hai — aap bhi seva mein bhaagi banein</div>
+      </div>
+      <div class="gau-card">
+        <div class="gau-icon">🎋</div>
+        <div class="gau-num">Tons</div>
+        <div class="gau-title">Chaara & Gur</div>
+        <div class="gau-desc">Gayon ke liye chaara, gur, aur paani ki vyavastha hoti hai</div>
+      </div>
+      <div class="gau-card">
+        <div class="gau-icon">🙏</div>
+        <div class="gau-num">Punya</div>
+        <div class="gau-title">Gau Seva = Dev Seva</div>
+        <div class="gau-desc">Gau mata ki seva karna bhagwan ki pooja ke barabar maana gaya hai</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- FACILITIES -->
+<div class="section" id="facilities">
+  <div class="sec-label">🏛️ Suvidhaayein</div>
+  <div class="sec-title">Ashram Ki <span>Suvidhaayein</span></div>
+  <div class="sec-title-hindi">आश्रम की सुविधाएं</div>
+  <div class="sec-sub">Hamare ashram mein aane wale har shraddhalu ko ek peaceful, comfortable aur spiritual experience milta hai.</div>
+  <div class="facilities-grid">
+    <div class="fac-card">
+      <div class="fac-icon">🧘‍♂️</div>
+      <div class="fac-title">Meditation Centre</div>
+      <div class="fac-desc">International standard ka meditation centre — 100 logon ki capacity — AC & Non-AC rooms</div>
+    </div>
+    <div class="fac-card">
+      <div class="fac-icon">🏠</div>
+      <div class="fac-title">Aawas (Rooms)</div>
+      <div class="fac-desc">AC, Non-AC rooms aur dormitory — saaf sathra aur suvidhaajanak — reasonable charges</div>
+    </div>
+    <div class="fac-card">
+      <div class="fac-icon">🍛</div>
+      <div class="fac-title">Satvik Bhojan</div>
+      <div class="fac-desc">Bina pyaaz lahsun ka shuddh satvik bhojan — pure desi ghee mein — 90 log dining room</div>
+    </div>
+    <div class="fac-card">
+      <div class="fac-icon">⛪</div>
+      <div class="fac-title">Mandir & Puja</div>
+      <div class="fac-desc">Sundar mandir — subah shaam aarti — daily puja aur bhajan kirtan</div>
+    </div>
+    <div class="fac-card">
+      <div class="fac-icon">🌳</div>
+      <div class="fac-title">Garden & Park</div>
+      <div class="fac-desc">Harit vatavaran mein sundar garden aur walking track — prakriti ki god mein</div>
+    </div>
+    <div class="fac-card">
+      <div class="fac-icon">🐄</div>
+      <div class="fac-title">Gau Darshan</div>
+      <div class="fac-desc">Gau mata ka darshan aur seva karne ka suavsar — gau pooja bhi karein</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- HOW TO REACH -->
+<div class="section" id="reach">
+  <div class="sec-label">📍 Kaise Pahunchein</div>
+  <div class="sec-title">Ashram <span>Kaise Pahunchein</span></div>
+  <div class="sec-title-hindi">मार्गदर्शन</div>
+  <div class="reach-grid">
+    <div class="reach-card">
+      <h3>🚗 By Road</h3>
+      <div class="reach-step">
+        <div class="reach-num">1</div>
+        <div class="reach-text"><strong>Nagpur se:</strong> Nagpur-Chandrapur Highway pe aayein — 65 KM door Jam Girard pahunchein</div>
+      </div>
+      <div class="reach-step">
+        <div class="reach-num">2</div>
+        <div class="reach-text"><strong>Jam Girard se:</strong> Jam Girard Road pe 9 KM aur chalein — Village Lasanpur aayega</div>
+      </div>
+      <div class="reach-step">
+        <div class="reach-num">3</div>
+        <div class="reach-text"><strong>Total:</strong> Nagpur se sirf 70 KM — approximately 1.5 ghante ki drive</div>
+      </div>
+    </div>
+    <div class="reach-card">
+      <h3>🚆 By Train / Bus</h3>
+      <div class="reach-step">
+        <div class="reach-num">1</div>
+        <div class="reach-text"><strong>Nearest Station:</strong> Nagpur Railway Station — sabse paas ka major station</div>
+      </div>
+      <div class="reach-step">
+        <div class="reach-num">2</div>
+        <div class="reach-text"><strong>Bus:</strong> Nagpur se Chandrapur jaane wali bus mein Jam Girard utarein</div>
+      </div>
+      <div class="reach-step">
+        <div class="reach-num">3</div>
+        <div class="reach-text"><strong>Local Transport:</strong> Jam Girard se auto / taxi — 9 KM — Lasanpur Ashram</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- DONATION -->
+<div class="donation-section" id="donation">
+  <div style="position:relative;z-index:1;max-width:900px;margin:0 auto">
+    <div class="donation-title">🐄 गौ सेवा मेें भागीदार बनें</div>
+    <div class="sec-title-hindi" style="color:rgba(255,255,255,.8);margin-bottom:10px">Aapka ek chota yogdaan — gau mata ki badi seva</div>
+    <div class="donation-sub">
+      Ashram mein roz ₹40,000 ka kharcha hota hai — 650 gayon ka khana, ilaaj, dekhbhal.<br>
+      Aapke donation se ek gau mata pet bhar khana khati hai. <strong>Yahi sachchi puja hai.</strong>
+    </div>
+    <div class="donation-cards">
+      <div class="don-card" onclick="selectDonation(this,'₹501')">
+        <div class="don-amount">₹501</div>
+        <div class="don-label">1 din ka chaara aur khana</div>
+      </div>
+      <div class="don-card" onclick="selectDonation(this,'₹1,100')">
+        <div class="don-amount">₹1,100</div>
+        <div class="don-label">Ek gau ka 3 din ka kharcha</div>
+      </div>
+      <div class="don-card active" onclick="selectDonation(this,'₹2,100')">
+        <div class="don-amount">₹2,100</div>
+        <div class="don-label">Gau Puja + 1 hafte ki seva</div>
+      </div>
+      <div class="don-card" onclick="selectDonation(this,'₹5,100')">
+        <div class="don-amount">₹5,100</div>
+        <div class="don-label">Ek mahina — Gau Mata ki poori seva</div>
+      </div>
+    </div>
+    <div class="don-ways">
+      <div class="don-way">📱 UPI / Google Pay</div>
+      <div class="don-way">🏦 Bank Transfer</div>
+      <div class="don-way">💵 Cash / Cheque</div>
+      <div class="don-way">🌾 Chaara / Gur Donation</div>
+    </div>
+    <br>
+    <button class="don-btn" onclick="alert('Gau Seva ke liye dhanyavaad! 🙏\nHum aapko donation details WhatsApp karenge.\nJai Gau Mata!')">
+      🙏 Abhi Donate Karein — Jai Gau Mata
+    </button>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="section">
+  <div class="sec-label">💬 Shraddhalu Reviews</div>
+  <div class="sec-title">Aane Wale <span>Shraddhalu</span> Kehte Hain</div>
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Ek adbhut anubhav. Yahaan aake mann ko sachchi shanti mili. Gau mata ka darshan aur satvik bhojan ne hume puri tarah taaza kar diya."</div>
+      <div class="test-name">Suresh Patel</div>
+      <div class="test-city">📍 Nagpur</div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Hariom Baba ka ashram ek sachchi tapobhoomi hai. Yahan ki gaushala dekh ke dil bharaa aa gaya. Gau seva ka mauka milna bhaagya ki baat hai."</div>
+      <div class="test-name">Rajesh Sharma</div>
+      <div class="test-city">📍 Wardha</div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">⭐⭐⭐⭐⭐</div>
+      <div class="test-text">"Meditation centre bahut sundar hai. Shant vatavaran, shuddh hawa, satvik khana — sab kuch perfect. Har saal aana chahta hoon yahaan."</div>
+      <div class="test-name">Priya Deshmukh</div>
+      <div class="test-city">📍 Mumbai</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<div class="section" id="contact">
+  <div class="sec-label">📞 Sampark</div>
+  <div class="sec-title">Humse <span>Sampark Karein</span></div>
+  <div class="sec-title-hindi">संपर्क करें</div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Pata (Address)</div>
+          <div class="contact-value">Hariom Baba Gaushala Ashram Trust<br>Village Lasanpur, (9 KM from Jam Girard)<br>Nagpur-Chandrapur Highway, Maharashtra 442305</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <div class="contact-label">Darshan Samay</div>
+          <div class="contact-value">Subah 5:00 AM — Raat 9:00 PM<br>Saal ke 365 din khula rehta hai</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🍛</div>
+        <div>
+          <div class="contact-label">Bhojan Samay</div>
+          <div class="contact-value">Subah: 7:00 AM — 9:00 AM<br>Dopahar: 12:00 PM — 2:00 PM<br>Shaam: 7:00 PM — 9:00 PM</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📱</div>
+        <div>
+          <div class="contact-label">Social Media</div>
+          <div class="contact-value">Facebook: Hariom Baba Goushala Ashram Nagpur<br>Instagram: @hariombabanagpur</div>
+        </div>
+      </div>
+    </div>
+    <div class="map-placeholder">
+      <div class="map-icon">🗺️</div>
+      <div style="font-size:1.2rem;font-weight:700;margin-bottom:8px">Lasanpur, Nagpur</div>
+      <p>Nagpur-Chandrapur Highway<br>Village Lasanpur · 70 KM from Nagpur<br>Maharashtra 442305</p>
+      <a href="https://maps.google.com/?q=Hariom+Baba+Gaushala+Ashram+Trust+Lasanpur+Nagpur" target="_blank" class="map-btn">
+        🗺️ Google Maps Pe Dekho
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-om">ॐ</div>
+  <div class="footer-name">हरिओम बाबा गौशाला आश्रम ट्रस्ट</div>
+  <div class="footer-sub">Lasanpur, Nagpur · Maharashtra · India<br>गौ सेवा ही ईश्वर सेवा है 🐄</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#gaushala">Gaushala</a>
+    <a href="#facilities">Facilities</a>
+    <a href="#reach">How to Reach</a>
+    <a href="#donation">Donate</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">
+    Website by Lambence · lambence.in<br>
+    © 2026 Hariom Baba Gaushala Ashram Trust, Lasanpur. All rights reserved.
+  </div>
+</footer>
+
+<script>
+function selectDonation(el, amount) {
+  document.querySelectorAll('.don-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// Scroll animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, {threshold: 0.1});
+
+document.querySelectorAll('.gau-card, .fac-card, .test-card, .af').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .6s ease, transform .6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

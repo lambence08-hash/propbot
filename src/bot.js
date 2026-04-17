@@ -406,6 +406,7 @@ app.get('/interview-platform', (req, res) => res.sendFile(path.join(__dirname, '
 app.get('/leadpilot', (req, res) => res.sendFile(path.join(__dirname, '..', 'leadpilot.html')));
 app.get('/demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'lambence-demo.html')));
 app.get('/achievers-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'achievers-demo.html')));
+app.get('/hariom', (req, res) => res.sendFile(path.join(__dirname, '..', 'hariom-ashram.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
