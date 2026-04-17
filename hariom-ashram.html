@@ -146,6 +146,22 @@ nav{background:linear-gradient(135deg,#8B1A00,#C0392B,#FF6B00);padding:0;positio
 .don-btn{display:inline-flex;align-items:center;gap:10px;background:#FFD700;color:#8B1A00;padding:16px 40px;border-radius:12px;font-weight:800;font-size:1rem;margin-top:30px;cursor:pointer;transition:.2s;border:none;font-family:inherit}
 .don-btn:hover{background:#FFC000;transform:translateY(-2px)}
 
+/* DONATION FORM */
+.don-form-wrap{background:rgba(255,255,255,.12);backdrop-filter:blur(16px);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:32px;max-width:600px;margin:40px auto 0;text-align:left}
+.don-form-title{font-size:1.1rem;font-weight:800;color:#FFD700;margin-bottom:4px;font-family:'Tiro Devanagari Hindi',serif;text-align:center}
+.don-form-sub{font-size:.78rem;color:rgba(255,255,255,.7);text-align:center;margin-bottom:24px}
+.don-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.don-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.don-field label{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.06em}
+.don-field input,.don-field select{padding:11px 14px;border-radius:10px;border:1.5px solid rgba(255,215,0,.3);background:rgba(255,255,255,.1);color:#fff;font-size:.88rem;font-family:inherit;outline:none;transition:.2s}
+.don-field input::placeholder{color:rgba(255,255,255,.4)}
+.don-field input:focus,.don-field select:focus{border-color:#FFD700;background:rgba(255,215,0,.1)}
+.don-field select option{color:#2C1A0E;background:#fff}
+.don-submit{width:100%;background:#FFD700;color:#8B1A00;border:none;padding:16px;border-radius:12px;font-weight:800;font-size:1rem;cursor:pointer;font-family:inherit;transition:.2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.don-submit:hover{background:#FFC000;transform:translateY(-2px)}
+.don-success{display:none;background:rgba(255,215,0,.2);border:1px solid #FFD700;border-radius:12px;padding:16px;text-align:center;color:#FFD700;font-weight:700;margin-top:14px;font-size:.9rem}
+@media(max-width:600px){.don-form-row{grid-template-columns:1fr}.donation-cards{grid-template-columns:repeat(2,1fr)}}
+
 /* TESTIMONIALS */
 .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px}
 .test-card{background:#fff;border-radius:16px;padding:24px;border:1px solid #FFE0CC;box-shadow:0 4px 16px rgba(255,107,0,.06)}
@@ -429,40 +445,82 @@ footer{background:linear-gradient(135deg,#2C1A0E,#5C3D1E);padding:50px 20px 24px
 <!-- DONATION -->
 <div class="donation-section" id="donation">
   <div style="position:relative;z-index:1;max-width:900px;margin:0 auto">
-    <div class="donation-title">🐄 गौ सेवा मेें भागीदार बनें</div>
+    <div class="donation-title">🐄 गौ सेवा में भागीदार बनें</div>
     <div class="sec-title-hindi" style="color:rgba(255,255,255,.8);margin-bottom:10px">Aapka ek chota yogdaan — gau mata ki badi seva</div>
     <div class="donation-sub">
       Ashram mein roz ₹40,000 ka kharcha hota hai — 650 gayon ka khana, ilaaj, dekhbhal.<br>
       Aapke donation se ek gau mata pet bhar khana khati hai. <strong>Yahi sachchi puja hai.</strong>
     </div>
+
+    <!-- Amount Cards -->
     <div class="donation-cards">
-      <div class="don-card" onclick="selectDonation(this,'₹501')">
+      <div class="don-card" onclick="selectDonation(this,'501')">
         <div class="don-amount">₹501</div>
         <div class="don-label">1 din ka chaara aur khana</div>
       </div>
-      <div class="don-card" onclick="selectDonation(this,'₹1,100')">
+      <div class="don-card" onclick="selectDonation(this,'1100')">
         <div class="don-amount">₹1,100</div>
         <div class="don-label">Ek gau ka 3 din ka kharcha</div>
       </div>
-      <div class="don-card active" onclick="selectDonation(this,'₹2,100')">
+      <div class="don-card active" onclick="selectDonation(this,'2100')">
         <div class="don-amount">₹2,100</div>
         <div class="don-label">Gau Puja + 1 hafte ki seva</div>
       </div>
-      <div class="don-card" onclick="selectDonation(this,'₹5,100')">
+      <div class="don-card" onclick="selectDonation(this,'5100')">
         <div class="don-amount">₹5,100</div>
         <div class="don-label">Ek mahina — Gau Mata ki poori seva</div>
       </div>
     </div>
-    <div class="don-ways">
+
+    <!-- Donation Form -->
+    <div class="don-form-wrap">
+      <div class="don-form-title">🙏 Gau Seva Form भरें</div>
+      <div class="don-form-sub">Form bharein — hum aapko payment details WhatsApp karenge</div>
+      <div class="don-form-row">
+        <div class="don-field">
+          <label>Aapka Naam *</label>
+          <input type="text" id="donName" placeholder="Ramesh Sharma" required>
+        </div>
+        <div class="don-field">
+          <label>WhatsApp Number *</label>
+          <input type="tel" id="donPhone" placeholder="98765 43210" required>
+        </div>
+      </div>
+      <div class="don-form-row">
+        <div class="don-field">
+          <label>Donation Amount *</label>
+          <input type="text" id="donAmount" placeholder="₹2,100" value="₹2,100">
+        </div>
+        <div class="don-field">
+          <label>Payment Method</label>
+          <select id="donMethod">
+            <option>📱 UPI / Google Pay / PhonePe</option>
+            <option>🏦 Bank Transfer / NEFT</option>
+            <option>💵 Cash (Ashram mein aakar)</option>
+            <option>🌾 Chaara / Gur Donation</option>
+            <option>📜 Cheque</option>
+          </select>
+        </div>
+      </div>
+      <div class="don-field">
+        <label>Shehar (City)</label>
+        <input type="text" id="donCity" placeholder="Nagpur">
+      </div>
+      <button class="don-submit" onclick="submitDonation()">
+        🙏 Gau Seva Ke Liye Aage Badhein — Jai Gau Mata!
+      </button>
+      <div class="don-success" id="donSuccess">
+        ✅ Dhanyavaad! 🙏 Aapka form mil gaya. Hum aapko abhi WhatsApp karenge.<br>
+        <span style="font-size:.78rem;opacity:.8">Jai Gau Mata 🐄</span>
+      </div>
+    </div>
+
+    <div class="don-ways" style="margin-top:24px">
       <div class="don-way">📱 UPI / Google Pay</div>
       <div class="don-way">🏦 Bank Transfer</div>
       <div class="don-way">💵 Cash / Cheque</div>
       <div class="don-way">🌾 Chaara / Gur Donation</div>
     </div>
-    <br>
-    <button class="don-btn" onclick="alert('Gau Seva ke liye dhanyavaad! 🙏\nHum aapko donation details WhatsApp karenge.\nJai Gau Mata!')">
-      🙏 Abhi Donate Karein — Jai Gau Mata
-    </button>
   </div>
 </div>
 
@@ -604,9 +662,47 @@ footer{background:linear-gradient(135deg,#2C1A0E,#5C3D1E);padding:50px 20px 24px
 </footer>
 
 <script>
+const ADMIN_WA = '919876635532';
+
 function selectDonation(el, amount) {
   document.querySelectorAll('.don-card').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
+  // Update amount field
+  const fmt = parseInt(amount).toLocaleString('en-IN');
+  document.getElementById('donAmount').value = '₹' + fmt;
+}
+
+function submitDonation() {
+  const name   = document.getElementById('donName').value.trim();
+  const phone  = document.getElementById('donPhone').value.trim();
+  const amount = document.getElementById('donAmount').value.trim();
+  const method = document.getElementById('donMethod').value;
+  const city   = document.getElementById('donCity').value.trim();
+
+  if (!name || !phone) {
+    alert('Kripya apna naam aur WhatsApp number zaroor bharein 🙏');
+    return;
+  }
+
+  // Show success
+  document.getElementById('donSuccess').style.display = 'block';
+
+  // Build WhatsApp message for admin
+  const msg = `🙏 *NEW DONATION INQUIRY*
+
+👤 *Naam:* ${name}
+📱 *Phone:* ${phone}
+💰 *Amount:* ${amount}
+💳 *Method:* ${method}
+📍 *City:* ${city || 'N/A'}
+
+Inhe call karke donation confirm karein aur payment details bhejein.
+🐄 Jai Gau Mata!`;
+
+  // Open WhatsApp for admin notification
+  setTimeout(() => {
+    window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  }, 800);
 }
 
 // Smooth scroll
