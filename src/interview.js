@@ -236,32 +236,22 @@ router.post('/book-real', async (req, res) => {
     // Log booking immediately
     console.log(`Real Interview Booked: ${name} | ${phone} | ${role} | ${date} | ${slot}`);
 
-    // Send email in background (don't await — never block response)
-    const nodemailer = require('nodemailer');
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER || 'lambence08@gmail.com',
-        pass: process.env.GMAIL_APP_PASSWORD
+    // Notify admin via WhatsApp (Twilio)
+    try {
+      const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+      const adminPhone = process.env.ADMIN_PHONE || process.env.AGENT_PHONE;
+      if (adminPhone) {
+        const msg = `📅 *NEW INTERVIEW BOOKING*\n\n👤 ${name}\n📱 ${phone}\n💼 ${role}${company ? ' @ ' + company : ''}\n🎯 ${domain}\n📆 ${date}\n⏰ ${slot}\n\nStudent ko confirm karo aur Meet link bhejo.`;
+        twilio.messages.create({
+          from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+          to:   `whatsapp:${adminPhone}`,
+          body: msg
+        }).then(() => console.log('Booking WhatsApp sent'))
+          .catch(e => console.error('WhatsApp error:', e.message));
       }
-    });
-    const adminEmail = process.env.ADMIN_EMAIL || 'lambence08@gmail.com';
-    transporter.sendMail({
-      from: `"Lambence Interview" <${process.env.GMAIL_USER || 'lambence08@gmail.com'}>`,
-      to: adminEmail,
-      subject: `New Booking: ${name} | ${date} | ${slot}`,
-      html: `<h2>New Real Interview Booking</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Phone:</b> ${phone}</p>
-        <p><b>Role:</b> ${role}${company ? ' @ ' + company : ''}</p>
-        <p><b>Domain:</b> ${domain}</p>
-        <p><b>Date:</b> ${date}</p>
-        <p><b>Slot:</b> ${slot}</p>
-        <hr><p>Student ko WhatsApp karo aur Zoom/Meet link bhejo.</p>`
-    }).then(() => console.log('Booking email sent'))
-      .catch(e => console.error('Email error:', e.message));
+    } catch(e) {
+      console.error('Twilio error:', e.message);
+    }
     res.json({ success: true });
 
   } catch(e) {
