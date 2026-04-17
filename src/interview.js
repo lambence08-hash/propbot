@@ -239,7 +239,9 @@ router.post('/book-real', async (req, res) => {
     // Send email in background (don't await — never block response)
     const nodemailer = require('nodemailer');
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER || 'lambence08@gmail.com',
         pass: process.env.GMAIL_APP_PASSWORD
