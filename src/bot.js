@@ -407,6 +407,7 @@ app.get('/leadpilot', (req, res) => res.sendFile(path.join(__dirname, '..', 'lea
 app.get('/demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'lambence-demo.html')));
 app.get('/achievers-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'achievers-demo.html')));
 app.get('/hariom', (req, res) => res.sendFile(path.join(__dirname, '..', 'hariom-ashram.html')));
+app.get('/khandelwal-cold', (req, res) => res.sendFile(path.join(__dirname, '..', 'khandelwal-cold-storage.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
