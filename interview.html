@@ -104,6 +104,22 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
 .send-btn:disabled{opacity:.4;cursor:not-allowed}
 .input-hint{font-size:.68rem;color:#333;margin-top:6px;text-align:center}
 
+/* VOICE */
+.voice-bar{display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 24px;border-top:1px solid #1a1a1a;background:#0a0a0a}
+.mic-btn{width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;transition:.2s;flex-shrink:0}
+.mic-btn.idle{background:#1a1a1a;color:#555}
+.mic-btn.recording{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;animation:micPulse 1s infinite}
+.mic-btn.processing{background:#1a1a1a;color:#f59e0b;cursor:not-allowed}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 16px rgba(239,68,68,0)}}
+.voice-status{font-size:.82rem;color:#555;text-align:center;min-width:160px}
+.voice-status.recording{color:#ef4444;font-weight:600}
+.voice-status.processing{color:#f59e0b}
+.voice-status.speaking{color:#3b82f6}
+.voice-transcript{font-size:.75rem;color:#444;text-align:center;margin-top:4px;min-height:16px;font-style:italic}
+.speaker-btn{width:38px;height:38px;border-radius:50%;border:1px solid #222;background:#111;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.2s}
+.speaker-btn:hover{border-color:#25d366;color:#25d366}
+.speaker-btn.active{border-color:#3b82f6;color:#3b82f6}
+
 /* ── REPORT ── */
 #page-report{display:none;min-height:100vh;padding:30px 20px;max-width:900px;margin:0 auto}
 .report-header{text-align:center;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid #1a1a1a}
@@ -296,12 +312,22 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-area">
         <div class="input-wrap">
-          <textarea class="answer-input" id="answerInput" placeholder="Yahan apna jawab likho... (Enter = send, Shift+Enter = new line)" rows="2" onkeydown="handleKeydown(event)"></textarea>
+          <textarea class="answer-input" id="answerInput" placeholder="Yahan likho ya neeche mic dabao..." rows="2" onkeydown="handleKeydown(event)"></textarea>
           <button class="send-btn" id="sendBtn" onclick="sendAnswer()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
           </button>
         </div>
-        <div class="input-hint">Shift+Enter for new line · Enter to send</div>
+        <div class="input-hint">Type karke Enter dabao · Ya neeche mic se bolo</div>
+      </div>
+      <!-- VOICE BAR -->
+      <div class="voice-bar">
+        <button class="speaker-btn" id="speakerBtn" onclick="toggleSpeaker()" title="Interviewer voice on/off">🔊</button>
+        <div style="text-align:center">
+          <button class="mic-btn idle" id="micBtn" onclick="toggleMic()">🎤</button>
+          <div class="voice-status" id="voiceStatus">Mic dabao — bolke jawab do</div>
+          <div class="voice-transcript" id="voiceTranscript"></div>
+        </div>
+        <div style="width:38px"></div>
       </div>
     </div>
   </div>
@@ -390,6 +416,109 @@ let sessionId = null;
 let questionCount = 0;
 let interviewConfig = {};
 let reportData = null;
+
+// ── VOICE — Speech Recognition + Synthesis ───────────────────
+let recognition   = null;
+let isRecording   = false;
+let speakerOn     = true;
+let isSpeaking    = false;
+
+// Toggle speaker on/off
+function toggleSpeaker() {
+  speakerOn = !speakerOn;
+  const btn = document.getElementById('speakerBtn');
+  btn.textContent = speakerOn ? '🔊' : '🔇';
+  btn.style.opacity = speakerOn ? '1' : '0.4';
+  if (!speakerOn) speechSynthesis.cancel();
+}
+
+// Speak interviewer text
+function speakText(text) {
+  if (!speakerOn) return;
+  speechSynthesis.cancel();  // stop any ongoing speech
+  const clean = text.replace(/[*_~`#]/g, '');  // strip markdown
+  const utt   = new SpeechSynthesisUtterance(clean);
+  utt.lang  = 'en-IN';
+  utt.rate  = 0.88;
+  utt.pitch = 1.0;
+  // Pick a good English voice if available
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang === 'en-IN') ||
+                    voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male')) ||
+                    voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utt.voice = preferred;
+  utt.onstart = () => { isSpeaking = true; };
+  utt.onend   = () => { isSpeaking = false; };
+  speechSynthesis.speak(utt);
+}
+
+// Toggle mic recording
+function toggleMic() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    startRecording();
+  }
+}
+
+function startRecording() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    alert('Aapka browser voice input support nahi karta. Chrome use karo.');
+    return;
+  }
+  // Stop any ongoing TTS before recording
+  speechSynthesis.cancel();
+
+  recognition = new SR();
+  recognition.continuous    = false;
+  recognition.interimResults = true;
+  recognition.lang          = 'en-IN';
+
+  recognition.onstart = () => {
+    isRecording = true;
+    const btn = document.getElementById('micBtn');
+    btn.className = 'mic-btn recording';
+    btn.textContent = '⏹';
+    document.getElementById('voiceStatus').textContent = 'Sun raha hoon... (bolte raho)';
+    document.getElementById('voiceTranscript').textContent = '';
+  };
+
+  recognition.onresult = (e) => {
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    document.getElementById('voiceTranscript').textContent = transcript;
+    document.getElementById('answerInput').value = transcript;
+    if (e.results[e.results.length - 1].isFinal) {
+      stopRecording();
+      setTimeout(() => {
+        if (document.getElementById('answerInput').value.trim()) sendAnswer();
+      }, 600);
+    }
+  };
+
+  recognition.onerror = (e) => {
+    stopRecording();
+    if (e.error !== 'no-speech' && e.error !== 'aborted') {
+      document.getElementById('voiceStatus').textContent = 'Error: ' + e.error + '. Dobara try karo.';
+    }
+  };
+
+  recognition.onend = () => { stopRecording(); };
+
+  recognition.start();
+}
+
+function stopRecording() {
+  isRecording = false;
+  if (recognition) { try { recognition.stop(); } catch(e){} recognition = null; }
+  const btn = document.getElementById('micBtn');
+  btn.className = 'mic-btn idle';
+  btn.textContent = '🎤';
+  document.getElementById('voiceStatus').textContent = 'Mic dabao — bolke jawab do';
+}
+
+// Preload voices on page load (needed for Chrome)
+speechSynthesis.onvoiceschanged = () => { speechSynthesis.getVoices(); };
 
 // ── START INTERVIEW ──────────────────────────────────────────
 async function startInterview() {
@@ -600,7 +729,15 @@ function addBotMessage(text) {
   body.appendChild(div);
   body.scrollTop = body.scrollHeight;
   setStatus('speaking');
-  setTimeout(() => setStatus('listening'), 1500);
+  speakText(text);
+  // Wait for TTS to finish before switching to listening status
+  const checkDone = setInterval(() => {
+    if (!speechSynthesis.speaking) {
+      clearInterval(checkDone);
+      setStatus('listening');
+    }
+  }, 300);
+  setTimeout(() => { clearInterval(checkDone); setStatus('listening'); }, 15000);
 }
 
 function addUserMessage(text) {
