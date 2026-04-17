@@ -225,4 +225,36 @@ router.post('/report', async (req, res) => {
   }
 });
 
+// ─── Book Real Interview ───────────────────────────────────────────────────────
+router.post('/book-real', async (req, res) => {
+  try {
+    const { name, phone, role, company, domain, date, slot } = req.body;
+    if (!name || !phone || !role || !date) {
+      return res.json({ success: false, error: 'Missing required fields' });
+    }
+
+    // Notify Lambence team via WhatsApp
+    try {
+      const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+      const adminPhone = process.env.ADMIN_PHONE || process.env.AGENT_PHONE || '+919999999999';
+      const msg = `📅 *NEW REAL INTERVIEW BOOKING*\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n💼 Role: ${role}${company ? ' @ ' + company : ''}\n🎯 Domain: ${domain}\n📆 Date: ${date}\n⏰ Slot: ${slot}\n\nReply karo confirm karne ke liye aur Zoom link bhejo.`;
+      await twilio.messages.create({
+        from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+        to:   `whatsapp:${adminPhone}`,
+        body: msg
+      });
+    } catch(twilioErr) {
+      console.error('WhatsApp notify error:', twilioErr.message);
+      // Don't fail the booking if WhatsApp fails
+    }
+
+    console.log(`Real Interview Booked: ${name} | ${phone} | ${role} | ${date} | ${slot}`);
+    res.json({ success: true });
+
+  } catch(e) {
+    console.error('Booking error:', e.message);
+    res.json({ success: false, error: 'Booking failed. Try again.' });
+  }
+});
+
 module.exports = { router };

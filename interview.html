@@ -33,6 +33,15 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
 .feat-item{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#555}
 .feat-item span{color:#25d366}
 
+/* Mode cards */
+.mode-card{flex:1;min-width:240px;max-width:340px;background:#111;border:2px solid #1e1e1e;border-radius:16px;padding:24px;cursor:pointer;transition:.2s;text-align:center;position:relative}
+.mode-card:hover{border-color:#333}
+.mode-card.active{border-color:#25d366;background:rgba(37,211,102,.04)}
+.mode-icon{font-size:2.4rem;margin-bottom:10px}
+.mode-title{font-size:1rem;font-weight:700;margin-bottom:6px}
+.mode-desc{font-size:.75rem;color:#555;line-height:1.5;margin-bottom:12px}
+.mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;background:rgba(37,211,102,.15);color:#25d366;border:1px solid rgba(37,211,102,.3)}
+
 /* ── INTERVIEW ── */
 #page-interview{display:none;min-height:100vh;flex-direction:column}
 .int-header{background:#0f0f0f;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
@@ -238,17 +247,27 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
 <div id="page-landing">
   <div class="brand">⚡ LAMBENCE <span>INTERVIEW</span></div>
   <h1 class="landing-title">Practice karo.<br><span>Confident bano. Job pao.</span></h1>
-  <p class="landing-sub">AI interviewer se real interview do — company specific questions, instant feedback, detailed report. Ghar baithe placement ready bano.</p>
+  <p class="landing-sub">AI ya Real Expert — dono taraf se interview do. Ghar baithe placement ready bano.</p>
 
-  <div class="features">
-    <div class="feat-item"><span>✅</span> Real interview feel</div>
-    <div class="feat-item"><span>✅</span> Company specific questions</div>
-    <div class="feat-item"><span>✅</span> Detailed report + certificate</div>
-    <div class="feat-item"><span>✅</span> Free pehla interview</div>
+  <!-- Mode selection cards -->
+  <div style="display:flex;gap:20px;margin-bottom:36px;flex-wrap:wrap;justify-content:center;width:100%;max-width:760px">
+    <div class="mode-card active" id="modeAI" onclick="selectMode('ai')">
+      <div class="mode-icon">🤖</div>
+      <div class="mode-title">AI Interview</div>
+      <div class="mode-desc">Instant • Free • 10 Questions • Full Report + Certificate</div>
+      <div class="mode-badge">FREE</div>
+    </div>
+    <div class="mode-card" id="modeReal" onclick="selectMode('real')">
+      <div class="mode-icon">👔</div>
+      <div class="mode-title">Real Expert Interview</div>
+      <div class="mode-desc">Live • Expert Interviewer • Slot Book Karo • Detailed Feedback</div>
+      <div class="mode-badge" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">BOOK NOW</div>
+    </div>
   </div>
 
-  <div class="setup-card">
-    <div class="setup-title">🎯 Apna Interview Setup Karo</div>
+  <!-- AI FORM -->
+  <div class="setup-card" id="aiForm">
+    <div class="setup-title">🎯 AI Interview Setup Karo</div>
 
     <div class="form-group">
       <label class="form-label">Tumhara Naam</label>
@@ -292,8 +311,72 @@ body{background:#080808;color:#fff;font-family:'Inter',sans-serif;min-height:100
     </div>
 
     <button class="start-btn" id="startBtn" onclick="startInterview()">
-      🎤 Interview Shuru Karo — Free
+      🤖 AI Interview Shuru Karo — Free
     </button>
+  </div>
+
+  <!-- REAL INTERVIEW BOOKING FORM -->
+  <div class="setup-card" id="realForm" style="display:none">
+    <div class="setup-title">👔 Real Expert Interview Book Karo</div>
+
+    <div class="form-group">
+      <label class="form-label">Tumhara Naam</label>
+      <input type="text" class="form-input" id="realName" placeholder="Jaise: Priya Sharma">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Phone Number (WhatsApp)</label>
+      <input type="tel" class="form-input" id="realPhone" placeholder="+91 98765 43210">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Job Role</label>
+      <input type="text" class="form-input" id="realRole" placeholder="Jaise: Software Engineer, Marketing Manager">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Target Company (optional)</label>
+      <input type="text" class="form-input" id="realCompany" placeholder="Jaise: TCS, Deloitte, Amazon">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Domain</label>
+      <select class="form-select" id="realDomain">
+        <option value="Information Technology">💻 Information Technology</option>
+        <option value="Core Engineering">⚙️ Core Engineering</option>
+        <option value="Management / MBA">📊 Management / MBA</option>
+        <option value="Banking & Finance">🏦 Banking & Finance</option>
+        <option value="Sales & Marketing">📈 Sales & Marketing</option>
+        <option value="Data Science / AI">🤖 Data Science / AI</option>
+        <option value="General HR Round">👔 General HR Round</option>
+        <option value="Other">🔹 Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Preferred Date</label>
+      <input type="date" class="form-input" id="realDate" min="">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Preferred Time Slot</label>
+      <select class="form-select" id="realSlot">
+        <option value="10:00 AM - 11:00 AM">🕙 10:00 AM – 11:00 AM</option>
+        <option value="11:00 AM - 12:00 PM">🕚 11:00 AM – 12:00 PM</option>
+        <option value="12:00 PM - 01:00 PM">🕛 12:00 PM – 1:00 PM</option>
+        <option value="02:00 PM - 03:00 PM">🕑 2:00 PM – 3:00 PM</option>
+        <option value="03:00 PM - 04:00 PM">🕒 3:00 PM – 4:00 PM</option>
+        <option value="05:00 PM - 06:00 PM">🕔 5:00 PM – 6:00 PM</option>
+        <option value="07:00 PM - 08:00 PM">🕖 7:00 PM – 8:00 PM</option>
+      </select>
+    </div>
+
+    <button class="start-btn" id="bookBtn" onclick="bookRealInterview()" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+      📅 Slot Book Karo — Expert Se Baat Karo
+    </button>
+    <div style="font-size:.72rem;color:#555;text-align:center;margin-top:10px">Booking confirm hone par WhatsApp pe Zoom/Meet link milega</div>
+  </div>
+
+  <!-- BOOKING CONFIRMATION -->
+  <div class="setup-card" id="bookingDone" style="display:none;text-align:center">
+    <div style="font-size:3rem;margin-bottom:12px">✅</div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px;color:#25d366">Booking Ho Gayi!</div>
+    <div style="font-size:.85rem;color:#666;line-height:1.7" id="bookingMsg">—</div>
+    <button class="start-btn" onclick="selectMode('ai')" style="margin-top:20px">🤖 AI Interview bhi try karo</button>
   </div>
 </div>
 
@@ -981,6 +1064,74 @@ function startNew() {
   document.getElementById('startBtn').disabled = false;
   showPage('landing');
 }
+
+// ── MODE SWITCH ───────────────────────────────────────────────
+function selectMode(mode) {
+  document.getElementById('modeAI').classList.toggle('active',   mode === 'ai');
+  document.getElementById('modeReal').classList.toggle('active', mode === 'real');
+  document.getElementById('aiForm').style.display       = mode === 'ai'   ? 'block' : 'none';
+  document.getElementById('realForm').style.display     = mode === 'real' ? 'block' : 'none';
+  document.getElementById('bookingDone').style.display  = 'none';
+
+  // Set min date for booking to tomorrow
+  if (mode === 'real') {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('realDate').min = tomorrow.toISOString().split('T')[0];
+    document.getElementById('realDate').value = tomorrow.toISOString().split('T')[0];
+  }
+}
+
+// ── REAL INTERVIEW BOOKING ────────────────────────────────────
+async function bookRealInterview() {
+  const name    = document.getElementById('realName').value.trim();
+  const phone   = document.getElementById('realPhone').value.trim();
+  const role    = document.getElementById('realRole').value.trim();
+  const company = document.getElementById('realCompany').value.trim();
+  const domain  = document.getElementById('realDomain').value;
+  const date    = document.getElementById('realDate').value;
+  const slot    = document.getElementById('realSlot').value;
+
+  if (!name)  { alert('Naam daalo!'); return; }
+  if (!phone) { alert('Phone number daalo!'); return; }
+  if (!role)  { alert('Job role daalo!'); return; }
+  if (!date)  { alert('Date select karo!'); return; }
+
+  document.getElementById('bookBtn').disabled = true;
+  document.getElementById('bookBtn').textContent = 'Booking ho rahi hai...';
+
+  try {
+    const res  = await fetch('/interview/book-real', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, role, company, domain, date, slot })
+    });
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error || 'Booking failed');
+
+    document.getElementById('realForm').style.display    = 'none';
+    document.getElementById('bookingDone').style.display = 'block';
+    document.getElementById('bookingMsg').innerHTML =
+      `<strong>${name}</strong> ki booking ho gayi!<br><br>
+       📅 <strong>${date}</strong> — ${slot}<br>
+       💼 <strong>${role}</strong>${company ? ' @ ' + company : ''}<br><br>
+       Aapko <strong>WhatsApp pe confirm</strong> karenge aur Zoom/Meet link bhejenge.<br>
+       <span style="color:#25d366">Phone: ${phone}</span>`;
+  } catch(e) {
+    document.getElementById('bookBtn').disabled = false;
+    document.getElementById('bookBtn').textContent = '📅 Slot Book Karo — Expert Se Baat Karo';
+    alert('Booking mein error: ' + e.message);
+  }
+}
+
+// Init: set min date on load
+window.addEventListener('DOMContentLoaded', () => {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const d = document.getElementById('realDate');
+  if (d) { d.min = tomorrow.toISOString().split('T')[0]; d.value = tomorrow.toISOString().split('T')[0]; }
+});
 </script>
 </body>
 </html>
