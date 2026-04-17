@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lambence Academy — WhatsApp Lead Automation Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#fff;font-family:'Inter',sans-serif}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #111;background:#0a0a0a;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:1.1rem;font-weight:900;letter-spacing:-.5px}
+.nav-logo span{color:#25d366}
+.nav-badge{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:#25d366;padding:5px 14px;border-radius:20px;font-size:.72rem;font-weight:700}
+
+/* HERO */
+.hero{text-align:center;padding:70px 20px 50px;max-width:760px;margin:0 auto}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);color:#25d366;padding:6px 16px;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:24px;letter-spacing:.04em}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:900;line-height:1.1;margin-bottom:18px;letter-spacing:-1px}
+.hero h1 span{background:linear-gradient(135deg,#25d366,#128c7e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1rem;color:#777;line-height:1.7;max-width:520px;margin:0 auto 36px}
+
+/* STATS */
+.stats{display:flex;gap:0;justify-content:center;margin-bottom:50px;background:#111;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden;max-width:600px;margin:0 auto 50px}
+.stat{flex:1;padding:20px;text-align:center;border-right:1px solid #1a1a1a}
+.stat:last-child{border-right:none}
+.stat-num{font-size:1.8rem;font-weight:900;color:#25d366}
+.stat-label{font-size:.72rem;color:#555;margin-top:4px}
+
+/* SECTION */
+.section{padding:60px 20px;max-width:960px;margin:0 auto}
+.sec-tag{font-size:.7rem;color:#25d366;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px}
+.sec-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:12px;letter-spacing:-.5px}
+.sec-sub{color:#666;font-size:.95rem;line-height:1.7;max-width:500px}
+.divider{border:none;border-top:1px solid #111;margin:0}
+
+/* WHATSAPP DEMO */
+.wa-demo{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:20px;overflow:hidden;max-width:380px;margin:40px auto 0}
+.wa-header{background:#075e54;padding:14px 18px;display:flex;align-items:center;gap:12px}
+.wa-avatar{width:38px;height:38px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.wa-name{font-size:.9rem;font-weight:700}
+.wa-status{font-size:.7rem;color:rgba(255,255,255,.6)}
+.wa-body{padding:16px;display:flex;flex-direction:column;gap:10px;background:#0b1a13}
+.wa-msg{max-width:80%;padding:10px 14px;border-radius:12px;font-size:.82rem;line-height:1.5}
+.wa-msg.bot{background:#1f2c24;border-radius:0 12px 12px 12px;align-self:flex-start;color:#e0e0e0}
+.wa-msg.user{background:#005c4b;border-radius:12px 0 12px 12px;align-self:flex-end;color:#fff}
+.wa-msg .wa-time{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:4px;text-align:right}
+.wa-typing{display:flex;gap:4px;padding:12px 14px;background:#1f2c24;border-radius:0 12px 12px 12px;width:fit-content;align-self:flex-start}
+.wa-dot{width:6px;height:6px;border-radius:50%;background:#25d366;animation:waDot 1.2s infinite}
+.wa-dot:nth-child(2){animation-delay:.2s}
+.wa-dot:nth-child(3){animation-delay:.4s}
+@keyframes waDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* FLOW */
+.flow{display:flex;flex-direction:column;gap:0;margin-top:40px;position:relative}
+.flow-item{display:flex;gap:24px;align-items:flex-start;padding:24px 0}
+.flow-item:not(:last-child){border-bottom:1px solid #111}
+.flow-num{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;flex-shrink:0;color:#000}
+.flow-content h3{font-size:.95rem;font-weight:700;margin-bottom:6px}
+.flow-content p{font-size:.82rem;color:#555;line-height:1.6}
+.flow-tag{display:inline-block;background:rgba(37,211,102,.1);color:#25d366;font-size:.65rem;padding:3px 10px;border-radius:20px;font-weight:700;margin-top:8px}
+
+/* LEADS TABLE */
+.leads-table{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:16px;overflow:hidden;margin-top:36px}
+.table-header{background:#111;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a}
+.table-title{font-size:.85rem;font-weight:700}
+.table-count{font-size:.72rem;color:#25d366;background:rgba(37,211,102,.1);padding:3px 10px;border-radius:20px}
+.table-row{display:grid;grid-template-columns:1fr 1fr 1fr 80px 80px;gap:12px;padding:14px 20px;border-bottom:1px solid #0d0d0d;align-items:center;font-size:.8rem}
+.table-row.head{background:#111;color:#555;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}
+.table-row:last-child{border-bottom:none}
+.lead-name{font-weight:600}
+.lead-course{color:#888}
+.lead-city{color:#666}
+.temp{padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;text-align:center}
+.temp.hot{background:rgba(239,68,68,.15);color:#ef4444}
+.temp.warm{background:rgba(245,158,11,.15);color:#f59e0b}
+.temp.cold{background:rgba(99,102,241,.15);color:#818cf8}
+.status{font-size:.72rem;color:#555}
+
+/* FOLLOWUP */
+.followup-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:36px}
+.fu-card{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:14px;padding:20px}
+.fu-day{font-size:.7rem;color:#25d366;font-weight:700;text-transform:uppercase;margin-bottom:8px}
+.fu-msg{font-size:.8rem;color:#888;line-height:1.5;background:#111;padding:12px;border-radius:8px;border-left:2px solid #25d366}
+
+/* PRICING */
+.pricing-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px}
+.price-card{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:16px;padding:28px;position:relative}
+.price-card.popular{border-color:#25d366}
+.popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#25d366;color:#000;font-size:.68rem;font-weight:800;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.price-name{font-size:.8rem;color:#666;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.price-amount{font-size:2rem;font-weight:900;color:#fff;margin-bottom:4px}
+.price-amount span{font-size:.9rem;color:#666;font-weight:400}
+.price-desc{font-size:.75rem;color:#555;margin-bottom:20px}
+.price-features{display:flex;flex-direction:column;gap:8px}
+.pf{display:flex;align-items:center;gap:8px;font-size:.8rem;color:#888}
+.pf::before{content:'✅';font-size:.7rem}
+.price-btn{width:100%;margin-top:20px;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit}
+.price-btn.primary{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff}
+.price-btn.secondary{background:#111;border:1px solid #222;color:#ccc}
+
+/* CTA */
+.cta-section{text-align:center;padding:70px 20px;background:linear-gradient(180deg,#080808,#0d1f17)}
+.cta-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:16px;letter-spacing:-.5px}
+.cta-sub{color:#666;font-size:.95rem;margin-bottom:36px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;padding:16px 36px;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;transition:.2s}
+.cta-btn:hover{opacity:.9;transform:translateY(-2px)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .table-row{grid-template-columns:1fr 1fr;gap:8px}
+  .stats{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid #1a1a1a}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">⚡ LAMBENCE <span>PILOT</span></div>
+  <div class="nav-badge">LIVE DEMO</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill">🤖 WhatsApp AI Automation — Lambence Academy</div>
+  <h1>Har Student Lead Ko<br><span>Auto Convert Karo</span></h1>
+  <p>WhatsApp pe AI bot — student ka naam, course, budget sab collect kare. 3 din baad automatic follow-up. Koi lead miss nahi.</p>
+</div>
+
+<!-- STATS -->
+<div style="padding:0 20px;max-width:960px;margin:0 auto">
+  <div class="stats">
+    <div class="stat"><div class="stat-num">3x</div><div class="stat-label">Zyada Lead Convert</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Manual Follow-up</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Bot Active Rehta Hai</div></div>
+    <div class="stat"><div class="stat-num">₹0</div><div class="stat-label">Extra Staff Cost</div></div>
+  </div>
+</div>
+
+<hr class="divider" style="margin-top:50px">
+
+<!-- WHATSAPP DEMO -->
+<div class="section">
+  <div class="sec-tag">Live Demo</div>
+  <div class="sec-title">Student Aisa Experience Karta Hai</div>
+  <div class="sec-sub">Jab bhi koi "Hi" kare WhatsApp pe — bot turant reply karta hai, details collect karta hai</div>
+
+  <div class="wa-demo">
+    <div class="wa-header">
+      <div class="wa-avatar">🎓</div>
+      <div>
+        <div class="wa-name">Lambence Academy</div>
+        <div class="wa-status">● Online</div>
+      </div>
+    </div>
+    <div class="wa-body" id="waChat">
+      <div class="wa-msg bot">
+        Namaste! 🙏 Main Lambence Academy ka virtual assistant hoon.<br><br>
+        Aapka naam kya hai?
+        <div class="wa-time">10:01 AM</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px">
+    <button onclick="playDemo()" id="demoBtn" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit">
+      ▶ Demo Chalao — Dekho Kaise Kaam Karta Hai
+    </button>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="sec-tag">Process</div>
+  <div class="sec-title">Kaise Kaam Karta Hai</div>
+  <div class="sec-sub">Ek baar setup — phir bot sab sambhalta hai automatically</div>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-num">1</div>
+      <div class="flow-content">
+        <h3>Student WhatsApp pe "Hi" karta hai</h3>
+        <p>Koi bhi number se message kare — bot turant 24/7 reply deta hai. Koi wait nahi.</p>
+        <span class="flow-tag">⚡ Instant Reply</span>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">2</div>
+      <div class="flow-content">
+        <h3>Bot details collect karta hai</h3>
+        <p>Naam, course interest, city, budget, joining timeline — sab natural conversation mein poochta hai.</p>
+        <span class="flow-tag">🤖 AI Powered</span>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">3</div>
+      <div class="flow-content">
+        <h3>Lead dashboard mein save hota hai</h3>
+        <p>Har lead Google Sheets mein automatically save. Hot/Warm/Cold score bhi milta hai.</p>
+        <span class="flow-tag">📊 Auto Scoring</span>
+      </div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-num">4</div>
+      <div class="flow-content">
+        <h3>3 din baad automatic follow-up</h3>
+        <p>Jo student response nahi deta — usse 3, 7, aur 30 din baad automatically message jaata hai.</p>
+        <span class="flow-tag">🔄 Auto Follow-up</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- LEADS DASHBOARD -->
+<div class="section">
+  <div class="sec-tag">Dashboard</div>
+  <div class="sec-title">Sare Leads Ek Jagah</div>
+  <div class="sec-sub">Real-time dashboard — kaunsa student hot hai, kaunsa cold, sab pata chalega</div>
+
+  <div class="leads-table">
+    <div class="table-header">
+      <div class="table-title">📋 Lambence Academy — Leads</div>
+      <div class="table-count">24 Leads Today</div>
+    </div>
+    <div class="table-row head">
+      <div>Student</div>
+      <div>Course</div>
+      <div>City</div>
+      <div>Temp</div>
+      <div>Status</div>
+    </div>
+    <div class="table-row">
+      <div class="lead-name">Rahul Sharma</div>
+      <div class="lead-course">JEE Coaching</div>
+      <div class="lead-city">Nagpur</div>
+      <div><span class="temp hot">🔥 HOT</span></div>
+      <div class="status">New</div>
+    </div>
+    <div class="table-row">
+      <div class="lead-name">Priya Patel</div>
+      <div class="lead-course">MBA Prep</div>
+      <div class="lead-city">Mumbai</div>
+      <div><span class="temp warm">⚡ WARM</span></div>
+      <div class="status">Day 3 FU</div>
+    </div>
+    <div class="table-row">
+      <div class="lead-name">Ankit Singh</div>
+      <div class="lead-course">Coding Batch</div>
+      <div class="lead-city">Pune</div>
+      <div><span class="temp hot">🔥 HOT</span></div>
+      <div class="status">Interested</div>
+    </div>
+    <div class="table-row">
+      <div class="lead-name">Sneha Gupta</div>
+      <div class="lead-course">NEET Coaching</div>
+      <div class="lead-city">Delhi</div>
+      <div><span class="temp cold">❄ COLD</span></div>
+      <div class="status">Day 7 FU</div>
+    </div>
+    <div class="table-row">
+      <div class="lead-name">Vikram Nair</div>
+      <div class="lead-course">JEE Coaching</div>
+      <div class="lead-city">Nagpur</div>
+      <div><span class="temp warm">⚡ WARM</span></div>
+      <div class="status">Thinking</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FOLLOW-UP MESSAGES -->
+<div class="section">
+  <div class="sec-tag">Auto Follow-up</div>
+  <div class="sec-title">Bot Khud Follow-up Karta Hai</div>
+  <div class="sec-sub">Koi lead chhootne nahi deta — 3, 7, aur 30 din baad automatically message jaata hai</div>
+
+  <div class="followup-cards">
+    <div class="fu-card">
+      <div class="fu-day">📅 Day 3 Follow-up</div>
+      <div class="fu-msg">
+        "Rahul ji, namaste! 🙏 Aapne Lambence Academy ke JEE coaching ke baare mein poochha tha. Kya aapne koi decision liya? Abhi batch mein limited seats hain — aaj hi confirm karo!"
+      </div>
+    </div>
+    <div class="fu-card">
+      <div class="fu-day">📅 Day 7 Follow-up</div>
+      <div class="fu-msg">
+        "Rahul ji, ek special offer hai aapke liye 🎯 — agar is hafte join karo toh ₹2,000 discount milega. Kya aap interested hain?"
+      </div>
+    </div>
+    <div class="fu-card">
+      <div class="fu-day">📅 Day 30 Follow-up</div>
+      <div class="fu-msg">
+        "Rahul ji, nayi batch shuru ho rahi hai next month 🚀 Aapke liye seat reserve kar dein? Free demo class bhi available hai!"
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PRICING -->
+<div class="section">
+  <div class="sec-tag">Pricing</div>
+  <div class="sec-title">Simple Pricing — Koi Hidden Cost Nahi</div>
+  <div class="sec-sub">Ek baar setup karo — lifetime use karo</div>
+
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">₹9,999 <span>/month</span></div>
+      <div class="price-desc">Chhote institutes ke liye</div>
+      <div class="price-features">
+        <div class="pf">WhatsApp Bot Setup</div>
+        <div class="pf">Lead Dashboard</div>
+        <div class="pf">Auto Follow-up (3 din)</div>
+        <div class="pf">500 leads/month</div>
+        <div class="pf">Google Sheets integration</div>
+      </div>
+      <button class="price-btn secondary">Contact Karo</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">⭐ MOST POPULAR</div>
+      <div class="price-name">Growth</div>
+      <div class="price-amount">₹19,999 <span>/month</span></div>
+      <div class="price-desc">Growing institutes ke liye</div>
+      <div class="price-features">
+        <div class="pf">Sab Starter features</div>
+        <div class="pf">Auto Follow-up (3/7/30 din)</div>
+        <div class="pf">Hot/Warm/Cold scoring</div>
+        <div class="pf">2000 leads/month</div>
+        <div class="pf">Custom bot flow</div>
+        <div class="pf">Priority support</div>
+      </div>
+      <button class="price-btn primary">Abhi Shuru Karo</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Enterprise</div>
+      <div class="price-amount">₹39,999 <span>/month</span></div>
+      <div class="price-desc">Large institutes ke liye</div>
+      <div class="price-features">
+        <div class="pf">Sab Growth features</div>
+        <div class="pf">Unlimited leads</div>
+        <div class="pf">Multiple branches</div>
+        <div class="pf">Custom branding</div>
+        <div class="pf">Dedicated manager</div>
+        <div class="pf">AI Interview Platform free</div>
+      </div>
+      <button class="price-btn secondary">Baat Karo</button>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-title">Ready Ho? Aaj Hi Shuru Karo</div>
+  <div class="cta-sub">Free demo mein dekho — koi commitment nahi, koi risk nahi</div>
+  <a href="https://wa.me/918855840971?text=Lambence%20LeadPilot%20demo%20dekhna%20hai" class="cta-btn" target="_blank">
+    💬 WhatsApp Pe Baat Karo
+  </a>
+  <div style="margin-top:16px;font-size:.78rem;color:#444">Lambence.in · lambence08@gmail.com</div>
+</div>
+
+<script>
+const demoFlow = [
+  { type:'user', text:'Hi' },
+  { type:'bot',  text:'Namaste! 🙏 Aapka naam kya hai?' },
+  { type:'user', text:'Rahul Sharma' },
+  { type:'bot',  text:'Nice to meet you Rahul! 😊\n\nKaunse course mein interested ho?\n1️⃣ JEE Coaching\n2️⃣ NEET Coaching\n3️⃣ MBA Prep\n4️⃣ Coding Batch\n5️⃣ Other' },
+  { type:'user', text:'1' },
+  { type:'bot',  text:'JEE Coaching — great choice! 🎯\n\nKaunse city mein ho aap?' },
+  { type:'user', text:'Nagpur' },
+  { type:'bot',  text:'Aapka monthly budget kya hai coaching ke liye?\n1️⃣ ₹5,000 se kam\n2️⃣ ₹5,000 - ₹10,000\n3️⃣ ₹10,000 se zyada' },
+  { type:'user', text:'2' },
+  { type:'bot',  text:'Perfect Rahul! 🔥\n\nAapki details save ho gayi. Hamare counselor aapko aaj hi call karenge.\n\n*Lambence Academy*\n📍 Nagpur\n📞 +91 88558 40971\n\nKoi bhi sawaal ho toh poochho! 😊' },
+];
+
+let step = 0;
+let playing = false;
+
+function playDemo() {
+  if (playing) return;
+  playing = true;
+  document.getElementById('demoBtn').textContent = '⏳ Demo chal raha hai...';
+  document.getElementById('demoBtn').disabled = true;
+  document.getElementById('waChat').innerHTML = `
+    <div class="wa-msg bot">Namaste! 🙏 Main Lambence Academy ka virtual assistant hoon.<br><br>Aapka naam kya hai?<div class="wa-time">10:01 AM</div></div>`;
+  step = 0;
+  nextStep();
+}
+
+function nextStep() {
+  if (step >= demoFlow.length) {
+    playing = false;
+    document.getElementById('demoBtn').textContent = '🔄 Dobara Chalao';
+    document.getElementById('demoBtn').disabled = false;
+    return;
+  }
+  const msg = demoFlow[step];
+  const delay = msg.type === 'user' ? 1200 : 1800;
+
+  setTimeout(() => {
+    if (msg.type === 'bot') {
+      // Show typing first
+      const typing = document.createElement('div');
+      typing.className = 'wa-typing';
+      typing.innerHTML = '<div class="wa-dot"></div><div class="wa-dot"></div><div class="wa-dot"></div>';
+      document.getElementById('waChat').appendChild(typing);
+      scrollChat();
+
+      setTimeout(() => {
+        typing.remove();
+        addMsg(msg);
+        step++;
+        nextStep();
+      }, 1200);
+    } else {
+      addMsg(msg);
+      step++;
+      nextStep();
+    }
+  }, delay);
+}
+
+function addMsg(msg) {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+  const div = document.createElement('div');
+  div.className = `wa-msg ${msg.type === 'bot' ? 'bot' : 'user'}`;
+  div.innerHTML = msg.text.replace(/\n/g,'<br>') + `<div class="wa-time">${time}</div>`;
+  document.getElementById('waChat').appendChild(div);
+  scrollChat();
+}
+
+function scrollChat() {
+  const chat = document.getElementById('waChat');
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+</body>
+</html>

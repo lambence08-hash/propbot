@@ -404,6 +404,7 @@ app.get('/shivam-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 's
 app.get('/chem-dashboard', (req, res) => res.sendFile(path.join(__dirname, '..', 'chem-dashboard.html')));
 app.get('/interview-platform', (req, res) => res.sendFile(path.join(__dirname, '..', 'interview.html')));
 app.get('/leadpilot', (req, res) => res.sendFile(path.join(__dirname, '..', 'leadpilot.html')));
+app.get('/demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'lambence-demo.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {
