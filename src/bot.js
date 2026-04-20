@@ -10,6 +10,7 @@ const { router: universalRouter } = require('./universalbot');
 const { startScheduler } = require('./scheduler');
 const { router: interviewRouter } = require('./interview');
 const { handleSaasMessage } = require('./saasbot');
+const resumeRouter = require('./resumebot');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -19,6 +20,7 @@ app.use('/docbot', docbotRouter);
 app.use('/chem', chembotRouter);
 app.use('/lp', universalRouter);       // LeadPilot universal routes
 app.use('/interview', interviewRouter); // AI Interview Platform
+app.use('/api/resume', resumeRouter);   // AI Resume Builder
 
 // ─── Start follow-up scheduler ───────────────────────────────────────────────
 startScheduler();
@@ -443,6 +445,7 @@ app.get('/achievers-demo', (req, res) => res.sendFile(path.join(__dirname, '..',
 app.get('/hariom', (req, res) => res.sendFile(path.join(__dirname, '..', 'hariom-ashram.html')));
 app.get('/khandelwal-cold', (req, res) => res.sendFile(path.join(__dirname, '..', 'khandelwal-cold-storage.html')));
 app.get('/vedant', (req, res) => res.sendFile(path.join(__dirname, '..', 'vedant-realestate.html')));
+app.get('/resume', (req, res) => res.sendFile(path.join(__dirname, '..', 'resume-builder.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {

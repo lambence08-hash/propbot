@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Builder — Free Professional Resume</title>
+<style>
+  :root {
+    --primary: #667eea;
+    --primary-dark: #764ba2;
+    --secondary: #e94560;
+    --dark: #1a1a2e;
+    --gray: #f7f8fc;
+    --border: #e2e8f0;
+    --text: #2d3748;
+    --muted: #718096;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f8; color: var(--text); min-height: 100vh; }
+
+  /* ── Header ── */
+  .header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+  .header .badge { background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+
+  /* ── Steps ── */
+  .steps-bar { background: white; padding: 16px 40px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .step { display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; transition: all 0.3s; }
+  .step-label { font-size: 13px; color: var(--muted); transition: all 0.3s; }
+  .step.active .step-num { background: var(--primary); color: white; }
+  .step.active .step-label { color: var(--primary); font-weight: 600; }
+  .step.done .step-num { background: #48bb78; color: white; }
+  .step.done .step-label { color: #48bb78; }
+  .step-arrow { color: var(--border); font-size: 18px; }
+
+  /* ── Main Layout ── */
+  .main { display: grid; grid-template-columns: 1fr 400px; gap: 0; max-width: 1300px; margin: 24px auto; padding: 0 24px; }
+  @media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+
+  /* ── Form Panel ── */
+  .form-panel { background: white; border-radius: 12px; padding: 32px; margin-right: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .section-page { display: none; }
+  .section-page.active { display: block; }
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+  .section-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .form-group label span { color: var(--secondary); }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 13.5px; color: var(--text); transition: border 0.2s; outline: none; font-family: inherit;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── Dynamic Lists ── */
+  .dynamic-list { margin-top: 8px; }
+  .dynamic-item { background: var(--gray); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; position: relative; border: 1px solid var(--border); }
+  .dynamic-item .remove-btn { position: absolute; right: 12px; top: 10px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; }
+  .dynamic-item .remove-btn:hover { color: var(--secondary); }
+  .add-btn { width: 100%; padding: 10px; border: 1.5px dashed var(--border); border-radius: 8px; background: none; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .add-btn:hover { background: #f0f2ff; border-color: var(--primary); }
+
+  /* ── Skills ── */
+  .skills-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .skill-tag { display: flex; align-items: center; gap: 6px; background: var(--primary); color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; }
+  .skill-tag button { background: none; border: none; color: white; cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
+  .skill-input-row { display: flex; gap: 8px; margin-top: 8px; }
+  .skill-input-row input { flex: 1; }
+  .skill-input-row button { padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; white-space: nowrap; }
+
+  /* ── Template Selection ── */
+  .templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+  @media (max-width: 600px) { .templates-grid { grid-template-columns: repeat(2, 1fr); } }
+  .template-card { border: 2px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .template-card:hover { border-color: var(--primary); }
+  .template-card.selected { border-color: var(--primary); background: #f0f2ff; }
+  .template-card .t-dot { width: 36px; height: 36px; border-radius: 50%; margin: 0 auto 8px; }
+  .template-card .t-name { font-size: 13px; font-weight: 700; }
+  .template-card .t-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Navigation ── */
+  .nav-buttons { display: flex; gap: 12px; margin-top: 28px; }
+  .btn-prev { flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 8px; background: white; color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-next { flex: 2; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-generate { flex: 2; padding: 14px; background: linear-gradient(135deg, #48bb78, #38a169); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .btn-next:hover { opacity: 0.9; }
+  .btn-generate:hover { opacity: 0.9; }
+
+  /* ── Preview Panel ── */
+  .preview-panel { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); height: fit-content; position: sticky; top: 24px; }
+  .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .preview-header h3 { font-size: 15px; font-weight: 700; }
+  .preview-frame { width: 100%; height: 500px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--gray); display: flex; align-items: center; justify-content: center; }
+  .preview-frame iframe { width: 170%; height: 170%; transform: scale(0.588); transform-origin: top left; border: none; }
+  .preview-placeholder { text-align: center; color: var(--muted); }
+  .preview-placeholder .icon { font-size: 48px; margin-bottom: 12px; }
+  .preview-placeholder p { font-size: 13px; }
+  .preview-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-preview { flex: 1; padding: 10px; border: 2px solid var(--primary); border-radius: 8px; background: white; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-download { flex: 2; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .btn-download:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Loading ── */
+  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .loading-overlay.show { display: flex; }
+  .loading-box { background: white; border-radius: 16px; padding: 40px 48px; text-align: center; }
+  .spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-box h3 { font-size: 17px; margin-bottom: 6px; }
+  .loading-box p { color: var(--muted); font-size: 13px; }
+
+  /* ── Toast ── */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--dark); color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🤖 AI Resume Builder</h1>
+    <p>Free professional resume in 2 minutes — powered by AI</p>
+  </div>
+  <div class="badge">✨ 5 Templates</div>
+</div>
+
+<div class="steps-bar">
+  <div class="step active" id="step-1" onclick="goToStep(1)">
+    <div class="step-num">1</div>
+    <div class="step-label">Personal Info</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-2" onclick="goToStep(2)">
+    <div class="step-num">2</div>
+    <div class="step-label">Education</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-3" onclick="goToStep(3)">
+    <div class="step-num">3</div>
+    <div class="step-label">Skills</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-4" onclick="goToStep(4)">
+    <div class="step-num">4</div>
+    <div class="step-label">Projects</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-5" onclick="goToStep(5)">
+    <div class="step-num">5</div>
+    <div class="step-label">Experience</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-6" onclick="goToStep(6)">
+    <div class="step-num">6</div>
+    <div class="step-label">Achievements</div>
+  </div>
+  <div class="step-arrow">›</div>
+  <div class="step" id="step-7" onclick="goToStep(7)">
+    <div class="step-num">7</div>
+    <div class="step-label">Template</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="form-panel">
+
+    <!-- Step 1: Personal Info -->
+    <div class="section-page active" id="page-1">
+      <div class="section-title">👤 Personal Information</div>
+      <div class="section-subtitle">Basic details that appear at the top of your resume</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name <span>*</span></label>
+          <input type="text" id="name" placeholder="Rahul Sharma">
+        </div>
+        <div class="form-group">
+          <label>Phone Number <span>*</span></label>
+          <input type="tel" id="phone" placeholder="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address <span>*</span></label>
+          <input type="email" id="email" placeholder="rahul@gmail.com">
+        </div>
+        <div class="form-group">
+          <label>City / Location</label>
+          <input type="text" id="location" placeholder="Nagpur, Maharashtra">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>LinkedIn Profile URL</label>
+        <input type="text" id="linkedin" placeholder="linkedin.com/in/rahulsharma (optional)">
+      </div>
+      <div class="form-group">
+        <label>Career Goal / Objective</label>
+        <textarea id="objective" placeholder="e.g. Seeking a software developer role where I can apply my Python and web development skills..."></textarea>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-next" onclick="nextStep()">Next: Education →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Education -->
+    <div class="section-page" id="page-2">
+      <div class="section-title">🎓 Education</div>
+      <div class="section-subtitle">Add your educational qualifications</div>
+      <div class="dynamic-list" id="edu-list"></div>
+      <button class="add-btn" onclick="addEdu()">+ Add Education</button>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-next" onclick="nextStep()">Next: Skills →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Skills -->
+    <div class="section-page" id="page-3">
+      <div class="section-title">⚡ Skills</div>
+      <div class="section-subtitle">Add technical and soft skills</div>
+      <div class="form-group">
+        <label>Technical Skills</label>
+        <div class="skills-container" id="tech-skills-container"></div>
+        <div class="skill-input-row">
+          <input type="text" id="tech-skill-input" placeholder="e.g. Python, React, Photoshop..." onkeypress="handleSkillEnter(event,'tech')">
+          <button onclick="addSkill('tech')">Add</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Soft Skills</label>
+        <div class="skills-container" id="soft-skills-container"></div>
+        <div class="skill-input-row">
+          <input type="text" id="soft-skill-input" placeholder="e.g. Communication, Leadership..." onkeypress="handleSkillEnter(event,'soft')">
+          <button onclick="addSkill('soft')">Add</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Languages Known</label>
+        <input type="text" id="languages" placeholder="Hindi, English, Marathi (comma separated)">
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-next" onclick="nextStep()">Next: Projects →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Projects -->
+    <div class="section-page" id="page-4">
+      <div class="section-title">🚀 Projects</div>
+      <div class="section-subtitle">Add your projects — even school/college projects count!</div>
+      <div class="dynamic-list" id="proj-list"></div>
+      <button class="add-btn" onclick="addProj()">+ Add Project</button>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-next" onclick="nextStep()">Next: Experience →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Experience -->
+    <div class="section-page" id="page-5">
+      <div class="section-title">💼 Work Experience</div>
+      <div class="section-subtitle">Internships, part-time jobs, freelance — all count. Skip if none.</div>
+      <div class="dynamic-list" id="exp-list"></div>
+      <button class="add-btn" onclick="addExp()">+ Add Experience</button>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-next" onclick="nextStep()">Next: Achievements →</button>
+      </div>
+    </div>
+
+    <!-- Step 6: Achievements -->
+    <div class="section-page" id="page-6">
+      <div class="section-title">🏆 Achievements</div>
+      <div class="section-subtitle">Awards, competitions, certifications, extra-curriculars</div>
+      <div class="dynamic-list" id="achieve-list"></div>
+      <button class="add-btn" onclick="addAchieve()">+ Add Achievement</button>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-next" onclick="nextStep()">Next: Choose Template →</button>
+      </div>
+    </div>
+
+    <!-- Step 7: Template -->
+    <div class="section-page" id="page-7">
+      <div class="section-title">🎨 Choose Template</div>
+      <div class="section-subtitle">Pick a design for your resume</div>
+      <div class="templates-grid" id="templates-grid"></div>
+      <div class="nav-buttons">
+        <button class="btn-prev" onclick="prevStep()">← Back</button>
+        <button class="btn-generate" onclick="generateResume()">✨ Generate My Resume</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Preview Panel -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <h3>Live Preview</h3>
+      <span style="font-size:12px;color:var(--muted)">Updates automatically</span>
+    </div>
+    <div class="preview-frame" id="preview-frame">
+      <div class="preview-placeholder">
+        <div class="icon">📄</div>
+        <p>Fill in your details<br>to see preview</p>
+      </div>
+    </div>
+    <div class="preview-actions">
+      <button class="btn-preview" onclick="refreshPreview()">🔄 Refresh</button>
+      <button class="btn-download" id="download-btn" onclick="downloadPDF()" disabled>⬇ Download PDF</button>
+    </div>
+    <div style="margin-top:12px;padding:10px;background:#f0fff4;border-radius:8px;font-size:12px;color:#276749;text-align:center;">
+      ✅ AI will enhance your content automatically
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <h3>AI is building your resume...</h3>
+    <p>Enhancing content with AI magic ✨</p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 7;
+let selectedTemplate = 'modern';
+let techSkills = [];
+let softSkills = [];
+let generatedHTML = null;
+
+const templateData = [
+  { id: 'modern',   name: 'Modern',   desc: 'Gradient header, colorful', color: '#667eea' },
+  { id: 'classic',  name: 'Classic',  desc: 'Traditional, formal', color: '#1a1a1a' },
+  { id: 'creative', name: 'Creative', desc: 'Dark sidebar, bold', color: '#e94560' },
+  { id: 'minimal',  name: 'Minimal',  desc: 'Clean, whitespace', color: '#888' },
+  { id: 'ats',      name: 'ATS Safe', desc: 'Optimized for systems', color: '#333' }
+];
+
+// ── Init ──────────────────────────────────────────────────────
+window.onload = () => {
+  addEdu(); addProj();
+  renderTemplates();
+};
+
+function renderTemplates() {
+  const grid = document.getElementById('templates-grid');
+  grid.innerHTML = templateData.map(t => `
+    <div class="template-card ${t.id === selectedTemplate ? 'selected' : ''}" onclick="selectTemplate('${t.id}')">
+      <div class="t-dot" style="background:${t.color}"></div>
+      <div class="t-name">${t.name}</div>
+      <div class="t-desc">${t.desc}</div>
+    </div>
+  `).join('');
+}
+
+function selectTemplate(id) {
+  selectedTemplate = id;
+  renderTemplates();
+  refreshPreview();
+}
+
+// ── Step Navigation ──────────────────────────────────────────
+function goToStep(n) {
+  if (n > currentStep) {
+    for (let i = currentStep; i < n; i++) {
+      document.getElementById(`step-${i}`).classList.remove('active');
+      document.getElementById(`step-${i}`).classList.add('done');
+    }
+  }
+  document.getElementById(`page-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`page-${currentStep}`).classList.add('active');
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  document.getElementById(`step-${currentStep}`).classList.remove('done');
+}
+
+function nextStep() {
+  if (currentStep === 1 && !document.getElementById('name').value.trim()) {
+    showToast('Please enter your name'); return;
+  }
+  if (currentStep < totalSteps) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.getElementById(`step-${currentStep}`).classList.add('done');
+    currentStep++;
+    document.getElementById(`page-${currentStep}`).classList.add('active');
+    document.getElementById(`page-${currentStep - 1}`).classList.remove('active');
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+    if (currentStep === 7) refreshPreview();
+  }
+}
+
+function prevStep() {
+  if (currentStep > 1) {
+    document.getElementById(`page-${currentStep}`).classList.remove('active');
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.getElementById(`step-${currentStep}`).classList.remove('done');
+    currentStep--;
+    document.getElementById(`page-${currentStep}`).classList.add('active');
+    document.getElementById(`step-${currentStep}`).classList.add('active');
+    document.getElementById(`step-${currentStep}`).classList.remove('done');
+  }
+}
+
+// ── Education ─────────────────────────────────────────────────
+let eduCount = 0;
+function addEdu() {
+  const id = ++eduCount;
+  const div = document.createElement('div');
+  div.className = 'dynamic-item';
+  div.id = `edu-${id}`;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="removeItem('edu-${id}')">×</button>
+    <div class="form-row">
+      <div class="form-group"><label>Degree/Class</label><input type="text" id="edu-degree-${id}" placeholder="B.Tech Computer Science / Class 12"></div>
+      <div class="form-group"><label>Institution</label><input type="text" id="edu-inst-${id}" placeholder="NIT Nagpur / DPS Nagpur"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Year</label><input type="text" id="edu-year-${id}" placeholder="2024 / 2020–2024"></div>
+      <div class="form-group"><label>Score/Grade</label><input type="text" id="edu-score-${id}" placeholder="8.5 CGPA / 87%"></div>
+    </div>`;
+  document.getElementById('edu-list').appendChild(div);
+}
+
+// ── Projects ──────────────────────────────────────────────────
+let projCount = 0;
+function addProj() {
+  const id = ++projCount;
+  const div = document.createElement('div');
+  div.className = 'dynamic-item';
+  div.id = `proj-${id}`;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="removeItem('proj-${id}')">×</button>
+    <div class="form-row">
+      <div class="form-group"><label>Project Name</label><input type="text" id="proj-name-${id}" placeholder="E-commerce Website"></div>
+      <div class="form-group"><label>Technologies Used</label><input type="text" id="proj-tech-${id}" placeholder="React, Node.js, MongoDB"></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="proj-desc-${id}" placeholder="What did you build? What problem does it solve?" style="min-height:60px"></textarea></div>`;
+  document.getElementById('proj-list').appendChild(div);
+}
+
+// ── Experience ────────────────────────────────────────────────
+let expCount = 0;
+function addExp() {
+  const id = ++expCount;
+  const div = document.createElement('div');
+  div.className = 'dynamic-item';
+  div.id = `exp-${id}`;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="removeItem('exp-${id}')">×</button>
+    <div class="form-row">
+      <div class="form-group"><label>Job Title / Role</label><input type="text" id="exp-role-${id}" placeholder="Software Intern / Freelancer"></div>
+      <div class="form-group"><label>Company Name</label><input type="text" id="exp-company-${id}" placeholder="TCS / Freelance"></div>
+    </div>
+    <div class="form-group"><label>Duration</label><input type="text" id="exp-dur-${id}" placeholder="June 2023 – Aug 2023"></div>
+    <div class="form-group"><label>Key Responsibilities (one per line)</label><textarea id="exp-points-${id}" placeholder="Built REST APIs using Node.js&#10;Reduced load time by 30%&#10;Worked with cross-functional team" style="min-height:70px"></textarea></div>`;
+  document.getElementById('exp-list').appendChild(div);
+}
+
+// ── Achievements ──────────────────────────────────────────────
+let achCount = 0;
+function addAchieve() {
+  const id = ++achCount;
+  const div = document.createElement('div');
+  div.className = 'dynamic-item';
+  div.id = `ach-${id}`;
+  div.innerHTML = `
+    <button class="remove-btn" onclick="removeItem('ach-${id}')">×</button>
+    <div class="form-group"><label>Achievement</label><input type="text" id="ach-text-${id}" placeholder="Won 1st place in state-level coding competition 2023"></div>`;
+  document.getElementById('achieve-list').appendChild(div);
+}
+
+function removeItem(id) { document.getElementById(id)?.remove(); }
+
+// ── Skills ────────────────────────────────────────────────────
+function addSkill(type) {
+  const input = document.getElementById(`${type}-skill-input`);
+  const val = input.value.trim();
+  if (!val) return;
+  const arr = type === 'tech' ? techSkills : softSkills;
+  val.split(',').forEach(s => { const t = s.trim(); if (t && !arr.includes(t)) arr.push(t); });
+  input.value = '';
+  renderSkills(type);
+}
+
+function handleSkillEnter(e, type) { if (e.key === 'Enter') { e.preventDefault(); addSkill(type); } }
+
+function removeSkill(type, skill) {
+  if (type === 'tech') techSkills = techSkills.filter(s => s !== skill);
+  else softSkills = softSkills.filter(s => s !== skill);
+  renderSkills(type);
+}
+
+function renderSkills(type) {
+  const arr = type === 'tech' ? techSkills : softSkills;
+  const color = type === 'tech' ? '#667eea' : '#764ba2';
+  document.getElementById(`${type}-skills-container`).innerHTML = arr.map(s =>
+    `<div class="skill-tag" style="background:${color}">${s}<button onclick="removeSkill('${type}','${s}')">×</button></div>`
+  ).join('');
+}
+
+// ── Collect Data ──────────────────────────────────────────────
+function collectData() {
+  const data = {
+    name: document.getElementById('name').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    location: document.getElementById('location').value.trim(),
+    linkedin: document.getElementById('linkedin').value.trim(),
+    objective: document.getElementById('objective').value.trim(),
+    skills: { technical: [...techSkills], soft: [...softSkills] },
+    languages: document.getElementById('languages').value.split(',').map(l => l.trim()).filter(Boolean),
+    education: [], projects: [], experience: [], achievements: []
+  };
+
+  // Education
+  document.querySelectorAll('[id^="edu-degree-"]').forEach(el => {
+    const id = el.id.split('-')[2];
+    const deg = el.value.trim();
+    if (deg) data.education.push({
+      degree: deg,
+      institution: document.getElementById(`edu-inst-${id}`)?.value.trim() || '',
+      year: document.getElementById(`edu-year-${id}`)?.value.trim() || '',
+      score: document.getElementById(`edu-score-${id}`)?.value.trim() || ''
+    });
+  });
+
+  // Projects
+  document.querySelectorAll('[id^="proj-name-"]').forEach(el => {
+    const id = el.id.split('-')[2];
+    const name = el.value.trim();
+    if (name) data.projects.push({
+      name,
+      tech: document.getElementById(`proj-tech-${id}`)?.value.trim() || '',
+      description: document.getElementById(`proj-desc-${id}`)?.value.trim() || ''
+    });
+  });
+
+  // Experience
+  document.querySelectorAll('[id^="exp-role-"]').forEach(el => {
+    const id = el.id.split('-')[2];
+    const role = el.value.trim();
+    if (role) data.experience.push({
+      role,
+      company: document.getElementById(`exp-company-${id}`)?.value.trim() || '',
+      duration: document.getElementById(`exp-dur-${id}`)?.value.trim() || '',
+      points: (document.getElementById(`exp-points-${id}`)?.value || '').split('\n').map(l => l.trim()).filter(Boolean)
+    });
+  });
+
+  // Achievements
+  document.querySelectorAll('[id^="ach-text-"]').forEach(el => {
+    const val = el.value.trim();
+    if (val) data.achievements.push(val);
+  });
+
+  return data;
+}
+
+// ── Preview ───────────────────────────────────────────────────
+async function refreshPreview() {
+  const data = collectData();
+  if (!data.name) return;
+  try {
+    const res = await fetch('/api/resume/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, template: selectedTemplate })
+    });
+    const json = await res.json();
+    if (json.html) {
+      generatedHTML = json.html;
+      const frame = document.getElementById('preview-frame');
+      frame.innerHTML = `<iframe srcdoc="${json.html.replace(/"/g, '&quot;')}"></iframe>`;
+      document.getElementById('download-btn').disabled = false;
+    }
+  } catch(e) { console.error('Preview error:', e); }
+}
+
+// ── Generate PDF ──────────────────────────────────────────────
+async function generateResume() {
+  const data = collectData();
+  if (!data.name) { showToast('Please enter your name first'); return; }
+  document.getElementById('loading').classList.add('show');
+  try {
+    const res = await fetch('/api/resume/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, template: selectedTemplate })
+    });
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${data.name.replace(/\s+/g,'-')}-resume.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('✅ Resume downloaded!');
+      document.getElementById('download-btn').disabled = false;
+    } else {
+      const err = await res.json();
+      showToast('Error: ' + err.error);
+    }
+  } catch(e) {
+    showToast('Error generating resume. Please try again.');
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+async function downloadPDF() {
+  const data = collectData();
+  if (!data.name) { showToast('Please fill in your details first'); return; }
+  document.getElementById('loading').classList.add('show');
+  try {
+    const res = await fetch('/api/resume/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, template: selectedTemplate })
+    });
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${data.name.replace(/\s+/g,'-')}-resume.pdf`;
+      a.click();
+      showToast('✅ Resume downloaded!');
+    } else {
+      showToast('Error generating PDF');
+    }
+  } catch(e) {
+    showToast('Error. Please try again.');
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
