@@ -9,6 +9,7 @@ const { router: chembotRouter } = require('./chembot');
 const { router: universalRouter } = require('./universalbot');
 const { startScheduler } = require('./scheduler');
 const { router: interviewRouter } = require('./interview');
+const { handleSaasMessage } = require('./saasbot');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -296,6 +297,19 @@ app.post('/webhook', async (req, res) => {
   const phone  = req.body.From || '';
   const body   = (req.body.Body || '').trim();
   console.log(`📩 MSG FROM: ${phone} | BODY: ${body}`);
+
+  // Initialize Twilio client for proactive sends (SaaS bot needs it)
+  const twilioClient = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+  // ── SaaS routing: agent registration, agent commands, buyer flow ──
+  const saasReply = await handleSaasMessage(phone, body, twilioClient);
+  if (saasReply) {
+    console.log(`📤 SAAS REPLY TO: ${phone}`);
+    twiml.message(saasReply);
+    return res.type('text/xml').send(twiml.toString());
+  }
+
+  // ── Original PropBot single-agent flow ──
   const session = getSession(phone);
   const reply   = await handleMessage(phone, body, session);
   console.log(`📤 REPLY TO: ${phone} | STEP: ${session.step}`);
@@ -376,6 +390,26 @@ function getMockVisits() {
   ];
 }
 
+// ─── Sheet Setup ─────────────────────────────────────────────────────────────
+app.get('/api/setup-sheets', async (req, res) => {
+  try {
+    const result = await sheets.setupPropBotAgentsSheet();
+    res.json({ success: true, ...result, message: result.created ? 'PropBot Agents tab created with headers!' : 'PropBot Agents tab already exists — headers refreshed.' });
+  } catch(e) {
+    res.json({ success: false, error: e.message });
+  }
+});
+
+// ─── Agents API ───────────────────────────────────────────────────────────────
+app.get('/api/agents', async (req, res) => {
+  try {
+    const agents = await sheets.getAgents();
+    res.json({ success: true, agents, total: agents.length });
+  } catch(e) {
+    res.json({ success: false, error: e.message });
+  }
+});
+
 // ─── Demo Request ─────────────────────────────────────────────────────────────
 app.post('/api/demo-request', async (req, res) => {
   try {
@@ -408,6 +442,7 @@ app.get('/demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'lambence
 app.get('/achievers-demo', (req, res) => res.sendFile(path.join(__dirname, '..', 'achievers-demo.html')));
 app.get('/hariom', (req, res) => res.sendFile(path.join(__dirname, '..', 'hariom-ashram.html')));
 app.get('/khandelwal-cold', (req, res) => res.sendFile(path.join(__dirname, '..', 'khandelwal-cold-storage.html')));
+app.get('/vedant', (req, res) => res.sendFile(path.join(__dirname, '..', 'vedant-realestate.html')));
 
 // ─── Broadcast API ────────────────────────────────────────────────────────────
 app.post('/api/broadcast/send', async (req, res) => {

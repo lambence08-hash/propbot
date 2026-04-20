@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vedant Real Estate — Find Your Dream Property in Nagpur</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #C9A84C;
+    --dark: #1A1A2E;
+    --darker: #0F0F1A;
+    --light: #F5F0E8;
+    --white: #ffffff;
+    --gray: #6B7280;
+  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--darker); color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 50%, #0D1B2A 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 20px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80') center/cover no-repeat;
+    opacity: 0.08;
+  }
+  .hero-inner {
+    display: flex; gap: 60px; align-items: center; max-width: 1100px; width: 100%;
+    position: relative; z-index: 1; flex-wrap: wrap; justify-content: center;
+  }
+  .hero-text { flex: 1; min-width: 280px; }
+  .badge {
+    display: inline-block; background: var(--gold); color: var(--darker);
+    padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero-text h1 {
+    font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .hero-text h1 span { color: var(--gold); }
+  .hero-text p { font-size: 17px; color: #A0AEC0; margin-bottom: 30px; line-height: 1.7; }
+  .hero-stats { display: flex; gap: 30px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--gold); }
+  .stat-label { font-size: 12px; color: #A0AEC0; margin-top: 2px; }
+
+  /* ── LEAD FORM ── */
+  .form-card {
+    background: var(--white); border-radius: 20px; padding: 36px 32px;
+    width: 100%; max-width: 400px; box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+  .form-card h2 { color: var(--darker); font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .form-card p { color: var(--gray); font-size: 13px; margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--darker); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 13px 16px; border: 2px solid #E5E7EB;
+    border-radius: 10px; font-size: 14px; color: var(--darker);
+    outline: none; transition: border-color 0.2s; background: #F9FAFB;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--gold); background: #fff; }
+  .form-group select { cursor: pointer; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn-submit {
+    width: 100%; padding: 15px; background: linear-gradient(135deg, #C9A84C, #E8C76A);
+    color: var(--darker); font-size: 16px; font-weight: 800; border: none;
+    border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px; margin-top: 8px;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,168,76,0.4); }
+  .form-note { text-align: center; font-size: 11px; color: var(--gray); margin-top: 12px; }
+  .success-box {
+    display: none; background: #F0FDF4; border: 2px solid #86EFAC;
+    border-radius: 12px; padding: 20px; text-align: center; margin-top: 16px;
+  }
+  .success-box h3 { color: #166534; font-size: 16px; margin-bottom: 6px; }
+  .success-box p { color: #15803D; font-size: 13px; }
+
+  /* ── TICKER ── */
+  .ticker { background: var(--gold); color: var(--darker); padding: 10px 0; overflow: hidden; }
+  .ticker-inner { display: flex; animation: tick 25s linear infinite; white-space: nowrap; }
+  .ticker-inner span { font-size: 13px; font-weight: 700; padding: 0 40px; }
+  @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── PROPERTIES ── */
+  .section { padding: 70px 20px; max-width: 1100px; margin: 0 auto; }
+  .section-title { text-align: center; margin-bottom: 50px; }
+  .section-title h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+  .section-title h2 span { color: var(--gold); }
+  .section-title p { color: #A0AEC0; font-size: 15px; }
+  .props-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .prop-card {
+    background: #1A1A2E; border-radius: 16px; overflow: hidden;
+    border: 1px solid #2D2D4E; transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .prop-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(201,168,76,0.15); }
+  .prop-img { height: 200px; overflow: hidden; position: relative; }
+  .prop-img img { width: 100%; height: 100%; object-fit: cover; }
+  .prop-tag {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold); color: var(--darker);
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  }
+  .prop-body { padding: 20px; }
+  .prop-body h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .prop-body .location { color: var(--gold); font-size: 13px; margin-bottom: 14px; }
+  .prop-meta { display: flex; gap: 16px; margin-bottom: 14px; }
+  .prop-meta span { font-size: 12px; color: #A0AEC0; background: #0F0F1A; padding: 4px 10px; border-radius: 6px; }
+  .prop-price { font-size: 22px; font-weight: 800; color: var(--gold); margin-bottom: 14px; }
+  .prop-price small { font-size: 13px; color: #A0AEC0; font-weight: 400; }
+  .prop-btn {
+    width: 100%; padding: 12px; background: transparent;
+    border: 2px solid var(--gold); color: var(--gold);
+    border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px;
+    transition: all 0.2s;
+  }
+  .prop-btn:hover { background: var(--gold); color: var(--darker); }
+
+  /* ── WHY US ── */
+  .why-section { background: #1A1A2E; padding: 70px 20px; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+  .why-item { text-align: center; padding: 30px 20px; }
+  .why-icon { font-size: 40px; margin-bottom: 16px; }
+  .why-item h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .why-item p { color: #A0AEC0; font-size: 14px; line-height: 1.6; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .testi-card {
+    background: #1A1A2E; border-radius: 16px; padding: 28px;
+    border: 1px solid #2D2D4E;
+  }
+  .testi-stars { color: var(--gold); font-size: 16px; margin-bottom: 14px; }
+  .testi-card p { color: #D1D5DB; font-size: 14px; line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #E8C76A);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: var(--darker); font-size: 16px;
+  }
+  .testi-name { font-weight: 700; font-size: 14px; }
+  .testi-loc { color: var(--gold); font-size: 12px; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--gold), #E8C76A);
+    padding: 70px 20px; text-align: center;
+  }
+  .cta-section h2 { font-size: 36px; font-weight: 800; color: var(--darker); margin-bottom: 12px; }
+  .cta-section p { color: #5C4A1A; font-size: 16px; margin-bottom: 30px; }
+  .cta-btn {
+    background: var(--darker); color: var(--gold);
+    padding: 16px 40px; border-radius: 50px; font-size: 18px; font-weight: 800;
+    border: none; cursor: pointer; text-decoration: none; display: inline-block;
+    transition: transform 0.2s;
+  }
+  .cta-btn:hover { transform: scale(1.05); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0A0A14; padding: 40px 20px; text-align: center;
+    color: #6B7280; font-size: 14px;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── WHATSAPP FLOAT ── */
+  .wa-float {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: #25D366; width: 60px; height: 60px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.5);
+    text-decoration: none; font-size: 30px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,0.5); }
+    50% { box-shadow: 0 6px 40px rgba(37,211,102,0.8); }
+  }
+
+  @media(max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- WhatsApp Float -->
+<a class="wa-float" href="https://wa.me/917098765432?text=Hello%20Vedant%20Real%20Estate%2C%20mujhe%20property%20ke%20baare%20mein%20jaankari%20chahiye." target="_blank" title="Chat on WhatsApp">💬</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="badge">Nagpur's Trusted Real Estate</div>
+      <h1>Find Your <span>Dream Property</span> in Nagpur</h1>
+      <p>Residential, Commercial & Plots — Best deals across Nagpur. Expert guidance, zero brokerage surprises.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Happy Clients</div></div>
+        <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Properties</div></div>
+        <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Years Experience</div></div>
+        <div class="stat"><div class="stat-num">₹0</div><div class="stat-label">Hidden Charges</div></div>
+      </div>
+    </div>
+
+    <!-- LEAD FORM -->
+    <div class="form-card">
+      <h2>Get Free Consultation</h2>
+      <p>Our expert will call you within 30 minutes</p>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="leadName" placeholder="Aapka naam">
+      </div>
+      <div class="form-group">
+        <label>WhatsApp Number</label>
+        <input type="tel" id="leadPhone" placeholder="10-digit number">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Property Type</label>
+          <select id="leadType">
+            <option value="">Select</option>
+            <option>1 BHK Flat</option>
+            <option>2 BHK Flat</option>
+            <option>3 BHK Flat</option>
+            <option>Villa / Bungalow</option>
+            <option>Plot / Land</option>
+            <option>Commercial Shop</option>
+            <option>Office Space</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Budget</label>
+          <select id="leadBudget">
+            <option value="">Select</option>
+            <option>Under ₹30L</option>
+            <option>₹30L - ₹60L</option>
+            <option>₹60L - ₹1Cr</option>
+            <option>₹1Cr - ₹2Cr</option>
+            <option>Above ₹2Cr</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Preferred Location</label>
+        <select id="leadLocation">
+          <option value="">Select Area</option>
+          <option>Wardha Road</option>
+          <option>Hingna Road</option>
+          <option>Katol Road</option>
+          <option>Amravati Road</option>
+          <option>Manish Nagar</option>
+          <option>Dharampeth</option>
+          <option>Sitabuldi</option>
+          <option>Pratap Nagar</option>
+          <option>Nandanvan</option>
+          <option>Any Location</option>
+        </select>
+      </div>
+      <button class="btn-submit" onclick="submitLead()">Get Free Callback Now →</button>
+      <p class="form-note">🔒 Your info is 100% private. No spam.</p>
+      <div class="success-box" id="successBox">
+        <h3>Thank You! 🎉</h3>
+        <p>Our team will contact you on WhatsApp within 30 minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>🏠 New Flats on Wardha Road Starting ₹28L</span>
+    <span>🏢 Commercial Shops Near Airport</span>
+    <span>🌿 Plots in Hingna — RERA Approved</span>
+    <span>⭐ Zero Brokerage on Select Properties</span>
+    <span>📞 Free Site Visit — Call Now: 7098765432</span>
+    <span>🏠 New Flats on Wardha Road Starting ₹28L</span>
+    <span>🏢 Commercial Shops Near Airport</span>
+    <span>🌿 Plots in Hingna — RERA Approved</span>
+    <span>⭐ Zero Brokerage on Select Properties</span>
+    <span>📞 Free Site Visit — Call Now: 7098765432</span>
+  </div>
+</div>
+
+<!-- FEATURED PROPERTIES -->
+<div style="background: var(--darker); padding: 70px 20px;">
+  <div class="section-title">
+    <h2>Featured <span>Properties</span></h2>
+    <p>Handpicked properties across Nagpur — verified & RERA approved</p>
+  </div>
+  <div class="props-grid" style="max-width:1100px; margin:0 auto;">
+    <div class="prop-card">
+      <div class="prop-img">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Property" onerror="this.src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80'">
+        <span class="prop-tag">NEW LAUNCH</span>
+      </div>
+      <div class="prop-body">
+        <h3>2 BHK Premium Flat</h3>
+        <div class="location">📍 Wardha Road, Nagpur</div>
+        <div class="prop-meta">
+          <span>🛏 2 BHK</span><span>📐 950 sqft</span><span>🏗 Ready</span>
+        </div>
+        <div class="prop-price">₹42 Lakhs <small>onwards</small></div>
+        <button class="prop-btn" onclick="enquireProperty('2 BHK Flat, Wardha Road, ₹42L')">Enquire Now</button>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-img">
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80" alt="Property">
+        <span class="prop-tag">HOT DEAL</span>
+      </div>
+      <div class="prop-body">
+        <h3>3 BHK Luxury Villa</h3>
+        <div class="location">📍 Manish Nagar, Nagpur</div>
+        <div class="prop-meta">
+          <span>🛏 3 BHK</span><span>📐 1800 sqft</span><span>🏗 Ready</span>
+        </div>
+        <div class="prop-price">₹85 Lakhs <small>onwards</small></div>
+        <button class="prop-btn" onclick="enquireProperty('3 BHK Villa, Manish Nagar, ₹85L')">Enquire Now</button>
+      </div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-img">
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Property">
+        <span class="prop-tag">RERA APPROVED</span>
+      </div>
+      <div class="prop-body">
+        <h3>Residential Plot</h3>
+        <div class="location">📍 Hingna Road, Nagpur</div>
+        <div class="prop-meta">
+          <span>📐 1200 sqft</span><span>🌿 Open Plot</span><span>✅ Clear Title</span>
+        </div>
+        <div class="prop-price">₹18 Lakhs <small>onwards</small></div>
+        <button class="prop-btn" onclick="enquireProperty('Plot, Hingna Road, ₹18L')">Enquire Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY US -->
+<div class="why-section">
+  <div class="section-title">
+    <h2>Why Choose <span>Vedant?</span></h2>
+    <p>Nagpur ke sabse trusted real estate advisors</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="why-icon">🏆</div>
+      <h3>10+ Years Experience</h3>
+      <p>Nagpur real estate mein darsako ka experience aur deep market knowledge</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">✅</div>
+      <h3>RERA Verified</h3>
+      <p>Saari properties RERA approved — legal aur safe investment guaranteed</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">💰</div>
+      <h3>Best Price Guarantee</h3>
+      <p>Market se best deal dilate hain — koi hidden charges nahi</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">🚗</div>
+      <h3>Free Site Visit</h3>
+      <p>Hum aapko property dikhane aate hain — aapka time valuable hai</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">📋</div>
+      <h3>Loan Assistance</h3>
+      <p>Home loan processing mein poori help — SBI, HDFC, ICICI se tie-up</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">📞</div>
+      <h3>24/7 Support</h3>
+      <p>Koi bhi sawaal — WhatsApp pe message karo, 30 min mein reply</p>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div style="background: var(--darker); padding: 70px 20px;">
+  <div class="section-title">
+    <h2>Happy <span>Clients</span></h2>
+    <p>500+ families ne apna ghar Vedant ke saath dhundha</p>
+  </div>
+  <div class="testi-grid" style="max-width:1100px; margin:0 auto;">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p>"Vedant Real Estate ne mujhe perfect 2BHK Wardha Road pe dilaya. Price bhi best tha aur process bilkul smooth raha. Highly recommend!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div><div class="testi-name">Rajesh Sharma</div><div class="testi-loc">Wardha Road, Nagpur</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p>"Plot lena tha Hingna mein — Vedant team ne 3 options same din dikhaye. Legal clearance bhi unhone hi karwaya. Zero tension!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div><div class="testi-name">Priya Deshmukh</div><div class="testi-loc">Hingna Road, Nagpur</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p>"Commercial shop ki zaroorat thi airport ke paas. Vedant ne 1 hafte mein best deal close karwaya. Professional team!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div><div class="testi-name">Anil Khandelwal</div><div class="testi-loc">Airport Road, Nagpur</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Ready to Find Your Dream Property?</h2>
+  <p>Free consultation chahiye? Abhi WhatsApp karo — 30 minutes mein callback guaranteed</p>
+  <a class="cta-btn" href="https://wa.me/917098765432?text=Hello%20Vedant%20Real%20Estate%2C%20mujhe%20property%20dekhni%20hai." target="_blank">WhatsApp Now: 7098765432</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-size:20px; font-weight:800; color:var(--gold); margin-bottom:10px;">Vedant Real Estate</p>
+  <p>Nagpur, Maharashtra &nbsp;|&nbsp; 📞 7098765432 &nbsp;|&nbsp; ⏰ 6 PM – 10 PM</p>
+  <p style="margin-top:16px; font-size:12px;">© 2026 Vedant Real Estate. All rights reserved.</p>
+</footer>
+
+<script>
+  const ADMIN_WA = '917098765432';
+
+  function submitLead() {
+    const name     = document.getElementById('leadName').value.trim();
+    const phone    = document.getElementById('leadPhone').value.trim();
+    const type     = document.getElementById('leadType').value;
+    const budget   = document.getElementById('leadBudget').value;
+    const location = document.getElementById('leadLocation').value;
+
+    if (!name || !phone) {
+      alert('Kripya naam aur phone number zaroor bharein!');
+      return;
+    }
+    if (phone.length < 10) {
+      alert('Valid 10-digit phone number enter karein.');
+      return;
+    }
+
+    document.getElementById('successBox').style.display = 'block';
+
+    const msg = `🏠 *NEW PROPERTY LEAD — VEDANT REAL ESTATE*\n\n👤 *Naam:* ${name}\n📱 *Phone:* ${phone}\n🏗 *Property Type:* ${type || 'Not specified'}\n💰 *Budget:* ${budget || 'Not specified'}\n📍 *Location:* ${location || 'Not specified'}\n\n⚡ Jaldi callback karo — lead fresh hai!\n🕐 30 min mein contact karo.`;
+
+    setTimeout(() => {
+      window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+    }, 800);
+  }
+
+  function enquireProperty(propName) {
+    const msg = `🏠 *PROPERTY ENQUIRY*\n\nMujhe is property ke baare mein jaankari chahiye:\n📌 *${propName}*\n\nKripya mujhse contact karein.`;
+    window.open(`https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+</script>
+</body>
+</html>
